@@ -28,4 +28,9 @@ public:
 	{
 		UE_LOG(LogTemp, Warning, TEXT("%s"), *msg);
 	}
+
+	static void ToScreen(FString msg, FColor color = FColor::White, float time = 5.0f, int32 key = -1, bool newerOnTop = true, FVector2D scale = FVector2D::UnitVector)
+	{
+		GEngine->AddOnScreenDebugMessage(key, time, color, msg, newerOnTop, scale);
+	}
 };
