@@ -13,4 +13,19 @@ class BUILDINGBLOCKS_API Debug
 public:
 	Debug();
 	~Debug();
+
+	static void Log(FString msg)
+	{
+		UE_LOG(LogTemp, Log, TEXT("%s"), *msg);
+	}
+
+	static void Error(FString msg)
+	{
+		UE_LOG(LogTemp, Error, TEXT("%s"), *msg);
+	}
+
+	static void Warning(FString msg)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("%s"), *msg);
+	}
 };
