@@ -2,31 +2,28 @@
 
 
 #include "CoreSystem.h"
+#include "Debug/Debug.h"
 
-// Sets default values
-ACoreSystem::ACoreSystem()
+TUniquePtr<UCoreSystem> UCoreSystem::m_instance;
+
+UCoreSystem::UCoreSystem(const FObjectInitializer& objectInitializer) : Super(objectInitializer)
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
-
-	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
 }
 
-// Called when the game starts or when spawned
-void ACoreSystem::BeginPlay()
+void UCoreSystem::Init()
 {
-	Super::BeginPlay();
-	
-	if (!Exists())
-	{
-		m_core.Reset(this);
-	}
+	Super::Init();
+
+	m_instance.Reset(this);
+	Debug::Log("CoreSystem - Init");
 }
 
-// Called every frame
-void ACoreSystem::Tick(float DeltaTime)
+void UCoreSystem::Shutdown()
 {
-	Super::Tick(DeltaTime);
+	m_instance.Release();
 }
 
-TUniquePtr<ACoreSystem> ACoreSystem::m_core;
+UCoreSystem& UCoreSystem::Get()
+{
+	return *m_instance.Get();
+}

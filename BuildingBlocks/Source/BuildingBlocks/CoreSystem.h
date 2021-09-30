@@ -3,40 +3,23 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "Engine/GameInstance.h"
 #include "CoreSystem.generated.h"
 
 UCLASS()
-class BUILDINGBLOCKS_API ACoreSystem : public AActor
+class BUILDINGBLOCKS_API UCoreSystem : public UGameInstance
 {
 	GENERATED_BODY()
-	
-public:	
-	// Sets default values for this actor's properties
-	ACoreSystem();
 
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+public:
+	UCoreSystem(const FObjectInitializer& objectInitializer);
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	virtual void Init();
+	virtual void Shutdown();
 
-	static ACoreSystem& GetCore()
-	{
-		return *m_core.Get();
-	}
-
-	static bool Exists()
-	{
-		return m_core.IsValid();
-	}
-
-	UPROPERTY(EditAnywhere);
-	int x = 5;
+	static UCoreSystem& Get();
 
 private:
+	static TUniquePtr<UCoreSystem> m_instance;
 
-	static TUniquePtr<ACoreSystem> m_core;
 };
