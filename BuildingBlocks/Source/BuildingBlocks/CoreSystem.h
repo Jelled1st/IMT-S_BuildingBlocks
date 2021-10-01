@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
+#include "EventSystem/EventSystem.h"
+
 #include "CoreSystem.generated.h"
 
 UCLASS()
@@ -18,6 +20,8 @@ public:
 	virtual void Shutdown();
 
 	static UCoreSystem& Get();
+
+	EventSystem eventSystem;
 
 private:
 	static TUniquePtr<UCoreSystem> m_instance;
