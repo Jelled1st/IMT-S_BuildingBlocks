@@ -31,8 +31,6 @@ void AMyPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	Debug::Log("ye, is called");
-
 	PlayerInputComponent->BindAction("ModularObject_SwapNext", IE_Pressed, modularObject, &AModularObject::SwapMeshNext);
 	PlayerInputComponent->BindAction("ModularObject_SwapPrevious", IE_Pressed, modularObject, &AModularObject::SwapMeshPrevious);
 }
