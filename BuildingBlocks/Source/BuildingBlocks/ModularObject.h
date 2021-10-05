@@ -26,13 +26,17 @@ public:
 	UPROPERTY(EditAnywhere);
 	TArray<UStaticMesh*> meshAssets;
 
+	UPROPERTY(EditAnywhere);
+	TArray<UMaterialInterface*> materialAssets;
+
 	void SwapMeshNext();
-
 	void SwapMeshPrevious();
-
-	// Swaps the mesh of 
 	bool SwapMesh(int index);
 
+	void SwapMatNext();
+	void SwapMatPrevious();
+	bool SwapMat(int index);
 private:
 	int m_currentMeshIndex = 0;
+	int m_currentMatIndex = 0;
 };

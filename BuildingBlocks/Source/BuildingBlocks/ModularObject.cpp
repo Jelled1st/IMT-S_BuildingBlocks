@@ -23,6 +23,11 @@ void AModularObject::BeginPlay()
 		m_currentMeshIndex = 0;
 		visualComponent->SetStaticMesh(meshAssets[0]);
 	}
+	if (materialAssets.Num() != 0)
+	{
+		m_currentMatIndex = 0;
+		visualComponent->SetMaterial(0, materialAssets[0]);
+	}
 	
 }
 
@@ -56,6 +61,38 @@ bool AModularObject::SwapMesh(int index)
 	if (index >= 0 || index < meshAssets.Num())
 	{
 		visualComponent->SetStaticMesh(meshAssets[index]);
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+void AModularObject::SwapMatNext()
+{
+	Debug::Log("");
+	int newIndex = (m_currentMatIndex + 1) % materialAssets.Num();
+	if (SwapMat(newIndex))
+	{
+		m_currentMatIndex = newIndex;
+	}
+}
+
+void AModularObject::SwapMatPrevious()
+{
+	int newIndex = (m_currentMatIndex + (materialAssets.Num() - 1)) % materialAssets.Num();
+	if (SwapMat(newIndex))
+	{
+		m_currentMatIndex = newIndex;
+	}
+}
+
+bool AModularObject::SwapMat(int index)
+{
+	if (index >= 0 || index < materialAssets.Num())
+	{
+		visualComponent->SetMaterial(0, materialAssets[index]);
 		return true;
 	}
 	else

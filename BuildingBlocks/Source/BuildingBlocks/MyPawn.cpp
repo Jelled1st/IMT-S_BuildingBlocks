@@ -23,7 +23,6 @@ void AMyPawn::BeginPlay()
 void AMyPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 // Called to bind functionality to input
@@ -33,4 +32,6 @@ void AMyPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 	PlayerInputComponent->BindAction("ModularObject_SwapNext", IE_Pressed, modularObject, &AModularObject::SwapMeshNext);
 	PlayerInputComponent->BindAction("ModularObject_SwapPrevious", IE_Pressed, modularObject, &AModularObject::SwapMeshPrevious);
+	PlayerInputComponent->BindAction("ModularObject_SwapNextMat", IE_Pressed, modularObject, &AModularObject::SwapMatNext);
+	PlayerInputComponent->BindAction("ModularObject_SwapPreviousMat", IE_Pressed, modularObject, &AModularObject::SwapMatPrevious);
 }

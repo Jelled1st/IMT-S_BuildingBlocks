@@ -7,11 +7,6 @@
 
 #include "ModularObject.h"
 
-// For persistant spawning
-#include "LevelEditor.h"
-#include "Editor.h"
-#include "Engine/StaticMeshActor.h"
-
 #include "MyPawn.generated.h"
 
 UCLASS()
