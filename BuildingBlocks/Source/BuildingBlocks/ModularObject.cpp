@@ -100,3 +100,8 @@ bool AModularObject::SwapMat(int index)
 		return false;
 	}
 }
+
+void AModularObject::Select()
+{
+	Debug::Log("Selected");
+}

@@ -2,6 +2,8 @@
 
 
 #include "RaycastCharacter.h"
+#include "Debug/Debug.h"
+#include "ModularObject.h"
 
 // Sets default values
 ARaycastCharacter::ARaycastCharacter()
@@ -22,19 +24,25 @@ void ARaycastCharacter::RayCast()
 {
 	FHitResult* hit = new FHitResult();
 	FVector forward = GetWorld()->GetFirstPlayerController()->PlayerCameraManager->GetActorForwardVector();
-	FVector start =GetActorLocation();
-	start.Z = 100.f;
-	FVector end = (forward * 1000.f) + start;
+	FVector start = GetActorLocation();
+	start.Z = 0;
+	FVector end = start + (forward * 1000.f);
 
-	if (GetWorld()->LineTraceSingleByChannel(*hit, start, end, ECC_WorldStatic)) {
+	if (GetWorld()->LineTraceSingleByChannel(*hit, start, end, ECC_WorldStatic)) 
+	{
 		DrawDebugLine(GetWorld(), start, end, FColor::Red, true);
 
-		if (hit->GetActor() != NULL) {
-			UE_LOG(LogClass, Log, TEXT("Component: %s"), *hit->GetComponent()->GetName());
+		if (hit->GetActor() != NULL) 
+		{
+			Debug::Log(FString::Printf(TEXT("%s: %s"), *hit->GetActor()->GetName(), *hit->GetComponent()->GetName()));
+
+			AModularObject* modularObj = Cast<AModularObject>(hit->GetActor());
+			if (modularObj != nullptr)
+			{
+				modularObj->Select();
+			}
 		}
 	}
-
-
 }
 
 // Called every frame

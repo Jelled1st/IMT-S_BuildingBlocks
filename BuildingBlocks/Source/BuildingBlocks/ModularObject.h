@@ -36,6 +36,9 @@ public:
 	void SwapMatNext();
 	void SwapMatPrevious();
 	bool SwapMat(int index);
+
+	void Select();
+
 private:
 	int m_currentMeshIndex = 0;
 	int m_currentMatIndex = 0;
