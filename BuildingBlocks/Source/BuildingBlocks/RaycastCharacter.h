@@ -3,26 +3,22 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "GameFramework/Character.h"
 #include "DrawDebugHelpers.h"
-#include "RaycastActor.generated.h"
-
+#include "RaycastCharacter.generated.h"
 
 UCLASS()
-class BUILDINGBLOCKS_API ARaycastActor : public AActor
+class BUILDINGBLOCKS_API ARaycastCharacter : public ACharacter
 {
 	GENERATED_BODY()
-	
-public:	
-	// Sets default values for this actor's properties
-	ARaycastActor();
+
+public:
+	// Sets default values for this character's properties
+	ARaycastCharacter();
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
-	class ACharacter* player;
-	UInputComponent* playerInputComponent;
 
 private:
 	void RayCast();
@@ -30,5 +26,8 @@ private:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	// Called to bind functionality to input
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 };

@@ -1,40 +1,28 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "RaycastActor.h"
-#include "Kismet/GameplayStatics.h"
-#include "GameFramework/Character.h"
-
+#include "RaycastCharacter.h"
 
 // Sets default values
-ARaycastActor::ARaycastActor()
+ARaycastCharacter::ARaycastCharacter()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+ 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	
-
 
 }
 
 // Called when the game starts or when spawned
-void ARaycastActor::BeginPlay()
+void ARaycastCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
-// Called every frame
-void ARaycastActor::Tick(float DeltaTime)
+void ARaycastCharacter::RayCast()
 {
-	Super::Tick(DeltaTime);
-
-}
-
-
-void ARaycastActor::RayCast() {
 	FHitResult* hit = new FHitResult();
 	FVector forward = GetWorld()->GetFirstPlayerController()->PlayerCameraManager->GetActorForwardVector();
-	FVector start = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)->GetActorLocation();
+	FVector start =GetActorLocation();
 	start.Z = 100.f;
 	FVector end = (forward * 1000.f) + start;
 
@@ -46,6 +34,22 @@ void ARaycastActor::RayCast() {
 		}
 	}
 
+
+}
+
+// Called every frame
+void ARaycastCharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+}
+
+// Called to bind functionality to input
+void ARaycastCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+{
+	Super::SetupPlayerInputComponent(PlayerInputComponent);
+
+	InputComponent->BindAction("Raycast_Button", IE_Pressed, this, &ARaycastCharacter::RayCast);
 
 }
 
