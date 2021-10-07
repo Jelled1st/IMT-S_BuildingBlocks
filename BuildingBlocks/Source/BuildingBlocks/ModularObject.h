@@ -29,7 +29,9 @@ public:
 	UPROPERTY(EditAnywhere);
 	TArray<UMaterialInterface*> materialAssets;
 
+	UFUNCTION(BlueprintCallable)
 	void SwapMeshNext();
+	UFUNCTION(BlueprintCallable)
 	void SwapMeshPrevious();
 	bool SwapMesh(int index);
 
