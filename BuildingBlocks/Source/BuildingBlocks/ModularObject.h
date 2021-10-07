@@ -31,11 +31,15 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void SwapMeshNext();
+
 	UFUNCTION(BlueprintCallable)
 	void SwapMeshPrevious();
 	bool SwapMesh(int index);
 
+	UFUNCTION(BlueprintCallable)
 	void SwapMatNext();
+
+	UFUNCTION(BlueprintCallable)
 	void SwapMatPrevious();
 	bool SwapMat(int index);
 
