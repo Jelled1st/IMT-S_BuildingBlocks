@@ -5,6 +5,11 @@
 #include "Debug/Debug.h"
 #include "ModularObject.h"
 
+#include "CoreSystem.h"
+
+#include "Engine/LevelScriptActor.h"
+#include "Misc/OutputDeviceNull.h"
+
 // Sets default values
 ARaycastCharacter::ARaycastCharacter()
 {
@@ -30,8 +35,6 @@ void ARaycastCharacter::RayCast()
 
 	if (GetWorld()->LineTraceSingleByChannel(*hit, start, end, ECC_WorldStatic)) 
 	{
-		DrawDebugLine(GetWorld(), start, end, FColor::Red, true);
-
 		if (hit->GetActor() != NULL) 
 		{
 			Debug::Log(FString::Printf(TEXT("%s: %s"), *hit->GetActor()->GetName(), *hit->GetComponent()->GetName()));
@@ -40,6 +43,14 @@ void ARaycastCharacter::RayCast()
 			if (modularObj != nullptr)
 			{
 				modularObj->Select();
+				AModularitySystem* modularitySystem = UCoreSystem::Get().GetModularitySystem();
+				
+				if (modularitySystem != nullptr)
+				{
+					modularitySystem->SelectObject(modularObj);
+					FOutputDeviceNull ar;
+					modularObj->GetLevel()->GetLevelScriptActor()->CallFunctionByNameWithArguments(TEXT("OpenModularUI"), ar, NULL, true);
+				}
 			}
 		}
 	}
