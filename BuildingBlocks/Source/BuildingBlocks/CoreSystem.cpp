@@ -20,10 +20,17 @@ void UCoreSystem::Init()
 
 void UCoreSystem::Shutdown()
 {
+	m_modularitySystem.Release();
 	m_instance.Release();
 }
 
 UCoreSystem& UCoreSystem::Get()
 {
 	return *m_instance.Get();
+}
+
+void UCoreSystem::SetModularitySystem(AModularitySystem& system)
+{
+	Debug::Log("Registering system");
+	m_modularitySystem.Reset(&system);
 }

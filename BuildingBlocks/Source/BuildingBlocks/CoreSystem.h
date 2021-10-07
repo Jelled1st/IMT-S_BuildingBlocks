@@ -6,6 +6,8 @@
 #include "Engine/GameInstance.h"
 #include "EventSystem/EventSystem.h"
 
+#include "ModularitySystem.h"
+
 #include "CoreSystem.generated.h"
 
 UCLASS()
@@ -23,7 +25,14 @@ public:
 
 	EventSystem eventSystem;
 
+	AModularitySystem* GetModularitySystem()
+	{
+		return m_modularitySystem.Get();
+	};
+
+	void SetModularitySystem(AModularitySystem& system);
+
 private:
 	static TUniquePtr<UCoreSystem> m_instance;
-
+	TUniquePtr<AModularitySystem> m_modularitySystem;
 };
