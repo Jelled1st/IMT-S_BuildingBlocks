@@ -4,17 +4,22 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "ImGuiExample.h"
-#include "ImGuiRunner.generated.h"
+#include "ImGuiCommon.h"
+#include "DebugWindow.generated.h"
+
+#if WITH_IMGUI
+#include "..\..\Plugins\ImGui\Source\ImGui\Public\ImGuiDelegates.h"
+class FImGuiModuleProperties;
+#endif
 
 UCLASS()
-class BUILDINGBLOCKS_API AImGuiRunner : public AActor
+class BUILDINGBLOCKS_API ADebugWindow : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	AImGuiRunner();
+	ADebugWindow();
 
 protected:
 	// Called when the game starts or when spawned
@@ -24,5 +29,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	ImGuiExample* imGuiExample;
+#if WITH_IMGUI
+	void DrawWindow();
+#endif
 };
