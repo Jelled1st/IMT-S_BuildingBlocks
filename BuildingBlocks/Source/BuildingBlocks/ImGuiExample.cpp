@@ -20,8 +20,6 @@ ImGuiExample::~ImGuiExample()
 // Demo copied from ImGuiDemo
 void ImGuiExample::DrawControls(int32 ContextIndex)
 {
-	UE_LOG(LogTemp, Display, TEXT("text"));
-
 	const int32 contextBit = ContextIndex < 0 ? 0 : 1 << ContextIndex;
 
 	// 1. Show a simple window
