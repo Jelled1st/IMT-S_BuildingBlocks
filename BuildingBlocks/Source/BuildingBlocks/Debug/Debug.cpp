@@ -16,6 +16,11 @@ void Debug::Log(FString msg)
 	UE_LOG(LogTemp, Log, TEXT("%s"), *msg);
 }
 
+void Debug::Log(FString msg, FVector vector)
+{
+	UE_LOG(LogTemp, Log, TEXT("%s(%f;%f;%f)"), *msg, vector.X, vector.Y, vector.Z);
+}
+
 void Debug::Error(FString msg)
 {
 	UE_LOG(LogTemp, Error, TEXT("%s"), *msg);

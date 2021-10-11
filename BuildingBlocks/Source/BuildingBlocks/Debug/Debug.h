@@ -13,8 +13,10 @@ class BUILDINGBLOCKS_API Debug
 public:
 	Debug();
 	~Debug();
-
+	
 	static void Log(FString msg);
+
+	static void Log(FString msg, FVector vector);
 
 	static void Error(FString msg);
 
