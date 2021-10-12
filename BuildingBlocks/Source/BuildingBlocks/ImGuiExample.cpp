@@ -1,9 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "..\..\Plugins\ImGui\Source\ImGui\Private\ImGuiPrivatePCH.h"
-
 #include "ImGuiExample.h"
 
+#include "..\..\Plugins\ImGui\Source\ImGui\Private\ImGuiPrivatePCH.h"
 #include "..\..\Plugins\ImGui\Source\ImGui\Public\ImGuiModuleProperties.h"
 
 #if WITH_IMGUI
