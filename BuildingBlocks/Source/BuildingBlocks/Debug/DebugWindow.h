@@ -8,6 +8,7 @@
 #if WITH_IMGUI
 #include "..\..\..\Plugins\ImGui\Source\ImGui\Public\ImGuiDelegates.h"
 class FImGuiModuleProperties;
+class AModularObject;
 #endif
 
 class BUILDINGBLOCKS_API DebugWindow
@@ -24,4 +25,10 @@ public:
 
 private:
 	float m_slideValue = 0;
+
+#if WITH_IMGUI
+	void DrawOperatorControls();
+	void DrawObjectControls(AModularObject& object);
+	TSharedPtr<AModularObject> m_selectedObject;
+#endif
 };

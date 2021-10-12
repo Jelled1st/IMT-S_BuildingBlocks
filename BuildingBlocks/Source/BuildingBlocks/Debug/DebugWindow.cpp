@@ -33,17 +33,9 @@ void DebugWindow::DrawWindow()
 
 	if (ImGui::BeginTabBar("TabBar"))
 	{
-		if (ImGui::BeginTabItem("Modularity"))
+		if (ImGui::BeginTabItem("Operator Controls"))
 		{
-			ImGui::Text("Modular Objects:");
-			ImGui::NewLine();
-			TArray<TSharedPtr<AModularObject>> modularObjs = UCoreSystem::Get().GetModularitySystem()->GetRegisteredObjects();
-			for (TSharedPtr<AModularObject> obj : modularObjs)
-			{
-				FString name = obj.Get()->GetName();
-				ImGui::Text(TCHAR_TO_ANSI(*name));
-			}
-
+			DrawOperatorControls();
 			ImGui::EndTabItem();
 		}
 
@@ -65,5 +57,71 @@ void DebugWindow::DrawWindow()
 	}
 
 	ImGui::End();
+}
+
+void DebugWindow::DrawOperatorControls()
+{
+	if (ImGui::BeginTabBar("OperatorControlsBar"))
+	{
+		TArray<TSharedPtr<AModularObject>> modularObjs = UCoreSystem::Get().GetModularitySystem()->GetRegisteredObjects();
+		for (TSharedPtr<AModularObject> obj : modularObjs)
+		{
+			FString name = obj.Get()->GetName();
+			if (ImGui::BeginTabItem(TCHAR_TO_ANSI(*name)))
+			{
+				m_selectedObject = obj;
+
+				ImGui::EndTabItem();
+			}
+		}
+
+		if (m_selectedObject.IsValid())
+		{
+			DrawObjectControls(*m_selectedObject.Get());
+		}
+
+		ImGui::EndTabBar();
+	}
+}
+
+void DebugWindow::DrawObjectControls(AModularObject& object)
+{
+	ImGui::Text(TCHAR_TO_ANSI(*object.GetName()));
+
+	static float arrowButtonSpacing = 40;
+	static float textSpacing = 100;
+
+	ImGui::PushID("MeshSelection");
+	if (ImGui::Button("<"))
+	{
+		object.SwapMeshPrevious();
+	}
+	ImGui::SameLine(arrowButtonSpacing);
+
+	ImGui::Text(TCHAR_TO_ANSI(*object.GetMesh().GetName()));
+
+	ImGui::SameLine(arrowButtonSpacing + textSpacing);
+	if (ImGui::Button(">"))
+	{
+		object.SwapMeshNext();
+	}
+	ImGui::PopID();
+
+
+	ImGui::PushID("MaterialSelection");
+	if (ImGui::Button("<"))
+	{
+		object.SwapMatPrevious();
+	}
+	ImGui::SameLine(arrowButtonSpacing);
+
+	ImGui::Text(TCHAR_TO_ANSI(*object.GetMaterial().GetName()));
+
+	ImGui::SameLine(arrowButtonSpacing + textSpacing);
+	if (ImGui::Button(">"))
+	{
+		object.SwapMatNext();
+	}
+	ImGui::PopID();
 }
 #endif
