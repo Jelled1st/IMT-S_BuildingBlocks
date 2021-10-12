@@ -17,6 +17,8 @@ public:
 	void RegisterObject(AModularObject& object);
 	void UnregisterObject(AModularObject& object);
 
+	TArray<TSharedPtr<AModularObject>>& GetRegisteredObjects();
+
 private:
 	TArray<TSharedPtr<AModularObject>> m_modularObjects;
 };

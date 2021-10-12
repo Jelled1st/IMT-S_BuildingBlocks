@@ -22,3 +22,8 @@ void AModularitySystem::UnregisterObject(AModularObject& object)
 {
 	m_modularObjects.Remove(TSharedPtr<AModularObject>(&object));
 }
+
+TArray<TSharedPtr<AModularObject>>& AModularitySystem::GetRegisteredObjects()
+{
+	return m_modularObjects;
+}
