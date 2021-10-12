@@ -16,10 +16,18 @@ void UCoreSystem::Init()
 
 	m_instance.Reset(this);
 	Debug::Log("CoreSystem - Init");
+
+	m_debugWindow.Reset(new DebugWindow());
+}
+
+void UCoreSystem::OnStart()
+{
+	m_debugWindow.Get()->Start();
 }
 
 void UCoreSystem::Shutdown()
 {
+	m_debugWindow.Release();
 	m_modularitySystem.Release();
 	m_instance.Release();
 }

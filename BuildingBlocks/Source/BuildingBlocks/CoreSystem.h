@@ -7,6 +7,7 @@
 #include "EventSystem/EventSystem.h"
 
 #include "ModularitySystem.h"
+#include "Debug/DebugWindow.h"
 
 #include "CoreSystem.generated.h"
 
@@ -19,6 +20,7 @@ public:
 	UCoreSystem(const FObjectInitializer& objectInitializer);
 
 	virtual void Init();
+	virtual void OnStart();
 	virtual void Shutdown();
 
 	static UCoreSystem& Get();
@@ -35,4 +37,5 @@ public:
 private:
 	static TUniquePtr<UCoreSystem> m_instance;
 	TUniquePtr<AModularitySystem> m_modularitySystem;
+	TUniquePtr<DebugWindow> m_debugWindow;
 };
