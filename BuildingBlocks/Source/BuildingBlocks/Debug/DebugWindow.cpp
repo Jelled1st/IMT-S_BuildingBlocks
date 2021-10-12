@@ -6,6 +6,8 @@
 #include "..\..\..\Plugins\ImGui\Source\ImGui\Private\ImGuiPrivatePCH.h"
 #include "..\..\..\Plugins\ImGui\Source\ImGui\Public\ImGuiModuleProperties.h"
 
+#include "Debug.h"
+
 DebugWindow::DebugWindow()
 {
 }
@@ -25,7 +27,26 @@ void DebugWindow::Start()
 void DebugWindow::DrawWindow()
 {
 	ImGui::Begin("Debug Window");
-	ImGui::Text("Hello world!");
+
+	if (ImGui::BeginTabBar("TabBar"))
+	{
+		if (ImGui::BeginTabItem("Example"))
+		{
+			ImGui::Text("Hello world!");
+
+			if (ImGui::Button("Debug::Log('Hello World')"))
+			{
+				Debug::Log("Hello World");
+			}
+
+			ImGui::SliderFloat("Slider", &m_slideValue, -5, 5);
+
+			ImGui::EndTabItem();
+		}
+
+		ImGui::EndTabBar();
+	}
+
 	ImGui::End();
 }
 #endif

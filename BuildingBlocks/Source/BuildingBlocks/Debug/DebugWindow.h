@@ -21,4 +21,7 @@ public:
 #if WITH_IMGUI
 	void DrawWindow();
 #endif
+
+private:
+	float m_slideValue = 0;
 };
