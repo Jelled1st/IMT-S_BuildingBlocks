@@ -46,6 +46,9 @@ public:
 
 	void Select();
 
+	UStaticMesh& GetMesh();
+	UMaterialInterface& GetMaterial();
+
 private:
 	int m_currentMeshIndex = 0;
 	int m_currentMatIndex = 0;

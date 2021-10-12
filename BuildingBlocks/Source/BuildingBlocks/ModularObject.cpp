@@ -114,6 +114,16 @@ bool AModularObject::SwapMat(int index)
 	}
 }
 
+UStaticMesh& AModularObject::GetMesh()
+{
+	return *visualComponent->GetStaticMesh();
+}
+
+UMaterialInterface& AModularObject::GetMaterial()
+{
+	return *visualComponent->GetMaterial(0);
+}
+
 void AModularObject::Select()
 {
 	Debug::Log("Selected");
