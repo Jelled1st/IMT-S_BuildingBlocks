@@ -19,6 +19,7 @@ protected:
 
 public:	
 	virtual void Tick(float DeltaTime) override;
+	virtual void BeginDestroy() override;
 
 	UPROPERTY(EditAnywhere);
 	UStaticMeshComponent* visualComponent;

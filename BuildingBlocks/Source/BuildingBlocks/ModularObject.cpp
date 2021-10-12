@@ -3,6 +3,8 @@
 
 #include "ModularObject.h"
 #include "Debug/Debug.h"
+#include "CoreSystem.h"
+#include "ModularitySystem.h"
 
 AModularObject::AModularObject()
 {
@@ -29,6 +31,17 @@ void AModularObject::BeginPlay()
 		visualComponent->SetMaterial(0, materialAssets[0]);
 	}
 	
+	UCoreSystem::Get().GetModularitySystem()->RegisterObject(*this);
+}
+
+void AModularObject::BeginDestroy()
+{
+	Super::BeginDestroy();
+
+	if (UCoreSystem::Exists())
+	{
+		UCoreSystem::Get().GetModularitySystem()->UnregisterObject(*this);
+	}
 }
 
 void AModularObject::Tick(float DeltaTime)
