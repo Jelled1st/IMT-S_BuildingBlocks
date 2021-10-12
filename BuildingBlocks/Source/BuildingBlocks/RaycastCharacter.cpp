@@ -38,20 +38,6 @@ void ARaycastCharacter::RayCast()
 		if (hit->GetActor() != NULL) 
 		{
 			Debug::Log(FString::Printf(TEXT("%s: %s"), *hit->GetActor()->GetName(), *hit->GetComponent()->GetName()));
-
-			AModularObject* modularObj = Cast<AModularObject>(hit->GetActor());
-			if (modularObj != nullptr)
-			{
-				modularObj->Select();
-				AModularitySystem* modularitySystem = UCoreSystem::Get().GetModularitySystem();
-				
-				if (modularitySystem != nullptr)
-				{
-					modularitySystem->SelectObject(modularObj);
-					FOutputDeviceNull ar;
-					modularObj->GetLevel()->GetLevelScriptActor()->CallFunctionByNameWithArguments(TEXT("OpenModularUI"), ar, NULL, true);
-				}
-			}
 		}
 	}
 }
