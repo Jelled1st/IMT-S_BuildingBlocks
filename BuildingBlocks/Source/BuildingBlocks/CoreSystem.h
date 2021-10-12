@@ -24,6 +24,7 @@ public:
 	virtual void Shutdown();
 
 	static UCoreSystem& Get();
+	static bool Exists();
 
 	EventSystem eventSystem;
 
@@ -31,8 +32,6 @@ public:
 	{
 		return m_modularitySystem.Get();
 	};
-
-	void SetModularitySystem(AModularitySystem& system);
 
 private:
 	static TUniquePtr<UCoreSystem> m_instance;

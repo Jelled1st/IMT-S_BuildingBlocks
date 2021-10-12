@@ -4,26 +4,21 @@
 #include "ModularitySystem.h"
 #include "CoreSystem.h"
 
-// Sets default values
 AModularitySystem::AModularitySystem()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
 }
 
 // Called when the game starts or when spawned
-void AModularitySystem::BeginPlay()
+void AModularitySystem::Start()
 {
-	Super::BeginPlay();
-
-	selectedObject = nullptr;
-	UCoreSystem::Get().SetModularitySystem(*this);
 }
 
-// Called every frame
-void AModularitySystem::Tick(float DeltaTime)
+void AModularitySystem::RegisterObject(AModularObject& object)
 {
-	Super::Tick(DeltaTime);
-
+	m_modularObjects.Add(TSharedPtr<AModularObject>(&object));
 }
 
+void AModularitySystem::UnregisterObject(AModularObject& object)
+{
+	m_modularObjects.Remove(TSharedPtr<AModularObject>(&object));
+}

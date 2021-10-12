@@ -3,45 +3,20 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
 #include "ModularObject.h"
-#include "ModularitySystem.generated.h"
 
-UCLASS()
-class BUILDINGBLOCKS_API AModularitySystem : public AActor
-{
-	GENERATED_BODY()
-	
+class BUILDINGBLOCKS_API AModularitySystem
+{	
 public:	
 	// Sets default values for this actor's properties
 	AModularitySystem();
 
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
 public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
-	UFUNCTION(BlueprintCallable)
-	void SelectObject(AModularObject* object)
-	{
-		selectedObject = object;
-	}
-
-	UFUNCTION(BlueprintCallable)
-	void DeselectObject()
-	{
-		selectedObject = nullptr;
-	}
-
-	UFUNCTION(BlueprintCallable)
-	AModularObject* GetSelected()
-	{
-		return selectedObject;
-	}
+	void Start();
+	
+	void RegisterObject(AModularObject& object);
+	void UnregisterObject(AModularObject& object);
 
 private:
-	AModularObject* selectedObject;
+	TArray<TSharedPtr<AModularObject>> m_modularObjects;
 };

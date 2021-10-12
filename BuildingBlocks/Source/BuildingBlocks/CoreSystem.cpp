@@ -18,6 +18,7 @@ void UCoreSystem::Init()
 	Debug::Log("CoreSystem - Init");
 
 	m_debugWindow.Reset(new DebugWindow());
+	m_modularitySystem.Reset(new AModularitySystem());
 }
 
 void UCoreSystem::OnStart()
@@ -37,8 +38,7 @@ UCoreSystem& UCoreSystem::Get()
 	return *m_instance.Get();
 }
 
-void UCoreSystem::SetModularitySystem(AModularitySystem& system)
+bool UCoreSystem::Exists()
 {
-	Debug::Log("Registering system");
-	m_modularitySystem.Reset(&system);
+	return m_instance.IsValid();
 }
