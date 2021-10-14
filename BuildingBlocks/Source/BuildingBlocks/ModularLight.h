@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "ModularObject.h"
+#include "Components/SpotLightComponent.h"
 #include "ModularLight.generated.h"
 
 UCLASS()
@@ -20,8 +21,8 @@ public:
 	virtual void Tick(float deltaTime) override;
 
 	UPROPERTY(EditAnywhere);
-	bool lightIsEnabled = false;
+	USpotLightComponent* spotLight;
 
 private:
-	bool m_isLightEnabled = false;
+	bool m_isLightEnabled = true;
 };

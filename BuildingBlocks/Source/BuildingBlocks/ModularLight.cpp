@@ -5,6 +5,8 @@
 
 AModularLight::AModularLight() : AModularObject()
 {
+	spotLight = CreateDefaultSubobject<USpotLightComponent>("Spotlight");
+	spotLight->SetupAttachment(RootComponent);
 }
 
 void AModularLight::BeginPlay()
@@ -18,5 +20,5 @@ void AModularLight::Tick(float deltaTime)
 {
 	Super::Tick(deltaTime);
 
-	lightIsEnabled = m_isLightEnabled;
+	spotLight->SetVisibility(m_isLightEnabled, true);
 }
