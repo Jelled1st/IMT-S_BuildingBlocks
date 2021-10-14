@@ -14,6 +14,7 @@ void AModularLight::BeginPlay()
 	Super::BeginPlay();
 
 	SetupParameter(m_isLightEnabled, "Toggle Light");
+	SetupParameter(m_lightIntensity, "Light Intensity");
 }
 
 void AModularLight::Tick(float deltaTime)
@@ -21,4 +22,5 @@ void AModularLight::Tick(float deltaTime)
 	Super::Tick(deltaTime);
 
 	spotLight->SetVisibility(m_isLightEnabled, true);
+	spotLight->SetIntensity(m_lightIntensity);
 }
