@@ -123,8 +123,3 @@ UMaterialInterface& AModularObject::GetMaterial()
 {
 	return *visualComponent->GetMaterial(0);
 }
-
-void AModularObject::Select()
-{
-	Debug::Log("Selected");
-}

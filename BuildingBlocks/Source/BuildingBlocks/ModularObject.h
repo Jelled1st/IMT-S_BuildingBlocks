@@ -44,8 +44,6 @@ public:
 	void SwapMatPrevious();
 	bool SwapMat(int index);
 
-	void Select();
-
 	UStaticMesh& GetMesh();
 	UMaterialInterface& GetMaterial();
 
