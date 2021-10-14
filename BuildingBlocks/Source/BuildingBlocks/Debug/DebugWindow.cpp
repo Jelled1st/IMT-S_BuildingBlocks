@@ -123,5 +123,21 @@ void DebugWindow::DrawObjectControls(AModularObject& object)
 		object.SwapMatNext();
 	}
 	ImGui::PopID();
+
+	ImGui::NewLine();
+	ImGui::Separator();
+	ImGui::NewLine();
+
+	TMap<FString, TPair<AModularObject::ParameterType, void*>>& parameters = object.GetParameters();
+
+	for (TPair<FString, TPair<AModularObject::ParameterType, void* >> parameter : parameters)
+	{
+		AModularObject::ParameterType parameterType = parameter.Value.Key;
+
+		if (parameterType == AModularObject::ParameterType::Bool)
+		{
+			ImGui::Checkbox(TCHAR_TO_ANSI(*parameter.Key), reinterpret_cast<bool*>(parameter.Value.Value));
+		}
+	}
 }
 #endif
