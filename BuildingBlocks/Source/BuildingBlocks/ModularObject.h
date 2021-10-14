@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Containers/Map.h"
 #include "ModularObject.generated.h"
 
 UCLASS()
@@ -12,6 +13,14 @@ class BUILDINGBLOCKS_API AModularObject : public AActor
 	GENERATED_BODY()
 	
 public:	
+	enum ParameterType
+	{
+		Bool,
+		Int,
+		String,
+		Float,
+	};
+
 	AModularObject();
 
 protected:
@@ -47,7 +56,13 @@ public:
 	UStaticMesh& GetMesh();
 	UMaterialInterface& GetMaterial();
 
+	void SetupParameter(bool& value, FString name);
+	TMap<FString, TPair<ParameterType, void*>>& GetParameters();
+
 private:
 	int m_currentMeshIndex = 0;
 	int m_currentMatIndex = 0;
+
+	void SetupParameter(void* value, FString name, ParameterType type);
+	TMap<FString, TPair<ParameterType, void*>> m_parameters;
 };

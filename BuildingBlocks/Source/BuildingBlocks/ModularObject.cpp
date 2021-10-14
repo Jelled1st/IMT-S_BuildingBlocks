@@ -123,3 +123,18 @@ UMaterialInterface& AModularObject::GetMaterial()
 {
 	return *visualComponent->GetMaterial(0);
 }
+
+void AModularObject::SetupParameter(bool& value, FString name)
+{
+	SetupParameter(static_cast<void*>(&value), name, ParameterType::Bool);
+}
+
+void AModularObject::SetupParameter(void* value, FString name, ParameterType type)
+{
+	m_parameters.Add(name, TPair<ParameterType, void*>(type, value));
+}
+
+TMap<FString, TPair<AModularObject::ParameterType, void*>>& AModularObject::GetParameters()
+{
+	return m_parameters;
+}
