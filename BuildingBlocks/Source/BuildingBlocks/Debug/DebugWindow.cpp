@@ -11,7 +11,7 @@
 #include "..\ModularitySystem.h"
 #include "..\CoreSystem.h"
 
-#include "Math/NumericLimits.h"
+#include <string>
 
 DebugWindow::DebugWindow()
 {
@@ -93,6 +93,8 @@ void DebugWindow::DrawObjectControls(AModularObject& object)
 	static float arrowButtonSpacing = 40;
 	static float textSpacing = 100;
 
+	DrawObjectTransform(object);
+
 	ImGui::PushID("MeshSelection");
 	if (ImGui::Button("<"))
 	{
@@ -165,7 +167,60 @@ void DebugWindow::DrawObjectControls(AModularObject& object)
 			ImGui::SliderFloat(TCHAR_TO_ANSI(*parameter.Key), reinterpret_cast<float*>(parameter.Value.Value), -100000, 100000);
 			break;
 		}
+
 		}
 	}
+}
+
+void DebugWindow::DrawObjectTransform(AModularObject& object)
+{
+	FTransform transform = object.GetActorTransform();
+
+	FVector position = transform.GetLocation();
+	FVector rotation = transform.GetRotation().Euler();
+	FVector scale = transform.GetScale3D();
+
+	if (ImGui::TreeNode("Transform"))
+	{
+		ImGuiSliderVector("Position", position);
+		ImGuiSliderVector("Rotation", rotation);
+		ImGuiSliderVector("Scale", scale);
+		ImGui::TreePop();
+	}
+
+	transform.SetLocation(position);
+	transform.SetRotation(FQuat::MakeFromEuler(rotation));
+	transform.SetScale3D(scale);
+
+	object.SetActorTransform(transform);
+}
+
+void DebugWindow::ImGuiSliderVector(const char* label, FVector& vector)
+{
+	ImGui::PushID(label);
+	ImGui::Text(label);
+
+	FVector copy = FVector(vector.X, vector.Y, vector.Z);
+
+	ImGui::PushItemWidth(200);
+
+	ImGui::PushID("X");
+	ImGui::SliderFloat("", &vector.X, -100000, 100000);
+	ImGui::PopID();
+
+	ImGui::SameLine();
+
+	ImGui::PushID("Y");
+	ImGui::SliderFloat("", &vector.Y, -100000, 100000);
+	ImGui::PopID();
+
+	ImGui::SameLine();
+
+	ImGui::PushID("Z");
+	ImGui::SliderFloat("", &vector.Z, -100000, 100000);
+	ImGui::PopID();
+
+	ImGui::PopItemWidth();
+	ImGui::PopID();
 }
 #endif

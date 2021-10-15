@@ -21,6 +21,8 @@ public:
 
 #if WITH_IMGUI
 	void DrawWindow();
+
+	static void ImGuiSliderVector(const char* label, FVector& vector);
 #endif
 
 private:
@@ -29,6 +31,7 @@ private:
 #if WITH_IMGUI
 	void DrawOperatorControls();
 	void DrawObjectControls(AModularObject& object);
+	void DrawObjectTransform(AModularObject& object);
 	TSharedPtr<AModularObject> m_selectedObject;
 #endif
 };
