@@ -66,6 +66,7 @@ void DebugWindow::DrawOperatorControls()
 	if (ImGui::BeginTabBar("OperatorControlsBar"))
 	{
 		TArray<TSharedPtr<AModularObject>> modularObjs = UCoreSystem::Get().GetModularitySystem()->GetRegisteredObjects();
+		
 		for (TSharedPtr<AModularObject> obj : modularObjs)
 		{
 			FString name = obj.Get()->GetName();

@@ -4,6 +4,9 @@
 #include "LevevlBehaviour.h"
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h" 
 #include "Kismet/GameplayStatics.h"
+#include "ModularObjectSaveSystem.h"
+#include "ModularObject.h"
+#include "ModularitySystem.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/Character.h"
 
@@ -29,15 +32,13 @@ void ALevevlBehaviour::LoadLevel()
 void ALevevlBehaviour::BeginPlay()
 {
 	Super::BeginPlay();
-	//LoadLevel();
-	
+	//LoadLevel();	
 }
 
 // Called every frame
 void ALevevlBehaviour::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 void ALevevlBehaviour::OverlapBegins(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
