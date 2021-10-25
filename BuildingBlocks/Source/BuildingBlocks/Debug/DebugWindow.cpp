@@ -184,8 +184,8 @@ void DebugWindow::DrawObjectTransform(AModularObject& object)
 	if (ImGui::TreeNode("Transform"))
 	{
 		ImGuiSliderVector("Position", position);
-		ImGuiSliderVector("Rotation", rotation);
-		ImGuiSliderVector("Scale", scale);
+		ImGuiSliderVector("Rotation", rotation, 180, 180, 180);
+		ImGuiSliderVector("Scale", scale, 10, 10, 10);
 		ImGui::TreePop();
 	}
 
@@ -196,7 +196,7 @@ void DebugWindow::DrawObjectTransform(AModularObject& object)
 	object.SetActorTransform(transform);
 }
 
-void DebugWindow::ImGuiSliderVector(const char* label, FVector& vector)
+void DebugWindow::ImGuiSliderVector(const char* label, FVector& vector, float xLimit, float yLimit, float zLimit)
 {
 	ImGui::PushID(label);
 	ImGui::Text(label);
@@ -206,19 +206,19 @@ void DebugWindow::ImGuiSliderVector(const char* label, FVector& vector)
 	ImGui::PushItemWidth(200);
 
 	ImGui::PushID("X");
-	ImGui::SliderFloat("", &vector.X, -100000, 100000);
+	ImGui::SliderFloat("", &vector.X, -xLimit, xLimit);
 	ImGui::PopID();
 
 	ImGui::SameLine();
 
 	ImGui::PushID("Y");
-	ImGui::SliderFloat("", &vector.Y, -100000, 100000);
+	ImGui::SliderFloat("", &vector.Y, -yLimit, yLimit);
 	ImGui::PopID();
 
 	ImGui::SameLine();
 
 	ImGui::PushID("Z");
-	ImGui::SliderFloat("", &vector.Z, -100000, 100000);
+	ImGui::SliderFloat("", &vector.Z, -zLimit, zLimit);
 	ImGui::PopID();
 
 	ImGui::PopItemWidth();

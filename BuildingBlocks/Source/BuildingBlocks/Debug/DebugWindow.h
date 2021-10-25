@@ -22,7 +22,7 @@ public:
 #if WITH_IMGUI
 	void DrawWindow();
 
-	static void ImGuiSliderVector(const char* label, FVector& vector);
+	static void ImGuiSliderVector(const char* label, FVector& vector, float xLimit = 1000, float yLimit = 1000, float zLimit = 1000);
 #endif
 
 private:
