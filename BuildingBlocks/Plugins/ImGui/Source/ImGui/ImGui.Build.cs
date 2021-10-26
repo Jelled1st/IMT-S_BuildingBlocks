@@ -50,7 +50,8 @@ public class ImGui : ModuleRules
 			new string[]
 			{
 				"Core",
-				"Projects"
+				"Projects",
+				"Json"
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);
