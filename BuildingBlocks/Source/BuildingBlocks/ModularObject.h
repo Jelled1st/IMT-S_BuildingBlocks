@@ -60,6 +60,23 @@ public:
 	void SetupParameter(double& value, FString name);
 	TMap<FString, TPair<ParameterType, void*>>& GetParameters();
 
+	template <typename T>
+	bool SetParameterValue(const FString& name, const T& value)
+	{
+		if (m_parameters.Contains(name))
+		{
+			TPair<ParameterType, void*> parameter = m_parameters[name];
+
+			T* parameterValue = reinterpret_cast<T*>(parameter.Value);
+
+			*parameterValue = value;
+
+			return true;
+		}
+		return false;
+	}
+
+
 private:
 	int m_currentMeshIndex = 0;
 	int m_currentMatIndex = 0;

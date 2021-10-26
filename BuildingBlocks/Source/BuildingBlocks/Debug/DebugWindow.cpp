@@ -10,6 +10,9 @@
 #include "..\ModularObject.h"
 #include "..\ModularitySystem.h"
 #include "..\CoreSystem.h"
+#include "Dom/JsonObject.h"
+#include "Json.h"
+#include "Containers/Map.h"
 
 #include <string>
 
@@ -63,6 +66,12 @@ void DebugWindow::DrawWindow()
 
 void DebugWindow::DrawOperatorControls()
 {
+	if (ImGui::TreeNode("Presets"))
+	{
+		DrawPresetMenu();
+		ImGui::TreePop();
+	}
+
 	if (ImGui::BeginTabBar("OperatorControlsBar"))
 	{
 		TArray<TSharedPtr<AModularObject>> modularObjs = UCoreSystem::Get().GetModularitySystem()->GetRegisteredObjects();
@@ -84,6 +93,138 @@ void DebugWindow::DrawOperatorControls()
 		}
 
 		ImGui::EndTabBar();
+	}
+}
+
+void DebugWindow::DrawPresetMenu()
+{
+	if (ImGui::Button("Save preset"))
+	{
+		TSharedPtr<FJsonObject> jsonWriteObject = MakeShareable(new FJsonObject);
+
+		TArray<TSharedPtr<AModularObject>> modularObjs = UCoreSystem::Get().GetModularitySystem()->GetRegisteredObjects();
+		for (TSharedPtr<AModularObject> obj : modularObjs)
+		{
+			FString name = obj->GetName();
+
+			TMap<FString, TPair<AModularObject::ParameterType, void*>>& parameters = obj->GetParameters();
+
+			TSharedPtr<FJsonObject> jsonSubObject = MakeShareable(new FJsonObject);
+			jsonSubObject->SetStringField("Name", name);
+
+			for (TPair<FString, TPair<AModularObject::ParameterType, void* >> parameter : parameters)
+			{
+				FString parameterName = parameter.Key;
+				AModularObject::ParameterType parameterType = parameter.Value.Key;
+				switch (parameterType)
+				{
+				case AModularObject::ParameterType::Bool:
+				{
+					bool boolValue = *reinterpret_cast<bool*>(parameter.Value.Value);
+					jsonSubObject->SetBoolField(parameterName, boolValue);
+					break;
+				}
+				case AModularObject::ParameterType::String:
+				{
+					FString stringValue = *reinterpret_cast<FString*>(parameter.Value.Value);
+					jsonSubObject->SetStringField(parameterName, stringValue);
+					break;
+				}
+				case AModularObject::ParameterType::Double:
+				{
+					double doubleValue = *reinterpret_cast<double*>(parameter.Value.Value);
+					jsonSubObject->SetNumberField(parameterName, static_cast<double>(doubleValue));
+					break;
+				}
+
+				}
+			}
+
+			jsonWriteObject->SetObjectField(name, jsonSubObject);
+		}
+		TSharedRef<TJsonWriter<>> JsonWriter = TJsonWriterFactory<>::Create(&m_jsonString);
+		FJsonSerializer::Serialize(jsonWriteObject.ToSharedRef(), JsonWriter);
+	}
+
+	ImGui::SameLine();
+
+	if (ImGui::Button("Load preset"))
+	{
+		TSharedPtr<FJsonObject> jsonLoadObject = MakeShareable(new FJsonObject);
+		TSharedRef<TJsonReader<>> jsonReader = TJsonReaderFactory<>::Create(m_jsonString);
+
+		if (!FJsonSerializer::Deserialize(jsonReader, jsonLoadObject))
+		{
+			m_deserializeSucceeded = false;
+		}
+		else
+		{
+			m_deserializeSucceeded = true;
+
+			TArray<TSharedPtr<AModularObject>> modularObjs = UCoreSystem::Get().GetModularitySystem()->GetRegisteredObjects();
+			TMap<FString, TSharedPtr<AModularObject>> objectByName;
+
+			for (TSharedPtr<AModularObject> obj : modularObjs)
+			{
+				objectByName.Add(obj->GetName(), obj);
+			}
+
+			TMap<FString, TSharedPtr<FJsonValue>> globalJsonValues = jsonLoadObject->Values;
+
+			for ( TPair<FString, TSharedPtr<FJsonValue>> objectJsonValue : globalJsonValues)
+			{
+				if (objectJsonValue.Value->Type != EJson::Object)
+				{
+					Debug::Log(FString::Printf(TEXT("Unexpected type in json object {0}"), *objectJsonValue.Key));
+				}
+				else
+				{
+					TSharedPtr<AModularObject> modularObject = objectByName[objectJsonValue.Key];
+					TSharedPtr<FJsonObject> jsonObject = objectJsonValue.Value->AsObject();
+
+					TMap<FString, TSharedPtr<FJsonValue>> jsonValues = jsonObject->Values;
+
+					for (TPair<FString, TSharedPtr<FJsonValue>> jsonValue : jsonValues)
+					{
+						FString valueName = jsonValue.Key;
+						TSharedPtr<FJsonValue> abstractValue = jsonValue.Value;
+
+						EJson type = abstractValue->Type;
+
+						if (type == EJson::String)
+						{
+							FString value = abstractValue->AsString();
+							modularObject->SetParameterValue(valueName, value);
+						}
+
+						if (type == EJson::Boolean)
+						{
+							bool value = abstractValue->AsBool();
+							modularObject->SetParameterValue(valueName, value);
+						}
+
+						if (type == EJson::Number)
+						{
+							double value = abstractValue->AsNumber();
+							modularObject->SetParameterValue(valueName, value);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	if (!m_deserializeSucceeded)
+	{
+		ImGui::Text("Deserialization failed!");
+		ImGui::NewLine();
+	}
+
+	if (ImGui::TreeNode("Current json"))
+	{
+		ImGui::Text(TCHAR_TO_ANSI(*m_jsonString));
+
+		ImGui::TreePop();
 	}
 }
 

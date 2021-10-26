@@ -27,11 +27,16 @@ public:
 
 private:
 	float m_slideValue = 0;
+	bool m_isSaveWindowOpen = false;
 
 #if WITH_IMGUI
 	void DrawOperatorControls();
 	void DrawObjectControls(AModularObject& object);
 	void DrawObjectTransform(AModularObject& object);
+
+	void DrawPresetMenu();
+	FString m_jsonString = "";
+	bool m_deserializeSucceeded = true;
 	TSharedPtr<AModularObject> m_selectedObject;
 #endif
 };
