@@ -129,19 +129,14 @@ void AModularObject::SetupParameter(bool& value, FString name)
 	SetupParameter(static_cast<void*>(&value), name, ParameterType::Bool);
 }
 
-void AModularObject::SetupParameter(int& value, FString name)
-{
-	SetupParameter(static_cast<void*>(&value), name, ParameterType::Int);
-}
-
 void AModularObject::SetupParameter(FString& value, FString name)
 {
 	SetupParameter(static_cast<void*>(&value), name, ParameterType::String);
 }
 
-void AModularObject::SetupParameter(float& value, FString name)
+void AModularObject::SetupParameter(double& value, FString name)
 {
-	SetupParameter(static_cast<void*>(&value), name, ParameterType::Float);
+	SetupParameter(static_cast<void*>(&value), name, ParameterType::Double);
 }
 
 void AModularObject::SetupParameter(void* value, FString name, ParameterType type)

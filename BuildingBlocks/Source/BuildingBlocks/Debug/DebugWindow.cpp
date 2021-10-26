@@ -146,11 +146,6 @@ void DebugWindow::DrawObjectControls(AModularObject& object)
 			ImGui::Checkbox(TCHAR_TO_ANSI(*parameter.Key), reinterpret_cast<bool*>(parameter.Value.Value));
 			break;
 		}
-		case AModularObject::ParameterType::Int:
-		{
-			ImGui::SliderInt(TCHAR_TO_ANSI(*parameter.Key), reinterpret_cast<int*>(parameter.Value.Value), -100000, 100000);
-			break;
-		}
 		case AModularObject::ParameterType::String:
 		{
 			FString* stringPtr = reinterpret_cast<FString*>(parameter.Value.Value);
@@ -163,9 +158,15 @@ void DebugWindow::DrawObjectControls(AModularObject& object)
 			*stringPtr = outValue;
 			break;
 		}
-		case AModularObject::ParameterType::Float:
+		case AModularObject::ParameterType::Double:
 		{
-			ImGui::SliderFloat(TCHAR_TO_ANSI(*parameter.Key), reinterpret_cast<float*>(parameter.Value.Value), -100000, 100000);
+			double* doubleValue = reinterpret_cast<double*>(parameter.Value.Value);
+			float floatValue = static_cast<float>(*doubleValue);
+
+			ImGui::SliderFloat(TCHAR_TO_ANSI(*parameter.Key), &floatValue, -100000, 100000);
+
+			*doubleValue = static_cast<double>(floatValue);
+
 			break;
 		}
 

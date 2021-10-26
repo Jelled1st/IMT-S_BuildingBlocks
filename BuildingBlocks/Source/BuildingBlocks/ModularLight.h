@@ -25,6 +25,6 @@ public:
 
 private:
 	bool m_isLightEnabled = true;
-	float m_lightIntensity = 100000.0f;
+	double m_lightIntensity = 100000.0f;
 
 };

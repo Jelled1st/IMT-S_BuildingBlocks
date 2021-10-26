@@ -16,9 +16,8 @@ public:
 	enum ParameterType
 	{
 		Bool,
-		Int,
 		String,
-		Float,
+		Double,
 	};
 
 	AModularObject();
@@ -57,9 +56,8 @@ public:
 	UMaterialInterface& GetMaterial();
 
 	void SetupParameter(bool& value, FString name);
-	void SetupParameter(int& value, FString name);
 	void SetupParameter(FString& value, FString name);
-	void SetupParameter(float& value, FString name);
+	void SetupParameter(double& value, FString name);
 	TMap<FString, TPair<ParameterType, void*>>& GetParameters();
 
 private:

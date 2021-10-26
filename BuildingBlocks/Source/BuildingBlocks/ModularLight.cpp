@@ -22,5 +22,5 @@ void AModularLight::Tick(float deltaTime)
 	Super::Tick(deltaTime);
 
 	spotLight->SetVisibility(m_isLightEnabled, true);
-	spotLight->SetIntensity(m_lightIntensity);
+	spotLight->SetIntensity(static_cast<float>(m_lightIntensity));
 }
