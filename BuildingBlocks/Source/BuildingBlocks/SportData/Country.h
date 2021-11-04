@@ -2,10 +2,7 @@
 
 #pragma once
 
-#include "Country.generated.h"
-
-UENUM(BlueprintType)
-enum Country
+UENUM(BlueprintType) enum Country
 {
 	Afghanistan UMETA(DisplayName = "Afghanistan"),
 	Albania UMETA(DisplayName = "Albania"),
