@@ -233,7 +233,7 @@ void DebugWindow::DrawObjectControls(AModularObject& object)
 	ImGui::Text(TCHAR_TO_ANSI(*object.GetName()));
 
 	static float arrowButtonSpacing = 40;
-	static float textSpacing = 100;
+	static float textSpacing = 160;
 
 	DrawObjectTransform(object);
 
