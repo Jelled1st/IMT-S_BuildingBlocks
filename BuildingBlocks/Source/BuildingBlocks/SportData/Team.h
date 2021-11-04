@@ -3,8 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "SportPlayer.h"
 #include "Country.h"
+#include "Sport.h"
+#include "SportPlayer.h"
 #include "Team.generated.h"
 
 USTRUCT(BluePrintType) struct FTeam
@@ -17,6 +18,7 @@ USTRUCT(BluePrintType) struct FTeam
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) FString currentChampionship;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) FString teamBoss;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) TEnumAsByte<Country> nationality;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) TEnumAsByte<Sport> sport;
 
 	FTeam();
 	~FTeam();
