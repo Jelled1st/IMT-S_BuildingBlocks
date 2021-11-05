@@ -3,10 +3,10 @@
 
 #include "EventSystem.h"
 
-EventSystem::EventSystem()
+UEventSystem::UEventSystem()
 {
 }
 
-EventSystem::~EventSystem()
+UEventSystem::~UEventSystem()
 {
 }

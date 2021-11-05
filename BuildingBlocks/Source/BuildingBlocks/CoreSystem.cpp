@@ -19,6 +19,8 @@ void UCoreSystem::Init()
 
 	m_debugWindow.Reset(new DebugWindow());
 	m_modularitySystem.Reset(new AModularitySystem());
+
+	m_eventSystem = NewObject<UEventSystem>();
 }
 
 void UCoreSystem::OnStart()

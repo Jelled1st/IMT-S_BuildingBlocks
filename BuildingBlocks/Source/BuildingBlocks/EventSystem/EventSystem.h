@@ -3,12 +3,15 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "EventSystem.generated.h"
 
-class BUILDINGBLOCKS_API EventSystem
+UCLASS()
+class BUILDINGBLOCKS_API UEventSystem : public UObject
 {
+	GENERATED_BODY()
 public:
-	EventSystem();
-	~EventSystem();
+	UEventSystem();
+	~UEventSystem();
 
 	DECLARE_EVENT (EventSystem, TestEvent)
 	TestEvent& OnTest()

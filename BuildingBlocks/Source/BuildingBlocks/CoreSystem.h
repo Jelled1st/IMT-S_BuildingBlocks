@@ -26,7 +26,10 @@ public:
 	static UCoreSystem& Get();
 	static bool Exists();
 
-	EventSystem eventSystem;
+	UEventSystem& GetEventSystem()
+	{
+		return *m_eventSystem;
+	}
 
 	AModularitySystem* GetModularitySystem()
 	{
@@ -37,4 +40,6 @@ private:
 	static TUniquePtr<UCoreSystem> m_instance;
 	TUniquePtr<AModularitySystem> m_modularitySystem;
 	TUniquePtr<DebugWindow> m_debugWindow;
+
+	UEventSystem* m_eventSystem;
 };
