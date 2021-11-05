@@ -1,8 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+#include "HttpTestActor.h"
 #include "Runtime/Engine/Public/EngineGlobals.h"
 #include "Runtime/Online/HTTP/Public/Http.h"
-#include "HttpTestActor.h"
 
 // Sets default values
 AHttpTestActor::AHttpTestActor()
