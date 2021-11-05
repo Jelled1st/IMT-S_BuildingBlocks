@@ -17,7 +17,7 @@ void UCoreSystem::Init()
 	m_instance.Reset(this);
 	Debug::Log("CoreSystem - Init");
 
-	m_debugWindow.Reset(new DebugWindow());
+	m_debugWindow = NewObject<UDebugWindow>();
 	m_modularitySystem.Reset(new AModularitySystem());
 
 	m_eventSystem = NewObject<UEventSystem>();
@@ -25,12 +25,14 @@ void UCoreSystem::Init()
 
 void UCoreSystem::OnStart()
 {
-	m_debugWindow.Get()->Start();
+	m_debugWindow->Start();
 }
 
 void UCoreSystem::Shutdown()
 {
-	m_debugWindow.Release();
+	m_debugWindow = nullptr;
+	m_eventSystem = nullptr;
+
 	m_modularitySystem.Release();
 	m_instance.Release();
 }

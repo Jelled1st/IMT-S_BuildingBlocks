@@ -16,15 +16,15 @@
 
 #include <string>
 
-DebugWindow::DebugWindow()
+UDebugWindow::UDebugWindow()
 {
 }
 
-DebugWindow::~DebugWindow()
+UDebugWindow::~UDebugWindow()
 {
 }
 
-void DebugWindow::Start()
+void UDebugWindow::Start()
 {
 #if WITH_IMGUI
 	FImGuiDelegates::OnWorldDebug().AddLambda([this]() { DrawWindow(); });
@@ -32,7 +32,7 @@ void DebugWindow::Start()
 }
 
 #if WITH_IMGUI
-void DebugWindow::DrawWindow()
+void UDebugWindow::DrawWindow()
 {
 	ImGui::Begin("Debug Window");
 
@@ -64,7 +64,7 @@ void DebugWindow::DrawWindow()
 	ImGui::End();
 }
 
-void DebugWindow::DrawOperatorControls()
+void UDebugWindow::DrawOperatorControls()
 {
 	if (ImGui::TreeNode("Presets"))
 	{
@@ -96,7 +96,7 @@ void DebugWindow::DrawOperatorControls()
 	}
 }
 
-void DebugWindow::DrawPresetMenu()
+void UDebugWindow::DrawPresetMenu()
 {
 	if (ImGui::Button("Save preset"))
 	{
@@ -228,7 +228,7 @@ void DebugWindow::DrawPresetMenu()
 	}
 }
 
-void DebugWindow::DrawObjectControls(AModularObject& object)
+void UDebugWindow::DrawObjectControls(AModularObject& object)
 {
 	ImGui::Text(TCHAR_TO_ANSI(*object.GetName()));
 
@@ -315,7 +315,7 @@ void DebugWindow::DrawObjectControls(AModularObject& object)
 	}
 }
 
-void DebugWindow::DrawObjectTransform(AModularObject& object)
+void UDebugWindow::DrawObjectTransform(AModularObject& object)
 {
 	FTransform transform = object.GetActorTransform();
 
@@ -338,7 +338,7 @@ void DebugWindow::DrawObjectTransform(AModularObject& object)
 	object.SetActorTransform(transform);
 }
 
-void DebugWindow::ImGuiSliderVector(const char* label, FVector& vector, float xLimit, float yLimit, float zLimit)
+void UDebugWindow::ImGuiSliderVector(const char* label, FVector& vector, float xLimit, float yLimit, float zLimit)
 {
 	ImGui::PushID(label);
 	ImGui::Text(label);

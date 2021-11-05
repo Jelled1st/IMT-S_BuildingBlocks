@@ -11,11 +11,16 @@ class FImGuiModuleProperties;
 class AModularObject;
 #endif
 
-class BUILDINGBLOCKS_API DebugWindow
+#include "DebugWindow.generated.h"
+
+UCLASS()
+class BUILDINGBLOCKS_API UDebugWindow : public UObject
 {
+	GENERATED_BODY()
+
 public:
-	DebugWindow();
-	~DebugWindow();
+	UDebugWindow();
+	~UDebugWindow();
 
 	void Start();
 

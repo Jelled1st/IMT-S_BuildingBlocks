@@ -39,7 +39,7 @@ public:
 private:
 	static TUniquePtr<UCoreSystem> m_instance;
 	TUniquePtr<AModularitySystem> m_modularitySystem;
-	TUniquePtr<DebugWindow> m_debugWindow;
-
+	
+	UDebugWindow* m_debugWindow;
 	UEventSystem* m_eventSystem;
 };
