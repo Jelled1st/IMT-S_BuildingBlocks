@@ -8,7 +8,8 @@
 #include "SportPlayer.h"
 #include "Team.generated.h"
 
-UCLASS(BluePrintType) class BUILDINGBLOCKS_API UTeam : public UObject 
+UCLASS(BluePrintType) 
+class BUILDINGBLOCKS_API UTeam : public UObject 
 {
 	GENERATED_BODY()
 

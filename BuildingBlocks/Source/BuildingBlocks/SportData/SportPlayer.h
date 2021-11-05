@@ -10,12 +10,13 @@
 
 class UTeam;
 
-UCLASS(BluePrintType) class BUILDINGBLOCKS_API USportPlayer : public UObject
+UCLASS(BluePrintType) 
+class BUILDINGBLOCKS_API USportPlayer : public UObject
 {
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) FPlayerName playerName;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) UPlayerName* playerName;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) UTeam* team;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) int age;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) int length;

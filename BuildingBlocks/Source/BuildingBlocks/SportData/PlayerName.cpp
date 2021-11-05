@@ -3,10 +3,10 @@
 
 #include "PlayerName.h"
 
-FPlayerName::FPlayerName()
+UPlayerName::UPlayerName()
 {
 }
 
-FPlayerName::~FPlayerName()
+UPlayerName::~UPlayerName()
 {
 }
