@@ -2,7 +2,7 @@
 
 
 #include "CoreSystem.h"
-#include "Debug/Debug.h"
+#include "../Debug/Debug.h"
 
 TUniquePtr<UCoreSystem> UCoreSystem::m_instance;
 

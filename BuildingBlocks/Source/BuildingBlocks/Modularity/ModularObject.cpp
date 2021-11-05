@@ -2,8 +2,8 @@
 
 
 #include "ModularObject.h"
-#include "Debug/Debug.h"
-#include "CoreSystem.h"
+#include "../Debug/Debug.h"
+#include "../Core/CoreSystem.h"
 #include "ModularitySystem.h"
 
 AModularObject::AModularObject()

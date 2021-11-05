@@ -4,10 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
-#include "EventSystem/EventSystem.h"
+#include "../EventSystem/EventSystem.h"
 
-#include "ModularitySystem.h"
-#include "Debug/DebugWindow.h"
+#include "../Modularity/ModularitySystem.h"
+#include "../Debug/DebugWindow.h"
 
 #include "CoreSystem.generated.h"
 

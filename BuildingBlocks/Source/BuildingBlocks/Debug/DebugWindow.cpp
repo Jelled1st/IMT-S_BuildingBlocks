@@ -3,13 +3,13 @@
 
 #include "DebugWindow.h"
 
-#include "..\..\..\Plugins\ImGui\Source\ImGui\Private\ImGuiPrivatePCH.h"
-#include "..\..\..\Plugins\ImGui\Source\ImGui\Public\ImGuiModuleProperties.h"
+#include "../../../Plugins/ImGui/Source/ImGui/Private/ImGuiPrivatePCH.h"
+#include "../../../Plugins/ImGui/Source/ImGui/Public/ImGuiModuleProperties.h"
 
 #include "Debug.h"
-#include "..\ModularObject.h"
-#include "..\ModularitySystem.h"
-#include "..\CoreSystem.h"
+#include "../Modularity/ModularObject.h"
+#include "../Modularity/ModularitySystem.h"
+#include "../Core/CoreSystem.h"
 #include "Dom/JsonObject.h"
 #include "Json.h"
 #include "Containers/Map.h"

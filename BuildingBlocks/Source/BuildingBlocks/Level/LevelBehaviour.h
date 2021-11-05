@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "CoreSystem.h"
+#include "../Core/CoreSystem.h"
 #include "LevelBehaviour.generated.h"
 
 

@@ -2,7 +2,7 @@
 
 
 #include "ModularitySystem.h"
-#include "CoreSystem.h"
+#include "../Core/CoreSystem.h"
 
 UModularitySystem::UModularitySystem()
 {

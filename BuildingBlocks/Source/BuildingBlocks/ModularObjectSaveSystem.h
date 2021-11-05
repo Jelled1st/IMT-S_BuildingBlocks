@@ -3,9 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ModularObject.h"
-#include "ModularitySystem.h"
-#include "CoreSystem.h"
+#include "Modularity/ModularObject.h"
+#include "Modularity/ModularitySystem.h"
+#include "Core/CoreSystem.h"
 #include "GameFramework/SaveGame.h"
 #include "Kismet/GameplayStatics.h"
 #include "ModularObjectSaveSystem.generated.h"

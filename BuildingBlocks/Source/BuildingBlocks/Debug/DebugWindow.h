@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "..\ImGuiCommon.h"
+#include "ImGuiCommon.h"
 
 #if WITH_IMGUI
 #include "..\..\..\Plugins\ImGui\Source\ImGui\Public\ImGuiDelegates.h"
