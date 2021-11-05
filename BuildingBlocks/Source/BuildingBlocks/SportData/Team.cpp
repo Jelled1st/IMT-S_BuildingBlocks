@@ -3,10 +3,10 @@
 
 #include "Team.h"
 
-FTeam::FTeam()
+UTeam::UTeam()
 {
 }
 
-FTeam::~FTeam()
+UTeam::~UTeam()
 {
 }

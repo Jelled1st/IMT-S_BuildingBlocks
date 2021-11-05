@@ -8,11 +8,15 @@
 #include "Sport.h"
 #include "SportPlayer.generated.h"
 
-USTRUCT(BluePrintType) struct FSportPlayer
+class UTeam;
+
+UCLASS(BluePrintType) class BUILDINGBLOCKS_API USportPlayer : public UObject
 {
 	GENERATED_BODY()
 
+public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) FPlayerName playerName;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) UTeam* team;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) int age;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) int length;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) float weight;
@@ -20,6 +24,7 @@ USTRUCT(BluePrintType) struct FSportPlayer
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) TEnumAsByte<Country> nationality;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) TEnumAsByte<Sport> sport;
 
-	FSportPlayer();
-	~FSportPlayer();
+	USportPlayer();
+
+	~USportPlayer();
 };

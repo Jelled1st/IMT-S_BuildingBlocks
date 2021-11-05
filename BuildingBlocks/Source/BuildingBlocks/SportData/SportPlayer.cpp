@@ -3,10 +3,10 @@
 
 #include "SportPlayer.h"
 
-FSportPlayer::FSportPlayer()
+USportPlayer::USportPlayer()
 {
 }
 
-FSportPlayer::~FSportPlayer()
+USportPlayer::~USportPlayer()
 {
 }
