@@ -5,20 +5,20 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "CoreSystem.h"
-#include "LevevlBehaviour.generated.h"
+#include "LevelBehaviour.generated.h"
 
 
 
 
 UCLASS()
-class BUILDINGBLOCKS_API ALevevlBehaviour : public AActor
+class BUILDINGBLOCKS_API ALevelBehaviour : public AActor
 {
 	GENERATED_BODY()
 
 	
 public:	
 	// Sets default values for this actor's properties
-	ALevevlBehaviour();
+	ALevelBehaviour();
 	
 		
 
