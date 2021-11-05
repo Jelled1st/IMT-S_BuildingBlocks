@@ -37,7 +37,7 @@ void ARaycastCharacter::RayCast()
 	{
 		if (hit->GetActor() != NULL) 
 		{
-			Debug::Log(FString::Printf(TEXT("%s: %s"), *hit->GetActor()->GetName(), *hit->GetComponent()->GetName()));
+			UDebug::Log(FString::Printf(TEXT("%s: %s"), *hit->GetActor()->GetName(), *hit->GetComponent()->GetName()));
 		}
 	}
 }

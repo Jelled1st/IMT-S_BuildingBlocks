@@ -8,11 +8,16 @@
 #define DebugError(msg, ...)	UE_LOG(LogTemp, Error, TEXT(msg), ##__VA_ARGS__)
 #define DebugWarning(msg, ...)	UE_LOG(LogTemp, Warning, TEXT(msg), ##__VA_ARGS__)
 
-class BUILDINGBLOCKS_API Debug
+#include "Debug.generated.h"
+
+UCLASS()
+class BUILDINGBLOCKS_API UDebug : public UObject
 {
+	GENERATED_BODY()
+
 public:
-	Debug();
-	~Debug();
+	UDebug();
+	~UDebug();
 	
 	static void Log(FString msg);
 

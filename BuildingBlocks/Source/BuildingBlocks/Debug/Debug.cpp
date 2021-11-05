@@ -3,35 +3,35 @@
 
 #include "Debug.h"
 
-Debug::Debug()
+UDebug::UDebug()
 {
 }
 
-Debug::~Debug()
+UDebug::~UDebug()
 {
 }
 
-void Debug::Log(FString msg)
+void UDebug::Log(FString msg)
 {
 	UE_LOG(LogTemp, Log, TEXT("%s"), *msg);
 }
 
-void Debug::Log(FString msg, FVector vector)
+void UDebug::Log(FString msg, FVector vector)
 {
 	UE_LOG(LogTemp, Log, TEXT("%s(%f;%f;%f)"), *msg, vector.X, vector.Y, vector.Z);
 }
 
-void Debug::Error(FString msg)
+void UDebug::Error(FString msg)
 {
 	UE_LOG(LogTemp, Error, TEXT("%s"), *msg);
 }
 
-void Debug::Warning(FString msg)
+void UDebug::Warning(FString msg)
 {
 	UE_LOG(LogTemp, Warning, TEXT("%s"), *msg);
 }
 
-void Debug::ToScreen(FString msg, FColor color, float time, int32 key, bool newerOnTop, FVector2D scale)
+void UDebug::ToScreen(FString msg, FColor color, float time, int32 key, bool newerOnTop, FVector2D scale)
 {
 	GEngine->AddOnScreenDebugMessage(key, time, color, msg, newerOnTop, scale);
 }

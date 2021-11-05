@@ -52,7 +52,6 @@ void AModularObject::Tick(float DeltaTime)
 
 void AModularObject::SwapMeshNext()
 {
-	Debug::Log("");
 	int newIndex = (m_currentMeshIndex + 1) % meshAssets.Num();
 	if (SwapMesh(newIndex))
 	{
@@ -84,7 +83,6 @@ bool AModularObject::SwapMesh(int index)
 
 void AModularObject::SwapMatNext()
 {
-	Debug::Log("");
 	int newIndex = (m_currentMatIndex + 1) % materialAssets.Num();
 	if (SwapMat(newIndex))
 	{

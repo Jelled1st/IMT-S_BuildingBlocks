@@ -50,7 +50,7 @@ void UDebugWindow::DrawWindow()
 
 			if (ImGui::Button("Debug::Log('Hello World')"))
 			{
-				Debug::Log("Hello World");
+				UDebug::Log("Hello World");
 			}
 
 			ImGui::SliderFloat("Slider", &m_slideValue, -5, 5);
@@ -175,7 +175,7 @@ void UDebugWindow::DrawPresetMenu()
 			{
 				if (objectJsonValue.Value->Type != EJson::Object)
 				{
-					Debug::Log(FString::Printf(TEXT("Unexpected type in json object {0}"), *objectJsonValue.Key));
+					UDebug::Log(FString::Printf(TEXT("Unexpected type in json object {0}"), *objectJsonValue.Key));
 				}
 				else
 				{
