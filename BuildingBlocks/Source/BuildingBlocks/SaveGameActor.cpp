@@ -29,7 +29,7 @@ void ASaveGameActor::BeginPlay()
 		//TO DO:check if save exists before loading, load appropiate objects based on level/scene
 		UE_LOG(LogTemp, Warning, TEXT("LOADED GAME OBJS!"));
 
-		TArray<TSharedPtr<AModularObject>> modularObjs = UCoreSystem::Get().GetModularitySystem()->GetRegisteredObjects();
+		TArray<TSharedPtr<AModularObject>> modularObjs = UCoreSystem::Get().GetModularitySystem().GetRegisteredObjects();
 
 
 		for (int i = 0; i < modularObjs.Num(); i++) {
@@ -55,7 +55,7 @@ void ASaveGameActor::Tick(float DeltaTime)
 	if (UModularObjectSaveSystem* SaveGameInstance = Cast<UModularObjectSaveSystem>(UGameplayStatics::CreateSaveGameObject(UModularObjectSaveSystem::StaticClass())))
 	{
 		//TO DO: create delegate to save only when one object is changed
-		SaveGameInstance->m_levelObjects = UCoreSystem::Get().GetModularitySystem()->GetRegisteredObjects();
+		SaveGameInstance->m_levelObjects = UCoreSystem::Get().GetModularitySystem().GetRegisteredObjects();
 
 		UGameplayStatics::AsyncSaveGameToSlot(SaveGameInstance, "level1", 0);
 

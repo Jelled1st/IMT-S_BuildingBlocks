@@ -5,11 +5,16 @@
 #include "CoreMinimal.h"
 #include "ModularObject.h"
 
-class BUILDINGBLOCKS_API AModularitySystem
+#include "ModularitySystem.generated.h" 
+
+UCLASS()
+class BUILDINGBLOCKS_API UModularitySystem : public UObject
 {	
+	GENERATED_BODY()
+
 public:	
 	// Sets default values for this actor's properties
-	AModularitySystem();
+	UModularitySystem();
 
 public:	
 	void Start();

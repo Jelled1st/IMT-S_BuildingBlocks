@@ -74,7 +74,7 @@ void UDebugWindow::DrawOperatorControls()
 
 	if (ImGui::BeginTabBar("OperatorControlsBar"))
 	{
-		TArray<TSharedPtr<AModularObject>> modularObjs = UCoreSystem::Get().GetModularitySystem()->GetRegisteredObjects();
+		TArray<TSharedPtr<AModularObject>> modularObjs = UCoreSystem::Get().GetModularitySystem().GetRegisteredObjects();
 		
 		for (TSharedPtr<AModularObject> obj : modularObjs)
 		{
@@ -102,7 +102,7 @@ void UDebugWindow::DrawPresetMenu()
 	{
 		TSharedPtr<FJsonObject> jsonWriteObject = MakeShareable(new FJsonObject);
 
-		TArray<TSharedPtr<AModularObject>> modularObjs = UCoreSystem::Get().GetModularitySystem()->GetRegisteredObjects();
+		TArray<TSharedPtr<AModularObject>> modularObjs = UCoreSystem::Get().GetModularitySystem().GetRegisteredObjects();
 		for (TSharedPtr<AModularObject> obj : modularObjs)
 		{
 			FString name = obj->GetName();
@@ -161,7 +161,7 @@ void UDebugWindow::DrawPresetMenu()
 		{
 			m_deserializeSucceeded = true;
 
-			TArray<TSharedPtr<AModularObject>> modularObjs = UCoreSystem::Get().GetModularitySystem()->GetRegisteredObjects();
+			TArray<TSharedPtr<AModularObject>> modularObjs = UCoreSystem::Get().GetModularitySystem().GetRegisteredObjects();
 			TMap<FString, TSharedPtr<AModularObject>> objectByName;
 
 			for (TSharedPtr<AModularObject> obj : modularObjs)

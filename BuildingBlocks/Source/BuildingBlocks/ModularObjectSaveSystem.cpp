@@ -16,7 +16,7 @@ void UModularObjectSaveSystem::SaveLevelObjects() {
 	{
 
 		// Set data on the savegame object.
-		SaveGameInstance->m_levelObjects = UCoreSystem::Get().GetModularitySystem()->GetRegisteredObjects();
+		SaveGameInstance->m_levelObjects = UCoreSystem::Get().GetModularitySystem().GetRegisteredObjects();
 
 		// Start async save process.
 		UGameplayStatics::AsyncSaveGameToSlot(SaveGameInstance,"level1",0);

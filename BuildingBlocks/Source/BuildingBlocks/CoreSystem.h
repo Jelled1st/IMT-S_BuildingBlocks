@@ -31,15 +31,15 @@ public:
 		return *m_eventSystem;
 	}
 
-	AModularitySystem* GetModularitySystem()
+	UModularitySystem& GetModularitySystem()
 	{
-		return m_modularitySystem.Get();
+		return *m_modularitySystem;
 	};
 
 private:
 	static TUniquePtr<UCoreSystem> m_instance;
-	TUniquePtr<AModularitySystem> m_modularitySystem;
-	
+
+	UModularitySystem* m_modularitySystem;
 	UDebugWindow* m_debugWindow;
 	UEventSystem* m_eventSystem;
 };

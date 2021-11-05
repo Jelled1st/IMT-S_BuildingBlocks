@@ -4,26 +4,26 @@
 #include "ModularitySystem.h"
 #include "CoreSystem.h"
 
-AModularitySystem::AModularitySystem()
+UModularitySystem::UModularitySystem()
 {
 }
 
 // Called when the game starts or when spawned
-void AModularitySystem::Start()
+void UModularitySystem::Start()
 {
 }
 
-void AModularitySystem::RegisterObject(AModularObject& object)
+void UModularitySystem::RegisterObject(AModularObject& object)
 {
 	m_modularObjects.Add(TSharedPtr<AModularObject>(&object));
 }
 
-void AModularitySystem::UnregisterObject(AModularObject& object)
+void UModularitySystem::UnregisterObject(AModularObject& object)
 {
 	m_modularObjects.Remove(TSharedPtr<AModularObject>(&object));
 }
 
-TArray<TSharedPtr<AModularObject>>& AModularitySystem::GetRegisteredObjects()
+TArray<TSharedPtr<AModularObject>>& UModularitySystem::GetRegisteredObjects()
 {
 	return m_modularObjects;
 }
