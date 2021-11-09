@@ -9,6 +9,8 @@
 #include "../Modularity/ModularitySystem.h"
 #include "../Debug/DebugWindow.h"
 
+#include "../SportData/SportDataHandler.h"
+
 #include "CoreSystem.generated.h"
 
 UCLASS()
@@ -28,13 +30,29 @@ public:
 
 	UEventSystem& GetEventSystem()
 	{
+		if (m_eventSystem == nullptr)
+		{
+			UE_DEBUG_BREAK();
+		}
 		return *m_eventSystem;
 	}
 
 	UModularitySystem* GetModularitySystem()
 	{
 		return m_modularitySystem;
+		{
+			UE_DEBUG_BREAK();
+		}
 	};
+
+	USportDataHandler& GetSportDataHandler()
+	{
+		if (m_sportDataHandler == nullptr)
+		{
+			UE_DEBUG_BREAK();
+		}
+		return *m_sportDataHandler;
+	}
 
 private:
 	static TUniquePtr<UCoreSystem> m_instance;
@@ -42,4 +60,5 @@ private:
 	UModularitySystem* m_modularitySystem;
 	UDebugWindow* m_debugWindow;
 	UEventSystem* m_eventSystem;
+	USportDataHandler* m_sportDataHandler;
 };

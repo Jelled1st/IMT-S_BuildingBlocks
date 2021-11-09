@@ -14,6 +14,10 @@ class BUILDINGBLOCKS_API UTeam : public UObject
 	GENERATED_BODY()
 
 public:
+	UTeam();
+	UTeam(FString teamName, Sport sport, float score = 0, Country nationality = Country::Unknown);
+	~UTeam();
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) FString teamName;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) TArray<USportPlayer*> players;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) float score;
@@ -21,7 +25,4 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) FString teamBoss;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) TEnumAsByte<Country> nationality;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) TEnumAsByte<Sport> sport;
-
-	UTeam();
-	~UTeam();
 };

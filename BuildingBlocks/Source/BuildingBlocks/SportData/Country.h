@@ -4,6 +4,8 @@
 
 UENUM(BlueprintType) enum Country
 {
+	Unknown UMETA(DisplayName = "Unknown"),
+
 	Afghanistan UMETA(DisplayName = "Afghanistan"),
 	Albania UMETA(DisplayName = "Albania"),
 	Algeria UMETA(DisplayName = "Algeria"),

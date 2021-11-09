@@ -44,6 +44,12 @@ void UDebugWindow::DrawWindow()
 			ImGui::EndTabItem();
 		}
 
+		if (ImGui::BeginTabItem("Sport Database"))
+		{
+			DrawSportDatabase();
+			ImGui::EndTabItem();
+		}
+
 		if (ImGui::BeginTabItem("Example"))
 		{
 			ImGui::Text("Hello world!");
@@ -336,6 +342,95 @@ void UDebugWindow::DrawObjectTransform(AModularObject& object)
 	transform.SetScale3D(scale);
 
 	object.SetActorTransform(transform);
+}
+
+void UDebugWindow::DrawSportDatabase()
+{
+	USportDataHandler& sportData = UCoreSystem::Get().GetSportDataHandler();
+
+	ImGui::BeginTabBar("TeamsTabBar");
+	if (ImGui::BeginTabItem("Cricket"))
+	{
+		DrawSportData(sportData, Sport::Cricket);
+		ImGui::EndTabItem();
+	}
+	if (ImGui::BeginTabItem("Football"))
+	{
+		DrawSportData(sportData, Sport::Football);
+		ImGui::EndTabItem();
+	}
+	if (ImGui::BeginTabItem("F1"))
+	{
+		DrawSportData(sportData, Sport::Formula1);
+		ImGui::EndTabItem();
+	}
+	if (ImGui::BeginTabItem("Team creation"))
+	{
+		DrawCreateTeamMenu();
+		ImGui::EndTabItem();
+	}
+	ImGui::EndTabBar();
+}
+
+void UDebugWindow::DrawSportData(USportDataHandler& sportData, Sport sport)
+{
+	static int nameSize = 140;
+	static int scoreSize = 50;
+	static int nationalitySize = 140;
+	static int barSize = 10;
+
+	TArray<TSharedPtr<UTeam>> teams = sportData.GetTeams(sport);
+
+	ImGui::Text("Team name");
+	ImGui::SameLine(nameSize + barSize);
+	ImGui::Text("|");
+	ImGui::SameLine(nameSize + barSize + barSize);
+
+	ImGui::Text("score");
+	ImGui::SameLine(nameSize + barSize + barSize + scoreSize + barSize);
+	ImGui::Text("|");
+	ImGui::SameLine(nameSize + barSize + barSize + scoreSize + barSize + barSize);
+
+	ImGui::Text("nationality");
+	
+	ImGui::Text("====================================================================");
+
+	float highestScore = 0;
+	for (TSharedPtr<UTeam> team : teams)
+	{
+		if (team->score > highestScore)
+		{
+			highestScore = team->score;
+		}
+	}
+
+	for (TSharedPtr<UTeam> team : teams)
+	{
+		ImGui::Text(UUtility::FStringToCharPtr(team->teamName));
+		ImGui::SameLine(nameSize + barSize);
+		ImGui::Text("|");
+		ImGui::SameLine(barSize);
+
+		ImGui::PushID(UUtility::FStringToCharPtr(team->teamName));
+		ImGui::PushItemWidth(scoreSize);
+		float score = team->score;
+		ImGui::SliderFloat("", &score, 0, highestScore);
+		ImGui::PopItemWidth();
+		ImGui::PopID();
+
+		ImGui::SameLine(scoreSize + barSize);
+		ImGui::Text("|");
+		ImGui::SameLine(barSize);
+
+		ImGui::Text(UUtility::FStringToCharPtr("Unknown"));
+		ImGui::SameLine(nationalitySize);
+		ImGui::Text("|");
+	}
+}
+
+void UDebugWindow::DrawCreateTeamMenu()
+{
+
 }
 
 void UDebugWindow::ImGuiSliderVector(const char* label, FVector& vector, float xLimit, float yLimit, float zLimit)

@@ -4,6 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "ImGuiCommon.h"
+#include "../Utilities/Utility.h"
+
+#include "../SportData/SportDataHandler.h"
+#include "../SportData/Team.h"
+#include "../SportData/SportPlayer.h"
+#include "../SportData/PlayerName.h"
 
 #if WITH_IMGUI
 #include "..\..\..\Plugins\ImGui\Source\ImGui\Public\ImGuiDelegates.h"
@@ -38,6 +44,10 @@ private:
 	void DrawOperatorControls();
 	void DrawObjectControls(AModularObject& object);
 	void DrawObjectTransform(AModularObject& object);
+	
+	void DrawSportDatabase();
+	void DrawCreateTeamMenu();
+	void DrawSportData(USportDataHandler& sportData, Sport sport);
 
 	void DrawPresetMenu();
 	FString m_jsonString = "";

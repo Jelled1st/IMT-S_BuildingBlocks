@@ -21,6 +21,7 @@ void UCoreSystem::Init()
 	m_modularitySystem = NewObject<UModularitySystem>();
 
 	m_eventSystem = NewObject<UEventSystem>();
+	m_sportDataHandler = NewObject<USportDataHandler>();
 }
 
 void UCoreSystem::OnStart()
@@ -30,9 +31,12 @@ void UCoreSystem::OnStart()
 
 void UCoreSystem::Shutdown()
 {
-	m_debugWindow = nullptr;
+	m_sportDataHandler = nullptr;
 	m_eventSystem = nullptr;
 	m_modularitySystem = nullptr;
+	m_debugWindow = nullptr;
+
+	GEngine->ForceGarbageCollection();
 
 	m_instance.Release();
 }
