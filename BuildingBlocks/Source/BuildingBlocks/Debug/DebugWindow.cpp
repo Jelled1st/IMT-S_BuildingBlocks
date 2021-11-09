@@ -93,7 +93,7 @@ void UDebugWindow::DrawOperatorControls()
 			}
 		}
 
-		if (m_selectedObject == nullptr)
+		if (m_selectedObject != nullptr)
 		{
 			DrawObjectControls(*m_selectedObject);
 		}
