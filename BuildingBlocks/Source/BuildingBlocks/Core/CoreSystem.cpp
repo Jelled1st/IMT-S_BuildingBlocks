@@ -18,7 +18,7 @@ void UCoreSystem::Init()
 	UDebug::Log("CoreSystem - Init");
 
 	m_debugWindow = NewObject<UDebugWindow>();
-	m_modularitySystem.Reset(NewObject<UModularitySystem>());
+	m_modularitySystem = NewObject<UModularitySystem>();
 
 	m_eventSystem = NewObject<UEventSystem>();
 }

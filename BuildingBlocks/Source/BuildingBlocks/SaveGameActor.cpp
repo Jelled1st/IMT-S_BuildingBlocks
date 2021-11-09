@@ -55,7 +55,7 @@ void ASaveGameActor::Tick(float DeltaTime)
 	if (UModularObjectSaveSystem* SaveGameInstance = Cast<UModularObjectSaveSystem>(UGameplayStatics::CreateSaveGameObject(UModularObjectSaveSystem::StaticClass())))
 	{
 		//TO DO: create delegate to save only when one object is changed
-		SaveGameInstance->m_levelObjects = UCoreSystem::Get().GetModularitySystem().GetRegisteredObjects();
+		SaveGameInstance->m_levelObjects = UCoreSystem::Get().GetModularitySystem()->GetRegisteredObjects();
 
 		UGameplayStatics::AsyncSaveGameToSlot(SaveGameInstance, "level1", 0);
 

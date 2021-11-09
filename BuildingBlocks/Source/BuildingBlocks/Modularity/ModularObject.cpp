@@ -36,7 +36,7 @@ void AModularObject::BeginPlay()
 		visualComponent->SetMaterial(0, materialAssets[0]);
 	}
 	
-	UCoreSystem::Get().GetModularitySystem().RegisterObject(*this);
+	UCoreSystem::Get().GetModularitySystem()->RegisterObject(*this);
 }
 
 void AModularObject::BeginDestroy()
@@ -45,7 +45,7 @@ void AModularObject::BeginDestroy()
 
 	if (UCoreSystem::Exists() && UCoreSystem::Get().GetModularitySystem() != nullptr)
 	{
-		UCoreSystem::Get().GetModularitySystem().UnregisterObject(*this);
+		UCoreSystem::Get().GetModularitySystem()->UnregisterObject(*this);
 	}
 }
 

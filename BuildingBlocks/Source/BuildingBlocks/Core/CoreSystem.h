@@ -31,9 +31,9 @@ public:
 		return *m_eventSystem;
 	}
 
-	UModularitySystem& GetModularitySystem()
+	UModularitySystem* GetModularitySystem()
 	{
-		return *m_modularitySystem;
+		return m_modularitySystem;
 	};
 
 private:
