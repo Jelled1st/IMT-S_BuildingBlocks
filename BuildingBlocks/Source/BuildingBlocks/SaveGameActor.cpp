@@ -29,7 +29,7 @@ void ASaveGameActor::BeginPlay()
 		//TO DO:check if save exists before loading, load appropiate objects based on level/scene
 		UE_LOG(LogTemp, Warning, TEXT("LOADED GAME OBJS!"));
 
-		TArray<TSharedPtr<AModularObject>> modularObjs = UCoreSystem::Get().GetModularitySystem().GetRegisteredObjects();
+		TArray<AModularObject*>& modularObjs = UCoreSystem::Get().GetModularitySystem()->GetRegisteredObjects();
 
 
 		for (int i = 0; i < modularObjs.Num(); i++) {

@@ -8,6 +8,11 @@ UModularitySystem::UModularitySystem()
 {
 }
 
+UModularitySystem::~UModularitySystem()
+{
+	m_modularObjects.Empty();
+}
+
 // Called when the game starts or when spawned
 void UModularitySystem::Start()
 {
@@ -15,15 +20,15 @@ void UModularitySystem::Start()
 
 void UModularitySystem::RegisterObject(AModularObject& object)
 {
-	m_modularObjects.Add(TSharedPtr<AModularObject>(&object));
+	m_modularObjects.Add(&object);
 }
 
 void UModularitySystem::UnregisterObject(AModularObject& object)
 {
-	m_modularObjects.Remove(TSharedPtr<AModularObject>(&object));
+	m_modularObjects.Remove(&object);
 }
 
-TArray<TSharedPtr<AModularObject>>& UModularitySystem::GetRegisteredObjects()
+TArray<AModularObject*>& UModularitySystem::GetRegisteredObjects()
 {
 	return m_modularObjects;
 }

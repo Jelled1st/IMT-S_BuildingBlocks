@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "ModularObject.h"
 
-#include "ModularitySystem.generated.h" 
+#include "ModularitySystem.generated.h"
 
 UCLASS()
 class BUILDINGBLOCKS_API UModularitySystem : public UObject
@@ -15,6 +15,7 @@ class BUILDINGBLOCKS_API UModularitySystem : public UObject
 public:	
 	// Sets default values for this actor's properties
 	UModularitySystem();
+	~UModularitySystem();
 
 public:	
 	void Start();
@@ -22,8 +23,7 @@ public:
 	void RegisterObject(AModularObject& object);
 	void UnregisterObject(AModularObject& object);
 
-	TArray<TSharedPtr<AModularObject>>& GetRegisteredObjects();
+	TArray<AModularObject*>& GetRegisteredObjects();
 
-private:
-	TArray<TSharedPtr<AModularObject>> m_modularObjects;
+	TArray<AModularObject*> m_modularObjects;
 };

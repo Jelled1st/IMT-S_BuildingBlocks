@@ -23,7 +23,7 @@ void UModularObjectSaveSystem::SaveLevelObjects() {
 	}
 }
 
-TArray<TSharedPtr<AModularObject>> UModularObjectSaveSystem::returnSavedObjects()
+TArray<AModularObject*> UModularObjectSaveSystem::returnSavedObjects()
 {
 	return m_levelObjects;
 }

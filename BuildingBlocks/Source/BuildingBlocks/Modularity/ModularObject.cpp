@@ -16,6 +16,11 @@ AModularObject::AModularObject()
 	visualComponent->SetupAttachment(RootComponent);
 }
 
+AModularObject::~AModularObject()
+{
+
+}
+
 void AModularObject::BeginPlay()
 {
 	Super::BeginPlay();
@@ -38,7 +43,7 @@ void AModularObject::BeginDestroy()
 {
 	Super::BeginDestroy();
 
-	if (UCoreSystem::Exists())
+	if (UCoreSystem::Exists() && UCoreSystem::Get().GetModularitySystem() != nullptr)
 	{
 		UCoreSystem::Get().GetModularitySystem().UnregisterObject(*this);
 	}

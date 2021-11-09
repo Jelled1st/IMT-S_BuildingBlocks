@@ -74,11 +74,11 @@ void UDebugWindow::DrawOperatorControls()
 
 	if (ImGui::BeginTabBar("OperatorControlsBar"))
 	{
-		TArray<TSharedPtr<AModularObject>> modularObjs = UCoreSystem::Get().GetModularitySystem().GetRegisteredObjects();
+		TArray<AModularObject*>& modularObjs = UCoreSystem::Get().GetModularitySystem()->GetRegisteredObjects();
 		
-		for (TSharedPtr<AModularObject> obj : modularObjs)
+		for (AModularObject* obj : modularObjs)
 		{
-			FString name = obj.Get()->GetName();
+			FString name = obj->GetName();
 			if (ImGui::BeginTabItem(TCHAR_TO_ANSI(*name)))
 			{
 				m_selectedObject = obj;
@@ -87,9 +87,9 @@ void UDebugWindow::DrawOperatorControls()
 			}
 		}
 
-		if (m_selectedObject.IsValid())
+		if (m_selectedObject == nullptr)
 		{
-			DrawObjectControls(*m_selectedObject.Get());
+			DrawObjectControls(*m_selectedObject);
 		}
 
 		ImGui::EndTabBar();
@@ -102,8 +102,8 @@ void UDebugWindow::DrawPresetMenu()
 	{
 		TSharedPtr<FJsonObject> jsonWriteObject = MakeShareable(new FJsonObject);
 
-		TArray<TSharedPtr<AModularObject>> modularObjs = UCoreSystem::Get().GetModularitySystem().GetRegisteredObjects();
-		for (TSharedPtr<AModularObject> obj : modularObjs)
+		TArray<AModularObject*>& modularObjs = UCoreSystem::Get().GetModularitySystem()->GetRegisteredObjects();
+		for (AModularObject* obj : modularObjs)
 		{
 			FString name = obj->GetName();
 
@@ -161,10 +161,10 @@ void UDebugWindow::DrawPresetMenu()
 		{
 			m_deserializeSucceeded = true;
 
-			TArray<TSharedPtr<AModularObject>> modularObjs = UCoreSystem::Get().GetModularitySystem().GetRegisteredObjects();
-			TMap<FString, TSharedPtr<AModularObject>> objectByName;
+			TArray<AModularObject*> modularObjs = UCoreSystem::Get().GetModularitySystem()->GetRegisteredObjects();
+			TMap<FString, AModularObject*> objectByName;
 
-			for (TSharedPtr<AModularObject> obj : modularObjs)
+			for (AModularObject* obj : modularObjs)
 			{
 				objectByName.Add(obj->GetName(), obj);
 			}
@@ -179,7 +179,7 @@ void UDebugWindow::DrawPresetMenu()
 				}
 				else
 				{
-					TSharedPtr<AModularObject> modularObject = objectByName[objectJsonValue.Key];
+					AModularObject* modularObject = objectByName[objectJsonValue.Key];
 					TSharedPtr<FJsonObject> jsonObject = objectJsonValue.Value->AsObject();
 
 					TMap<FString, TSharedPtr<FJsonValue>> jsonValues = jsonObject->Values;

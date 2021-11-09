@@ -21,6 +21,7 @@ public:
 	};
 
 	AModularObject();
+	~AModularObject();
 
 protected:
 	virtual void BeginPlay() override;

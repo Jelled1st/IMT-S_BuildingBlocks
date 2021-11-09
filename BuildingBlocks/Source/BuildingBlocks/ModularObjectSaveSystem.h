@@ -27,9 +27,9 @@ public:
 	void SaveLevelObjects();
 
 	
-	TArray<TSharedPtr<AModularObject>> returnSavedObjects();
+	TArray<AModularObject*> returnSavedObjects();
 
-	TArray<TSharedPtr<AModularObject>> m_levelObjects;
+	TArray<AModularObject*> m_levelObjects;
 
 	
 	

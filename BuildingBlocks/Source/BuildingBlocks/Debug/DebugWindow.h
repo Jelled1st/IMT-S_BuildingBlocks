@@ -42,6 +42,6 @@ private:
 	void DrawPresetMenu();
 	FString m_jsonString = "";
 	bool m_deserializeSucceeded = true;
-	TSharedPtr<AModularObject> m_selectedObject;
+	AModularObject* m_selectedObject = nullptr;
 #endif
 };
