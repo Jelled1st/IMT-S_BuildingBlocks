@@ -13,4 +13,5 @@ class BUILDINGBLOCKS_API UUtility : public UObject
 	
 public:
 	static char* FStringToCharPtr(const FString& string);
+	static FString CharPtrToFString(const char* const string);
 };
