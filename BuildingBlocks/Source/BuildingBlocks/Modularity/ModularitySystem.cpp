@@ -13,11 +13,6 @@ UModularitySystem::~UModularitySystem()
 	m_modularObjects.Empty();
 }
 
-// Called when the game starts or when spawned
-void UModularitySystem::Start()
-{
-}
-
 void UModularitySystem::RegisterObject(AModularObject& object)
 {
 	m_modularObjects.Add(&object);

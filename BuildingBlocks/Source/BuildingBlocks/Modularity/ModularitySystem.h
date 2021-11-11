@@ -18,8 +18,6 @@ public:
 	~UModularitySystem();
 
 public:	
-	void Start();
-	
 	void RegisterObject(AModularObject& object);
 	void UnregisterObject(AModularObject& object);
 
