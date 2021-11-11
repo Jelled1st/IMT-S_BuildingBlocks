@@ -22,11 +22,16 @@ void UCoreSystem::Init()
 
 	m_eventSystem = NewObject<UEventSystem>();
 	m_sportDataHandler = NewObject<USportDataHandler>();
+
+	m_htttpTestObject= NewObject<UHTTPTestObject>();
 }
 
 void UCoreSystem::OnStart()
 {
 	m_debugWindow->Start();
+
+	//get request example, can be called from wherever needed
+	m_htttpTestObject->Start();
 }
 
 void UCoreSystem::Shutdown()

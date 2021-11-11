@@ -10,6 +10,7 @@
 #include "../Debug/DebugWindow.h"
 
 #include "../SportData/SportDataHandler.h"
+#include "../HTTPTestObject.h"
 
 #include "CoreSystem.generated.h"
 
@@ -61,4 +62,6 @@ private:
 	UDebugWindow* m_debugWindow;
 	UEventSystem* m_eventSystem;
 	USportDataHandler* m_sportDataHandler;
+	UHTTPTestObject* m_htttpTestObject;
+	
 };
