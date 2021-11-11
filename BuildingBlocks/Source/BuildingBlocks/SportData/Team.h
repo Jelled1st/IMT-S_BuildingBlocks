@@ -20,9 +20,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) FString teamName;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) TArray<USportPlayer*> players;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) TEnumAsByte<Sport> sport;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) float score;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) FString currentChampionship;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) FString teamBoss;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) TEnumAsByte<Country> nationality;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) TEnumAsByte<Sport> sport;
 };

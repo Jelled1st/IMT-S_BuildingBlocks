@@ -379,7 +379,7 @@ void UDebugWindow::DrawSportData(USportDataHandler& sportData, Sport sport)
 	static int nationalitySize = 140;
 	static int barSize = 10;
 
-	TArray<TSharedPtr<UTeam>> teams = sportData.GetTeams(sport);
+	const TArray<UTeam*>& teams = sportData.GetTeams(sport);
 
 	ImGui::Text("Team name");
 	ImGui::SameLine(nameSize + barSize);
@@ -396,7 +396,7 @@ void UDebugWindow::DrawSportData(USportDataHandler& sportData, Sport sport)
 	ImGui::Text("====================================================================");
 
 	float highestScore = 0;
-	for (TSharedPtr<UTeam> team : teams)
+	for (UTeam* team : teams)
 	{
 		if (team->score > highestScore)
 		{
@@ -404,7 +404,7 @@ void UDebugWindow::DrawSportData(USportDataHandler& sportData, Sport sport)
 		}
 	}
 
-	for (TSharedPtr<UTeam> team : teams)
+	for (UTeam* team : teams)
 	{
 		ImGui::Text(UUtility::FStringToCharPtr(team->teamName));
 		ImGui::SameLine(nameSize + barSize);
@@ -430,7 +430,13 @@ void UDebugWindow::DrawSportData(USportDataHandler& sportData, Sport sport)
 
 void UDebugWindow::DrawCreateTeamMenu()
 {
+	ImGui::InputText("Team Name", newTeam.teamName, newTeam.nameLength);
 
+	if (ImGui::Button("Create"))
+	{
+		UTeam* team = NewObject<UTeam>();
+		team->teamName = UUtility::CharPtrToFString(newTeam.teamName);
+	}
 }
 
 void UDebugWindow::ImGuiSliderVector(const char* label, FVector& vector, float xLimit, float yLimit, float zLimit)

@@ -20,10 +20,15 @@ public:
 
 	bool RegisterTeam(UTeam& team);
 
-	TArray<TSharedPtr<UTeam>> GetTeams(Sport sport);
+	const TArray<UTeam*>& GetCricketTeams();
+	const TArray<UTeam*>& GetFootballTeams();
+	const TArray<UTeam*>& GetF1Teams();
+
+	const TArray<UTeam*>& GetTeams(Sport sport);
+	TArray<UTeam*> GetAllTeams();
 
 private:
-	TArray<TSharedPtr<UTeam>> m_cricketTeams;
-	TArray<TSharedPtr<UTeam>> m_footballTeams;
-	TArray<TSharedPtr<UTeam>> m_f1Teams;
+	TArray<UTeam*> m_cricketTeams;
+	TArray<UTeam*> m_footballTeams;
+	TArray<UTeam*> m_f1Teams;
 };

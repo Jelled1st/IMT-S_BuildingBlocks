@@ -7,6 +7,10 @@
 
 UTeam::UTeam()
 {
+	if (UCoreSystem::Exists())
+	{
+		UCoreSystem::Get().GetSportDataHandler().RegisterTeam(*this);
+	}
 }
 
 UTeam::UTeam(FString teamName, Sport sport, float score, Country nationality) :

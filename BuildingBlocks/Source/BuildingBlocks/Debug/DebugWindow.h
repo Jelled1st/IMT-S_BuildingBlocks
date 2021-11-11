@@ -11,6 +11,8 @@
 #include "../SportData/SportPlayer.h"
 #include "../SportData/PlayerName.h"
 
+#include <string>
+
 #if WITH_IMGUI
 #include "..\..\..\Plugins\ImGui\Source\ImGui\Public\ImGuiDelegates.h"
 class FImGuiModuleProperties;
@@ -25,6 +27,13 @@ class BUILDINGBLOCKS_API UDebugWindow : public UObject
 	GENERATED_BODY()
 
 public:
+	struct TeamData
+	{
+	public:
+		const int nameLength = 21;
+		char* teamName = new char[nameLength];
+	};
+
 	UDebugWindow();
 	~UDebugWindow();
 
@@ -53,5 +62,6 @@ private:
 	FString m_jsonString = "";
 	bool m_deserializeSucceeded = true;
 	AModularObject* m_selectedObject = nullptr;
+	TeamData newTeam;
 #endif
 };

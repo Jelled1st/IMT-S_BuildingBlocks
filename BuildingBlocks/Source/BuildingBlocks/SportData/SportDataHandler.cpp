@@ -6,7 +6,9 @@
 
 USportDataHandler::USportDataHandler()
 {
-
+	m_cricketTeams = TArray<UTeam*>(nullptr, 0);
+	m_footballTeams = TArray<UTeam*>(nullptr, 0);
+	m_f1Teams = TArray<UTeam*>(nullptr, 0);
 }
 
 USportDataHandler::~USportDataHandler()
@@ -20,39 +22,68 @@ bool USportDataHandler::RegisterTeam(UTeam& team)
 	{
 		case Sport::Cricket:
 		{
-			m_cricketTeams.Add(MakeShareable(&team));
+			m_cricketTeams.Add(&team);
 			return true;
 		}
 		case Sport::Football:
 		{
-			m_footballTeams.Add(MakeShareable(&team));
+			m_footballTeams.Add(&team);
 			return true;
 		}
 		case Sport::Formula1:
 		{
-			m_f1Teams.Add(MakeShareable(&team));
+			m_f1Teams.Add(&team);
 			return true;
 		}
 	}
 	return false;
 }
 
-TArray<TSharedPtr<UTeam>> USportDataHandler::GetTeams(Sport sport)
+const TArray<UTeam*>& USportDataHandler::GetCricketTeams()
 {
-	switch (sport)
+	return m_cricketTeams;
+}
+
+const TArray<UTeam*>& USportDataHandler::GetFootballTeams()
+{
+	return m_footballTeams;
+}
+
+const TArray<UTeam*>& USportDataHandler::GetF1Teams()
+{
+	return m_f1Teams;
+}
+
+const TArray<UTeam*>& USportDataHandler::GetTeams(Sport sport)
+{
+	if (sport == Sport::Cricket)
 	{
-		case Sport::Cricket:
-		{
-			return m_cricketTeams;
-		}
-		case Sport::Football:
-		{
-			return m_footballTeams;
-		}
-		case Sport::Formula1:
-		{
-			return m_f1Teams;
-		}
+		return m_cricketTeams;
 	}
-	return TArray<TSharedPtr<UTeam>>();
+	else if (sport == Sport::Football)
+	{
+		return m_footballTeams;
+	}
+	else //if(sport == Sport::Formula1)
+	{
+		return m_f1Teams;
+	}
+}
+
+TArray<UTeam*> USportDataHandler::GetAllTeams()
+{
+	TArray<UTeam*> allTeams;
+	for (UTeam* team : m_cricketTeams)
+	{
+		allTeams.Add(team);
+	}
+	for (UTeam* team : m_footballTeams)
+	{
+		allTeams.Add(team);
+	}
+	for (UTeam* team : m_f1Teams)
+	{
+		allTeams.Add(team);
+	}
+	return allTeams;
 }
