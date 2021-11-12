@@ -82,15 +82,22 @@ void UDebugWindow::DrawOperatorControls()
 	{
 		TArray<AModularObject*>& modularObjs = UCoreSystem::Get().GetModularitySystem()->GetRegisteredObjects();
 		
-		for (AModularObject* obj : modularObjs)
+		if (modularObjs.Num() > 0)
 		{
-			FString name = obj->GetName();
-			if (ImGui::BeginTabItem(TCHAR_TO_ANSI(*name)))
+			for (AModularObject* obj : modularObjs)
 			{
-				m_selectedObject = obj;
+				FString name = obj->GetName();
+				if (ImGui::BeginTabItem(TCHAR_TO_ANSI(*name)))
+				{
+					m_selectedObject = obj;
 
-				ImGui::EndTabItem();
+					ImGui::EndTabItem();
+				}
 			}
+		}
+		else
+		{
+			m_selectedObject = nullptr;
 		}
 
 		if (m_selectedObject != nullptr)
