@@ -31,7 +31,7 @@ public:
 	{
 	public:
 		const int nameLength = 21;
-		char* teamName = new char[nameLength];
+		char teamName[21] = { 0 };
 	};
 
 	UDebugWindow();

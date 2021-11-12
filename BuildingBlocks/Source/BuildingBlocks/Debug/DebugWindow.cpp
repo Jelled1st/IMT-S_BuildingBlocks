@@ -413,10 +413,11 @@ void UDebugWindow::DrawSportData(USportDataHandler& sportData, Sport sport)
 
 	for (UTeam* team : teams)
 	{
-		ImGui::Text(UUtility::FStringToCharPtr(team->teamName));
+		//ImGui::Text(TCHAR_TO_ANSI(*team->teamName));
+		ImGui::Text(UUtility::FStringToCharPtr(*team->teamName));
 		ImGui::SameLine(nameSize + barSize);
 		ImGui::Text("|");
-		ImGui::SameLine(barSize);
+		ImGui::SameLine(nameSize + barSize + barSize);
 
 		ImGui::PushID(UUtility::FStringToCharPtr(team->teamName));
 		ImGui::PushItemWidth(scoreSize);
@@ -425,24 +426,21 @@ void UDebugWindow::DrawSportData(USportDataHandler& sportData, Sport sport)
 		ImGui::PopItemWidth();
 		ImGui::PopID();
 
-		ImGui::SameLine(scoreSize + barSize);
-		ImGui::Text("|");
-		ImGui::SameLine(barSize);
-
-		ImGui::Text(UUtility::FStringToCharPtr("Unknown"));
-		ImGui::SameLine(nationalitySize);
+		ImGui::SameLine(nameSize + barSize + barSize + scoreSize + barSize);
 		ImGui::Text("|");
 	}
 }
 
 void UDebugWindow::DrawCreateTeamMenu()
 {
+
 	ImGui::InputText("Team Name", newTeam.teamName, newTeam.nameLength);
 
 	if (ImGui::Button("Create"))
 	{
 		UTeam* team = NewObject<UTeam>();
-		team->teamName = UUtility::CharPtrToFString(newTeam.teamName);
+		FString name = UUtility::CharPtrToFString(newTeam.teamName);
+		team->teamName = name;
 	}
 }
 
