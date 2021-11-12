@@ -28,7 +28,12 @@ public:
 	TArray<UTeam*> GetAllTeams();
 
 private:
+	UPROPERTY();
 	TArray<UTeam*> m_cricketTeams;
+
+	UPROPERTY();
 	TArray<UTeam*> m_footballTeams;
+
+	UPROPERTY();
 	TArray<UTeam*> m_f1Teams;
 };

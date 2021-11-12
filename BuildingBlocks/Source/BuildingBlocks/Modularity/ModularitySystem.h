@@ -23,5 +23,6 @@ public:
 
 	TArray<AModularObject*>& GetRegisteredObjects();
 
+	UPROPERTY();
 	TArray<AModularObject*> m_modularObjects;
 };

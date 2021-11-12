@@ -58,10 +58,19 @@ public:
 private:
 	static TUniquePtr<UCoreSystem> m_instance;
 
+	UPROPERTY();
 	UModularitySystem* m_modularitySystem;
+
+	UPROPERTY();
 	UDebugWindow* m_debugWindow;
+
+	UPROPERTY();
 	UEventSystem* m_eventSystem;
+
+	UPROPERTY();
 	USportDataHandler* m_sportDataHandler;
+
+	UPROPERTY();
 	UHTTPTestObject* m_htttpTestObject;
 	
 };

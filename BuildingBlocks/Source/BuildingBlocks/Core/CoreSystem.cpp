@@ -36,13 +36,6 @@ void UCoreSystem::OnStart()
 
 void UCoreSystem::Shutdown()
 {
-	m_sportDataHandler = nullptr;
-	m_eventSystem = nullptr;
-	m_modularitySystem = nullptr;
-	m_debugWindow = nullptr;
-
-	GEngine->ForceGarbageCollection();
-
 	m_instance.Release();
 }
 
