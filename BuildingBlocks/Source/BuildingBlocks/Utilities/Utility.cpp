@@ -2,13 +2,3 @@
 
 
 #include "Utility.h"
-
-char* UUtility::FStringToCharPtr(const FString& string)
-{
-	return TCHAR_TO_ANSI(*string);
-}
-
-FString UUtility::CharPtrToFString(const char* const string)
-{
-	return FString(string);
-}

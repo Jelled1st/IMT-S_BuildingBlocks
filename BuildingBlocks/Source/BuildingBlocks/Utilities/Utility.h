@@ -12,6 +12,13 @@ class BUILDINGBLOCKS_API UUtility : public UObject
 	GENERATED_BODY()
 	
 public:
-	static char* FStringToCharPtr(const FString& string);
-	static FString CharPtrToFString(const char* const string);
+	static inline char* FStringToCharPtr(const FString& string)
+	{
+		return TCHAR_TO_ANSI(*string);
+	}
+
+	static inline FString CharPtrToFString(const char* const string)
+	{
+		return FString(string);
+	}
 };
