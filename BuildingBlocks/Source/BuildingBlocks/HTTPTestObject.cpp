@@ -192,30 +192,55 @@ void UHTTPTestObject::OnResponseReceivedSponsors(FHttpRequestPtr request, FHttpR
 
 		for (int i = 0; i < nrOfSponsors; i++) {
 			FString sponsorPoints = JsonObject->GetObjectField("MRData")->GetObjectField("StandingsTable")->GetArrayField("StandingsLists")[0]->AsObject()->GetArrayField("ConstructorStandings")[i]->AsObject()->GetStringField("points");			
-			sponsorPointsOf2021.Add(sponsorPoints);
+			f1TeamPoints2021.Add(sponsorPoints);
 
 			FString sponsorName = JsonObject->GetObjectField("MRData")->GetObjectField("StandingsTable")->GetArrayField("StandingsLists")[0]->AsObject()->GetArrayField("ConstructorStandings")[i]->AsObject()->GetObjectField("Constructor")->GetStringField("constructorId");
-			sponsorNamesOf2021.Add(sponsorName);
-			
+			f1Teams2021.Add(sponsorName);
 
 			FString sponsorNationality = JsonObject->GetObjectField("MRData")->GetObjectField("StandingsTable")->GetArrayField("StandingsLists")[0]->AsObject()->GetArrayField("ConstructorStandings")[i]->AsObject()->GetObjectField("Constructor")->GetStringField("nationality");
-			sponsorNationalitiesOf2021.Add(sponsorNationality);
+			f1TeamNationalities2021.Add(sponsorNationality);
+
+			f1TeamPointsByTeam2021.Add(sponsorName, FCString::Atof(*sponsorPoints));
+			f1TeamNationalitiesByTeam2021.Add(sponsorName, sponsorNationality);
 		}
 	}
 }
 
-TArray<FString> UHTTPTestObject::returnSponorNames()
+TArray<FString> UHTTPTestObject::GetTeamNames()
 {
-	return sponsorNamesOf2021;
+	return f1Teams2021;
 }
 
-TArray<FString> UHTTPTestObject::returnSponorPoints()
+TArray<FString> UHTTPTestObject::GetTeamScore()
 {
-	return sponsorPointsOf2021;
+	return f1TeamPoints2021;
 }
 
-TArray<FString> UHTTPTestObject::returnSponorNationalities()
+TArray<FString> UHTTPTestObject::GetTeamNationalities()
 {
-	return sponsorNationalitiesOf2021;
+	return f1TeamNationalities2021;
 }
 
+float UHTTPTestObject::GetTeamScore(FString team)
+{
+	if (!f1TeamPointsByTeam2021.Contains(team))
+	{
+		return 0;
+	}
+	else
+	{
+		return f1TeamPointsByTeam2021[team];
+	}
+}
+
+FString UHTTPTestObject::GetTeamNationality(FString team)
+{
+	if (!f1TeamNationalitiesByTeam2021.Contains(team))
+	{
+		return "Unknown";
+	}
+	else
+	{
+		return f1TeamNationalitiesByTeam2021[team];
+	}
+}

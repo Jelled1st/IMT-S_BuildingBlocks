@@ -39,10 +39,11 @@ public:
 	void OnResponseReceivedTracks(FHttpRequestPtr request, FHttpResponsePtr response, bool isSuccessful);
 	void OnResponseReceivedSponsors(FHttpRequestPtr request, FHttpResponsePtr response, bool isSuccessful);
 
-	TArray<FString> returnSponorNames();
-	TArray<FString> returnSponorPoints();
-	TArray<FString> returnSponorNationalities();
-
+	TArray<FString> GetTeamNames();
+	TArray<FString> GetTeamScore();
+	TArray<FString> GetTeamNationalities();
+	float GetTeamScore(FString team);
+	FString GetTeamNationality(FString team);
 
 
 	//these are to be replaced by player and team objects
@@ -51,9 +52,11 @@ public:
 	TArray<FString> racerTracksOf2020;
 
 	//2021 SPONSORS
-	TArray<FString> sponsorNamesOf2021;
-	TArray<FString> sponsorNationalitiesOf2021;
-	TArray<FString> sponsorPointsOf2021;
+	TArray<FString> f1Teams2021;
+	TArray<FString> f1TeamNationalities2021;
+	TArray<FString> f1TeamPoints2021;
+	TMap<FString, float> f1TeamPointsByTeam2021;
+	TMap<FString, FString> f1TeamNationalitiesByTeam2021;
 
 	//TODO public list of players, race tracks, nationalities, teams. To be replaced by players & team classes in fututre iteration
 };
