@@ -381,12 +381,20 @@ void UDebugWindow::DrawSportDatabase()
 
 void UDebugWindow::DrawSportData(USportDataHandler& sportData, Sport sport)
 {
-	static int nameSize = 140;
-	static int scoreSize = 50;
+	static int nameSize = 150;
+	static int scoreSize = 200;
 	static int nationalitySize = 140;
 	static int barSize = 10;
 
 	const TArray<UTeam*>& teams = sportData.GetTeams(sport);
+
+	if (sport == Sport::Formula1)
+	{
+		if (ImGui::Button("Update from API"))
+		{
+
+		}
+	}
 
 	ImGui::Text("Team name");
 	ImGui::SameLine(nameSize + barSize);
@@ -405,22 +413,22 @@ void UDebugWindow::DrawSportData(USportDataHandler& sportData, Sport sport)
 	float highestScore = 0;
 	for (UTeam* team : teams)
 	{
-		if (team->score > highestScore)
+		if (team->GetScore() > highestScore)
 		{
-			highestScore = team->score;
+			highestScore = team->GetScore();
 		}
 	}
 
 	for (UTeam* team : teams)
 	{
-		ImGui::Text(UUtility::FStringToCharPtr(*team->teamName));
+		ImGui::Text(UUtility::FStringToCharPtr(*team->GetName()));
 		ImGui::SameLine(nameSize + barSize);
 		ImGui::Text("|");
 		ImGui::SameLine(nameSize + barSize + barSize);
 
-		ImGui::PushID(UUtility::FStringToCharPtr(team->teamName));
+		ImGui::PushID(UUtility::FStringToCharPtr(team->GetName()));
 		ImGui::PushItemWidth(scoreSize);
-		float score = team->score;
+		float score = team->GetScore();
 		ImGui::SliderFloat("", &score, 0, highestScore);
 		ImGui::PopItemWidth();
 		ImGui::PopID();
@@ -428,7 +436,7 @@ void UDebugWindow::DrawSportData(USportDataHandler& sportData, Sport sport)
 		ImGui::SameLine(nameSize + barSize + barSize + scoreSize + barSize);
 		ImGui::Text("|");
 		ImGui::SameLine(nameSize + barSize + barSize + scoreSize + barSize + barSize);
-		FString country = UUtility::EnumToString(TEXT("Country"), static_cast<int>(team->nationality));
+		FString country = UUtility::EnumToString(TEXT("Country"), static_cast<int>(team->GetNationality()));
 		ImGui::Text(UUtility::FStringToCharPtr(*country));
 	}
 }
@@ -497,12 +505,8 @@ void UDebugWindow::DrawCreateTeamMenu()
 
 	if (ImGui::Button("Create Team"))
 	{
-		UTeam* team = NewObject<UTeam>();
 		FString name = UUtility::CharPtrToFString(newTeam.teamName);
-		team->teamName = name;
-		team->nationality = newTeam.selectedNationality;
-		team->score = newTeam.score;
-		team->SetSport(newTeam.sport);
+		UTeam::Make(name, newTeam.sport, newTeam.score, newTeam.selectedNationality);
 	}
 }
 

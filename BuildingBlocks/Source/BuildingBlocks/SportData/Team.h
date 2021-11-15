@@ -15,19 +15,24 @@ class BUILDINGBLOCKS_API UTeam : public UObject
 
 public:
 	UTeam();
-	UTeam(FString teamName, Sport sport, float score = 0, Country nationality = Country::Unknown);
 	~UTeam();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) FString teamName;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) TArray<USportPlayer*> players;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) float score;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) FString currentChampionship;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) FString teamBoss;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) TEnumAsByte<Country> nationality;
+	static UTeam& Make(FString teamName, Sport sport, float score = 0, Country nationality = Country::Unknown);
+	bool Init(FString newTeamName, Sport newSport, float newScore = 0, Country newNationality = Country::Unknown);
 
 	Sport GetSport();
-	void SetSport(Sport newSport);
+	FString GetName();
+	float GetScore();
+	Country GetNationality();
+
+	UPROPERTY() bool isInitialized = false;
 
 private:
+	UPROPERTY() FString teamName;
+	UPROPERTY() TArray<USportPlayer*> players;
+	UPROPERTY() float score;
+	UPROPERTY() FString currentChampionship;
+	UPROPERTY() FString teamBoss;
+	UPROPERTY() TEnumAsByte<Country> nationality;
 	UPROPERTY() TEnumAsByte<Sport> sport;
 };
