@@ -392,7 +392,7 @@ void UDebugWindow::DrawSportData(USportDataHandler& sportData, Sport sport)
 	{
 		if (ImGui::Button("Update from API"))
 		{
-
+			Debug_GetF1TeamsFromAPI();
 		}
 	}
 
@@ -571,5 +571,19 @@ void UDebugWindow::ImGuiSliderVector(const char* label, FVector& vector, float x
 
 	ImGui::PopItemWidth();
 	ImGui::PopID();
+}
+
+void UDebugWindow::Debug_GetF1TeamsFromAPI()
+{
+	UHTTPTestObject* apiObject = UCoreSystem::Get().GetHttpTestObject();
+	TArray<FString> teams = apiObject->GetTeamNames();
+
+	for (FString team : teams)
+	{
+		float score = apiObject->GetTeamScore(team);
+		FString nationality = apiObject->GetTeamNationality(team);
+
+		UTeam::Make(team, Sport::Formula1, score);
+	}
 }
 #endif
