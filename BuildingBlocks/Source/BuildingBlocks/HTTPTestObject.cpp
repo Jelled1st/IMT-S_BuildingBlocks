@@ -194,7 +194,7 @@ void UHTTPTestObject::OnResponseReceivedSponsors(FHttpRequestPtr request, FHttpR
 			FString sponsorPoints = JsonObject->GetObjectField("MRData")->GetObjectField("StandingsTable")->GetArrayField("StandingsLists")[0]->AsObject()->GetArrayField("ConstructorStandings")[i]->AsObject()->GetStringField("points");			
 			f1TeamPoints2021.Add(sponsorPoints);
 
-			FString sponsorName = JsonObject->GetObjectField("MRData")->GetObjectField("StandingsTable")->GetArrayField("StandingsLists")[0]->AsObject()->GetArrayField("ConstructorStandings")[i]->AsObject()->GetObjectField("Constructor")->GetStringField("constructorId");
+			FString sponsorName = JsonObject->GetObjectField("MRData")->GetObjectField("StandingsTable")->GetArrayField("StandingsLists")[0]->AsObject()->GetArrayField("ConstructorStandings")[i]->AsObject()->GetObjectField("Constructor")->GetStringField("name");
 			f1Teams2021.Add(sponsorName);
 
 			FString sponsorNationality = JsonObject->GetObjectField("MRData")->GetObjectField("StandingsTable")->GetArrayField("StandingsLists")[0]->AsObject()->GetArrayField("ConstructorStandings")[i]->AsObject()->GetObjectField("Constructor")->GetStringField("nationality");
