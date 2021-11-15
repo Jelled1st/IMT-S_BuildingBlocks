@@ -39,6 +39,14 @@ public:
 		float score = 0;
 	};
 
+	struct PlayerData
+	{
+	public:
+		const int nameLength = 21;
+		char firstName[21] = { 0 };
+		char lastName[21] = { 0 };
+	};
+
 	UDebugWindow();
 	~UDebugWindow();
 
@@ -67,6 +75,7 @@ private:
 	FString m_jsonString = "";
 	bool m_deserializeSucceeded = true;
 	AModularObject* m_selectedObject = nullptr;
-	TeamData newTeam;
+	TeamData m_newTeam;
+	UTeam* m_selectedTeam = nullptr;
 #endif
 };

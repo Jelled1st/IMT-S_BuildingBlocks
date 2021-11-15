@@ -419,14 +419,23 @@ void UDebugWindow::DrawSportData(USportDataHandler& sportData, Sport sport)
 		}
 	}
 
+	bool showAdditionalTeamInfo = false;
 	for (UTeam* team : teams)
 	{
-		ImGui::Text(UUtility::FStringToCharPtr(*team->GetName()));
+		if (m_selectedTeam == team)
+		{
+			showAdditionalTeamInfo = true;
+		}
+		if (ImGui::Button(UUtility::FStringToCharPtr(*team->GetName()), ImVec2(nameSize, 20)))
+		{
+			m_selectedTeam = team;
+			showAdditionalTeamInfo = true;
+		}
 		ImGui::SameLine(nameSize + barSize);
 		ImGui::Text("|");
 		ImGui::SameLine(nameSize + barSize + barSize);
 
-		ImGui::PushID(UUtility::FStringToCharPtr(team->GetName()));
+		ImGui::PushID(UUtility::FStringToCharPtr(*FString::Printf(TEXT("%s_score"), *team->GetName())));
 		ImGui::PushItemWidth(scoreSize);
 		float score = team->GetScore();
 		ImGui::SliderFloat("", &score, 0, highestScore);
@@ -439,27 +448,52 @@ void UDebugWindow::DrawSportData(USportDataHandler& sportData, Sport sport)
 		FString country = UUtility::EnumToString(TEXT("Country"), static_cast<int>(team->GetNationality()));
 		ImGui::Text(UUtility::FStringToCharPtr(*country));
 	}
+	
+	if (showAdditionalTeamInfo && m_selectedTeam != nullptr)
+	{
+		ImGui::Separator();
+
+		ImGui::Text(UUtility::FStringToCharPtr(*m_selectedTeam->GetName()));
+		ImGui::NewLine();
+
+		ImGui::Text("Players");
+		const TArray<USportPlayer*>& players = m_selectedTeam->GetPlayers();
+		int playersInRow = 5;
+
+		for (int i = 0; i < players.Num(); ++i)
+		{
+			USportPlayer* player = players[i];
+
+			ImGui::Text(UUtility::FStringToCharPtr(player->GetDisplayName()));
+			
+			bool isLast = i == players.Num() - 1;
+			if (i + 1 % playersInRow != 0 && !isLast)
+			{
+				ImGui::SameLine();
+			}
+		}
+	}
 }
 
 void UDebugWindow::DrawCreateTeamMenu()
 {
-	bool isCricket = newTeam.sport == Sport::Cricket;
-	bool isFootball = newTeam.sport == Sport::Football;
-	bool isF1 = newTeam.sport == Sport::Formula1;
+	bool isCricket = m_newTeam.sport == Sport::Cricket;
+	bool isFootball = m_newTeam.sport == Sport::Football;
+	bool isF1 = m_newTeam.sport == Sport::Formula1;
 	if (ImGui::Checkbox("Cricket", &isCricket))
 	{
-		newTeam.sport = Sport::Cricket;
+		m_newTeam.sport = Sport::Cricket;
 	}
 	if (ImGui::Checkbox("Football", &isFootball))
 	{
-		newTeam.sport = Sport::Football;
+		m_newTeam.sport = Sport::Football;
 	}
 	if (ImGui::Checkbox("Formula1", &isF1))
 	{
-		newTeam.sport = Sport::Formula1;
+		m_newTeam.sport = Sport::Formula1;
 	}
 
-	ImGui::InputText("Team Name", newTeam.teamName, newTeam.nameLength);
+	ImGui::InputText("Team Name", m_newTeam.teamName, m_newTeam.nameLength);
 
 	TArray<Country> countries = UUtility::CreateCountryArray();
 
@@ -470,7 +504,7 @@ void UDebugWindow::DrawCreateTeamMenu()
 		for (int i = 0; i < countries.Num(); ++i)
 		{
 			Country country = countries[i];
-			bool currentlySelected = newTeam.selectedNationality == country;
+			bool currentlySelected = m_newTeam.selectedNationality == country;
 
 			FString countryNameFString = UUtility::EnumToString(TEXT("Country"), static_cast<int>(country));
 			if (currentlySelected)
@@ -482,7 +516,7 @@ void UDebugWindow::DrawCreateTeamMenu()
 			char* countryName = UUtility::FStringToCharPtr(*countryNameFString);
 			if (ImGui::Button(countryName, ImVec2(140, 30)))
 			{
-				newTeam.selectedNationality = country;
+				m_newTeam.selectedNationality = country;
 			}
 
 			if (currentlySelected)
@@ -501,12 +535,12 @@ void UDebugWindow::DrawCreateTeamMenu()
 		ImGui::TreePop();
 	}
 
-	ImGui::SliderFloat("Score", &newTeam.score, 0, 500);
+	ImGui::SliderFloat("Score", &m_newTeam.score, 0, 500);
 
 	if (ImGui::Button("Create Team"))
 	{
-		FString name = UUtility::CharPtrToFString(newTeam.teamName);
-		UTeam::Make(name, newTeam.sport, newTeam.score, newTeam.selectedNationality);
+		FString name = UUtility::CharPtrToFString(m_newTeam.teamName);
+		UTeam::Make(name, m_newTeam.sport, m_newTeam.score, m_newTeam.selectedNationality);
 	}
 }
 
