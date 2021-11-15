@@ -17,7 +17,8 @@ void UHTTPTestObject::Start()
 	//HttpGetRequest();
 	//HttpGetRacersOf2020();
 	//HttpGetNationalitiesOf2020();
-	HttpGetRaceTracksOf2020();
+	//HttpGetRaceTracksOf2020();
+	HttpGetSponsorsOf2021();
 
 	
 }
@@ -68,6 +69,19 @@ void UHTTPTestObject::HttpGetRaceTracksOf2020()
 
 	//process GET request
 	Request->SetURL("http://ergast.com/api/f1/2020/circuits.json");
+	Request->SetVerb("GET");
+	Request->SetHeader(TEXT("User-Agent"), "X-UnrealEngine-Agent");
+	Request->SetHeader("Content-Type", TEXT("application/json"));
+	Request->ProcessRequest();
+}
+
+void UHTTPTestObject::HttpGetSponsorsOf2021()
+{
+	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = httpModule->CreateRequest();
+	Request->OnProcessRequestComplete().BindUObject(this, &UHTTPTestObject::OnResponseReceivedSponsors);
+
+	//process GET request
+	Request->SetURL("http://ergast.com/api/f1/2021/constructorStandings.json");
 	Request->SetVerb("GET");
 	Request->SetHeader(TEXT("User-Agent"), "X-UnrealEngine-Agent");
 	Request->SetHeader("Content-Type", TEXT("application/json"));
@@ -164,3 +178,44 @@ void UHTTPTestObject::OnResponseReceivedTracks(FHttpRequestPtr request, FHttpRes
 		GEngine->AddOnScreenDebugMessage(1, 2.0f, FColor::Green, FString::FromInt(racerTracksOf2020.Num()));
 	}
 }
+
+void UHTTPTestObject::OnResponseReceivedSponsors(FHttpRequestPtr request, FHttpResponsePtr response, bool isSuccessful)
+{
+	TSharedPtr<FJsonObject> JsonObject;
+	TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(response->GetContentAsString());
+
+	if (FJsonSerializer::Deserialize(Reader, JsonObject))
+	{
+
+		FString stringOfSponsors = JsonObject->GetObjectField("MRData")->GetStringField("total");
+		int32 nrOfSponsors = UKismetStringLibrary::Conv_StringToInt(stringOfSponsors);
+
+		for (int i = 0; i < nrOfSponsors; i++) {
+			FString sponsorPoints = JsonObject->GetObjectField("MRData")->GetObjectField("StandingsTable")->GetArrayField("StandingsLists")[0]->AsObject()->GetArrayField("ConstructorStandings")[i]->AsObject()->GetStringField("points");			
+			sponsorPointsOf2021.Add(sponsorPoints);
+
+			FString sponsorName = JsonObject->GetObjectField("MRData")->GetObjectField("StandingsTable")->GetArrayField("StandingsLists")[0]->AsObject()->GetArrayField("ConstructorStandings")[i]->AsObject()->GetObjectField("Constructor")->GetStringField("constructorId");
+			sponsorNamesOf2021.Add(sponsorName);
+			
+
+			FString sponsorNationality = JsonObject->GetObjectField("MRData")->GetObjectField("StandingsTable")->GetArrayField("StandingsLists")[0]->AsObject()->GetArrayField("ConstructorStandings")[i]->AsObject()->GetObjectField("Constructor")->GetStringField("nationality");
+			sponsorNationalitiesOf2021.Add(sponsorNationality);
+		}
+	}
+}
+
+TArray<FString> UHTTPTestObject::returnSponorNames()
+{
+	return sponsorNamesOf2021;
+}
+
+TArray<FString> UHTTPTestObject::returnSponorPoints()
+{
+	return sponsorPointsOf2021;
+}
+
+TArray<FString> UHTTPTestObject::returnSponorNationalities()
+{
+	return sponsorNationalitiesOf2021;
+}
+

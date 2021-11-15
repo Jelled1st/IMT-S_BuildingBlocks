@@ -29,6 +29,7 @@ public:
 		void HttpGetRacersOf2020();
 		void HttpGetNationalitiesOf2020();
 		void HttpGetRaceTracksOf2020();
+		void HttpGetSponsorsOf2021();
 
 
 	//TODO: condeness responses in one unqie response based on url?
@@ -36,6 +37,11 @@ public:
 	void OnResponseReceivedRacers(FHttpRequestPtr request, FHttpResponsePtr response, bool isSuccessful);
 	void OnResponseReceivedNationality(FHttpRequestPtr request, FHttpResponsePtr response, bool isSuccessful);
 	void OnResponseReceivedTracks(FHttpRequestPtr request, FHttpResponsePtr response, bool isSuccessful);
+	void OnResponseReceivedSponsors(FHttpRequestPtr request, FHttpResponsePtr response, bool isSuccessful);
+
+	TArray<FString> returnSponorNames();
+	TArray<FString> returnSponorPoints();
+	TArray<FString> returnSponorNationalities();
 
 
 
@@ -43,6 +49,11 @@ public:
 	TArray<FString> racersNameOf2020;
 	TArray<FString> nationalitiesOf2020;
 	TArray<FString> racerTracksOf2020;
+
+	//2021 SPONSORS
+	TArray<FString> sponsorNamesOf2021;
+	TArray<FString> sponsorNationalitiesOf2021;
+	TArray<FString> sponsorPointsOf2021;
 
 	//TODO public list of players, race tracks, nationalities, teams. To be replaced by players & team classes in fututre iteration
 };
