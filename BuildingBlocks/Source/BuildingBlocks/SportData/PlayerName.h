@@ -11,10 +11,13 @@ class BUILDINGBLOCKS_API UPlayerName : public UObject
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) FString firstName;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) FString lastName;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) FString displayName;
-
 	UPlayerName();
 	~UPlayerName();
+
+	FString ToString() const;
+
+private:
+	UPROPERTY() FString m_firstName;
+	UPROPERTY() FString m_lastName;
+	UPROPERTY() FString m_displayName;
 };

@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "PlayerName.h"
 #include "Country.h"
 #include "Sport.h"
 #include "SportPlayer.generated.h"
@@ -16,16 +15,24 @@ class BUILDINGBLOCKS_API USportPlayer : public UObject
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) UPlayerName* playerName;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) UTeam* team;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) int age;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) int length;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) float weight;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) float number;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) TEnumAsByte<Country> nationality;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) TEnumAsByte<Sport> sport;
-
 	USportPlayer();
-
 	~USportPlayer();
+
+	static USportPlayer& Make(FString firstName, FString lastName, FString displayName, UTeam& team);
+
+	FString GetFullName() const;
+	FString GetDisplayName() const;
+
+private:
+	UPROPERTY() FString m_firstName;
+	UPROPERTY() FString m_lastName;
+	UPROPERTY() FString m_displayName;
+
+	UPROPERTY() UTeam* m_team;
+	UPROPERTY() int m_age;
+	UPROPERTY() int m_length;
+	UPROPERTY() float m_weight;
+	UPROPERTY() float m_number;
+	UPROPERTY() TEnumAsByte<Country> m_nationality;
+	UPROPERTY() TEnumAsByte<Sport> m_sport;
 };

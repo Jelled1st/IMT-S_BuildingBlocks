@@ -10,3 +10,8 @@ UPlayerName::UPlayerName()
 UPlayerName::~UPlayerName()
 {
 }
+
+FString UPlayerName::ToString() const
+{
+	return FString::Printf(TEXT("%s - %s %s"), *m_displayName, *m_firstName, *m_lastName);
+}
