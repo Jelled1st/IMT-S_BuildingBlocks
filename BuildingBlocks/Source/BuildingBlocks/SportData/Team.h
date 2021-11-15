@@ -20,10 +20,13 @@ public:
 	static UTeam& Make(FString teamName, Sport sport, float score = 0, Country nationality = Country::Unknown);
 	bool Init(FString newTeamName, Sport newSport, float newScore = 0, Country newNationality = Country::Unknown);
 
+	void AddPlayer(USportPlayer& player);
+
 	Sport GetSport();
 	FString GetName();
 	float GetScore();
 	Country GetNationality();
+	const TArray<USportPlayer*>& GetPlayers();
 
 	UPROPERTY() bool isInitialized = false;
 

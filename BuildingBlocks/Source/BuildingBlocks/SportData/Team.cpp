@@ -13,6 +13,12 @@ UTeam::~UTeam()
 {
 }
 
+
+void UTeam::AddPlayer(USportPlayer& player)
+{
+	players.Add(&player);
+}
+
 Sport UTeam::GetSport()
 {
 	return sport;
@@ -31,6 +37,11 @@ float UTeam::GetScore()
 Country UTeam::GetNationality()
 {
 	return nationality;
+}
+
+const TArray<USportPlayer*>& UTeam::GetPlayers()
+{
+	return players;
 }
 
 UTeam& UTeam::Make(FString teamName, Sport sport, float score, Country nationality)
