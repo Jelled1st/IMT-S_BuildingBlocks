@@ -202,4 +202,8 @@ UENUM(BlueprintType) enum Country
 	Yemen UMETA(DisplayName = "Yemen"),
 	Zambia UMETA(DisplayName = "Zambia"),
 	Zimbabwe UMETA(DisplayName = "Zimbabwe"),
+
+	// Keep this last
+	Last UMETA(DisplayName = "Last"),
 };
+

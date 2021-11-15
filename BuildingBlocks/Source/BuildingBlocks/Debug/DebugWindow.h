@@ -10,6 +10,8 @@
 #include "../SportData/Team.h"
 #include "../SportData/SportPlayer.h"
 #include "../SportData/PlayerName.h"
+#include "../SportData/Country.h"
+#include "../SportData/Sport.h"
 
 #include <string>
 
@@ -30,8 +32,11 @@ public:
 	struct TeamData
 	{
 	public:
+		Sport sport;
 		const int nameLength = 21;
 		char teamName[21] = { 0 };
+		Country selectedNationality = Country::Unknown;
+		float score = 0;
 	};
 
 	UDebugWindow();

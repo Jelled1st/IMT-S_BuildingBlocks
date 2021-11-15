@@ -18,7 +18,7 @@ USportDataHandler::~USportDataHandler()
 
 bool USportDataHandler::RegisterTeam(UTeam& team)
 {
-	switch (team.sport)
+	switch (team.GetSport())
 	{
 		case Sport::Cricket:
 		{
@@ -35,6 +35,29 @@ bool USportDataHandler::RegisterTeam(UTeam& team)
 			m_f1Teams.Add(&team);
 			return true;
 		}
+	}
+	return false;
+}
+
+bool USportDataHandler::UnregisterTeam(UTeam& team)
+{
+	switch (team.GetSport())
+	{
+	case Sport::Cricket:
+	{
+		m_cricketTeams.Remove(&team);
+		return true;
+	}
+	case Sport::Football:
+	{
+		m_footballTeams.Remove(&team);
+		return true;
+	}
+	case Sport::Formula1:
+	{
+		m_f1Teams.Remove(&team);
+		return true;
+	}
 	}
 	return false;
 }

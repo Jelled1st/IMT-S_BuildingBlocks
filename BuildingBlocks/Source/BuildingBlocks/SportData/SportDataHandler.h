@@ -19,6 +19,7 @@ public:
 	~USportDataHandler();
 
 	bool RegisterTeam(UTeam& team);
+	bool UnregisterTeam(UTeam& team);
 
 	const TArray<UTeam*>& GetCricketTeams();
 	const TArray<UTeam*>& GetFootballTeams();

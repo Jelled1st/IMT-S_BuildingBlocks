@@ -413,7 +413,6 @@ void UDebugWindow::DrawSportData(USportDataHandler& sportData, Sport sport)
 
 	for (UTeam* team : teams)
 	{
-		//ImGui::Text(TCHAR_TO_ANSI(*team->teamName));
 		ImGui::Text(UUtility::FStringToCharPtr(*team->teamName));
 		ImGui::SameLine(nameSize + barSize);
 		ImGui::Text("|");
@@ -428,19 +427,82 @@ void UDebugWindow::DrawSportData(USportDataHandler& sportData, Sport sport)
 
 		ImGui::SameLine(nameSize + barSize + barSize + scoreSize + barSize);
 		ImGui::Text("|");
+		ImGui::SameLine(nameSize + barSize + barSize + scoreSize + barSize + barSize);
+		FString country = UUtility::EnumToString(TEXT("Country"), static_cast<int>(team->nationality));
+		ImGui::Text(UUtility::FStringToCharPtr(*country));
 	}
 }
 
 void UDebugWindow::DrawCreateTeamMenu()
 {
+	bool isCricket = newTeam.sport == Sport::Cricket;
+	bool isFootball = newTeam.sport == Sport::Football;
+	bool isF1 = newTeam.sport == Sport::Formula1;
+	if (ImGui::Checkbox("Cricket", &isCricket))
+	{
+		newTeam.sport = Sport::Cricket;
+	}
+	if (ImGui::Checkbox("Football", &isFootball))
+	{
+		newTeam.sport = Sport::Football;
+	}
+	if (ImGui::Checkbox("Formula1", &isF1))
+	{
+		newTeam.sport = Sport::Formula1;
+	}
 
 	ImGui::InputText("Team Name", newTeam.teamName, newTeam.nameLength);
 
-	if (ImGui::Button("Create"))
+	TArray<Country> countries = UUtility::CreateCountryArray();
+
+	static const int rowElements = 5;
+	if (ImGui::TreeNode("Select nationality"))
+	{
+		ImGui::Separator();
+		for (int i = 0; i < countries.Num(); ++i)
+		{
+			Country country = countries[i];
+			bool currentlySelected = newTeam.selectedNationality == country;
+
+			FString countryNameFString = UUtility::EnumToString(TEXT("Country"), static_cast<int>(country));
+			if (currentlySelected)
+			{
+				ImGui::PushStyleColor(0, ImVec4(0, 1, 0, 1));
+				countryNameFString = FString::Printf(TEXT("X %s X"), *countryNameFString);
+			}
+
+			char* countryName = UUtility::FStringToCharPtr(*countryNameFString);
+			if (ImGui::Button(countryName, ImVec2(140, 30)))
+			{
+				newTeam.selectedNationality = country;
+			}
+
+			if (currentlySelected)
+			{
+				ImGui::PopStyleColor();
+			}
+
+			bool isLast = i == countries.Num() - 1;
+			if ((i+1) % rowElements != 0 && !isLast)
+			{
+				ImGui::SameLine();
+			}
+		}
+
+		ImGui::Separator();
+		ImGui::TreePop();
+	}
+
+	ImGui::SliderFloat("Score", &newTeam.score, 0, 500);
+
+	if (ImGui::Button("Create Team"))
 	{
 		UTeam* team = NewObject<UTeam>();
 		FString name = UUtility::CharPtrToFString(newTeam.teamName);
 		team->teamName = name;
+		team->nationality = newTeam.selectedNationality;
+		team->score = newTeam.score;
+		team->SetSport(newTeam.sport);
 	}
 }
 

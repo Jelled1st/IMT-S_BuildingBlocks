@@ -22,3 +22,15 @@ UTeam::UTeam(FString teamName, Sport sport, float score, Country nationality) :
 UTeam::~UTeam()
 {
 }
+
+Sport UTeam::GetSport()
+{
+	return sport;
+}
+
+void UTeam::SetSport(Sport newSport)
+{
+	UCoreSystem::Get().GetSportDataHandler().UnregisterTeam(*this);
+	sport = newSport;
+	UCoreSystem::Get().GetSportDataHandler().RegisterTeam(*this);
+}
