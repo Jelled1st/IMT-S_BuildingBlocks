@@ -445,8 +445,7 @@ void UDebugWindow::DrawSportData(USportDataHandler& sportData, Sport sport)
 		ImGui::SameLine(nameSize + barSize + barSize + scoreSize + barSize);
 		ImGui::Text("|");
 		ImGui::SameLine(nameSize + barSize + barSize + scoreSize + barSize + barSize);
-		FString country = UUtility::EnumToString(TEXT("Country"), static_cast<int>(team->GetNationality()));
-		ImGui::Text(UUtility::FStringToCharPtr(*country));
+		ImGui::Text(UUtility::FStringToCharPtr(*team->GetNationalityAsString()));
 	}
 	
 	if (showAdditionalTeamInfo && m_selectedTeam != nullptr)
@@ -540,7 +539,7 @@ void UDebugWindow::DrawCreateTeamMenu()
 	if (ImGui::Button("Create Team"))
 	{
 		FString name = UUtility::CharPtrToFString(m_newTeam.teamName);
-		UTeam::Make(name, m_newTeam.sport, m_newTeam.score, m_newTeam.selectedNationality);
+		UTeam::Make(name, m_newTeam.sport, m_newTeam.score, UUtility::EnumToString(TEXT("Country"), static_cast<int>(m_newTeam.selectedNationality)), m_newTeam.selectedNationality);
 	}
 }
 
@@ -583,7 +582,7 @@ void UDebugWindow::Debug_GetF1TeamsFromAPI()
 		float score = apiObject->GetTeamScore(team);
 		FString nationality = apiObject->GetTeamNationality(team);
 
-		UTeam::Make(team, Sport::Formula1, score);
+		UTeam::Make(team, Sport::Formula1, score, nationality);
 	}
 }
 #endif

@@ -34,5 +34,6 @@ private:
 	UPROPERTY() float m_weight;
 	UPROPERTY() float m_number;
 	UPROPERTY() TEnumAsByte<Country> m_nationality;
+	UPROPERTY() FString m_nationalityAsString;
 	UPROPERTY() TEnumAsByte<Sport> m_sport;
 };

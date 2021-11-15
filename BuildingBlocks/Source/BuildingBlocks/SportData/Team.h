@@ -17,8 +17,8 @@ public:
 	UTeam();
 	~UTeam();
 
-	static UTeam& Make(FString teamName, Sport sport, float score = 0, Country nationality = Country::Unknown);
-	bool Init(FString newTeamName, Sport newSport, float newScore = 0, Country newNationality = Country::Unknown);
+	static UTeam& Make(FString teamName, Sport sport, float score = 0, FString nationalityString = "Unknown", Country nationality = Country::Unknown);
+	bool Init(FString newTeamName, Sport newSport, float newScore = 0, FString nationalityString = "Unknown", Country newNationality = Country::Unknown);
 
 	void AddPlayer(USportPlayer& player);
 
@@ -26,6 +26,7 @@ public:
 	FString GetName();
 	float GetScore();
 	Country GetNationality();
+	FString GetNationalityAsString();
 	const TArray<USportPlayer*>& GetPlayers();
 
 	UPROPERTY() bool isInitialized = false;
@@ -37,5 +38,6 @@ private:
 	UPROPERTY() FString currentChampionship;
 	UPROPERTY() FString teamBoss;
 	UPROPERTY() TEnumAsByte<Country> nationality;
+	UPROPERTY() FString nationalityAsString;
 	UPROPERTY() TEnumAsByte<Sport> sport;
 };

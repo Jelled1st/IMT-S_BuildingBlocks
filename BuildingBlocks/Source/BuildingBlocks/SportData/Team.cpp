@@ -39,21 +39,26 @@ Country UTeam::GetNationality()
 	return nationality;
 }
 
+FString UTeam::GetNationalityAsString()
+{
+	return nationalityAsString;
+}
+
 const TArray<USportPlayer*>& UTeam::GetPlayers()
 {
 	return players;
 }
 
-UTeam& UTeam::Make(FString teamName, Sport sport, float score, Country nationality)
+UTeam& UTeam::Make(FString teamName, Sport sport, float score, FString nationalityString, Country nationality)
 {
 	UTeam* team = NewObject<UTeam>();
 	
-	team->Init(teamName, sport, score, nationality);
+	team->Init(teamName, sport, score, nationalityString, nationality);
 
 	return *team;
 }
 
-bool UTeam::Init(FString newTeamName, Sport newSport, float newScore, Country newNationality)
+bool UTeam::Init(FString newTeamName, Sport newSport, float newScore, FString nationalityString, Country newNationality)
 {
 	if (isInitialized)
 	{
@@ -64,6 +69,7 @@ bool UTeam::Init(FString newTeamName, Sport newSport, float newScore, Country ne
 	this->teamName = newTeamName;
 	this->sport = newSport;
 	this->score = newScore;
+	this->nationalityAsString = nationalityString;
 	this->nationality = newNationality;
 
 	if (UCoreSystem::Exists())
