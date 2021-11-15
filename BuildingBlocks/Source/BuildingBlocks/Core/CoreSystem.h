@@ -55,6 +55,16 @@ public:
 		return *m_sportDataHandler;
 	}
 
+	UHTTPTestObject* GetHttpTestObject()
+	{
+		if (m_htttpTestObject == nullptr)
+		{
+			UE_DEBUG_BREAK();
+			UDebug::Warning("Requested Http Test Actor which is nullptr");
+		}
+		return m_htttpTestObject;
+	}
+
 private:
 	static TUniquePtr<UCoreSystem> m_instance;
 
