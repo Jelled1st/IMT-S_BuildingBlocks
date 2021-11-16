@@ -11,11 +11,29 @@ UCLASS()
 class BUILDINGBLOCKS_API UFormula1Api : public UObject
 {
 	GENERATED_BODY()
+
 public:
+	struct TeamData
+	{
+	public:
+		FString name;
+		FString nationality;
+		float points;
+		int wins;
+	};
+
 	UFormula1Api();
 	void Init(FHttpModule& newHttpModule);
 
+	void PullApiData(bool applyDataToSportHandler = false);
+
+	void ImportDataToSportHandler();
+
 private:
-	UPROPERTY()
+	void PullTeamsData(bool applyDataToSportHandler = false);
+	void PullPlayerData();
+
 	FHttpModule* m_httpModule;
+
+	TArray<TeamData> m_teams;
 };
