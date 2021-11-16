@@ -51,4 +51,16 @@ public:
 		return enumPtr->GetEnumName(enumValue);
 #endif
 	}
+
+	static int FStringToInt(const FString& string)
+	{
+		// unsafe - no way to detect errors
+		return FCString::Atoi(*string);
+	}
+
+	static int FStringToFloat(const FString& string)
+	{
+		// unsafe - no way to detect errors
+		return FCString::Atof(*string);
+	}
 };
