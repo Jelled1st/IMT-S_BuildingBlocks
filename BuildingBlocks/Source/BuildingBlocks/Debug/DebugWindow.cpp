@@ -452,8 +452,9 @@ void UDebugWindow::DrawSportData(USportDataHandler& sportData, Sport sport)
 	{
 		ImGui::Separator();
 
-		ImGui::Text(UUtility::FStringToCharPtr(*m_selectedTeam->GetName()));
-		ImGui::NewLine();
+		ImGui::Text(TCHAR_TO_ANSI(*m_selectedTeam->GetName()));
+
+		ImGui::Indent();
 
 		ImGui::Text("Players");
 		const TArray<USportPlayer*>& players = m_selectedTeam->GetPlayers();
@@ -471,6 +472,42 @@ void UDebugWindow::DrawSportData(USportDataHandler& sportData, Sport sport)
 				ImGui::SameLine();
 			}
 		}
+		ImGui::NewLine();
+
+		if (ImGui::TreeNode("Create player"))
+		{
+			ImGui::Indent();
+
+			ImGui::PushItemWidth(200);
+
+			ImGui::Text("Name");
+			ImGui::PushID("first_name");
+			ImGui::InputText("", m_newPlayer.firstName, PlayerData::nameLength);
+			ImGui::PopID();
+
+			ImGui::SameLine();
+
+			ImGui::PushID("last_name");
+			ImGui::InputText("Last name", m_newPlayer.lastName, PlayerData::nameLength);
+			ImGui::PopID();
+
+			ImGui::Text("Display name");
+			ImGui::PushID("display_name");
+			ImGui::InputText("", m_newPlayer.displayName, PlayerData::nameLength);
+			ImGui::PopID();
+
+			ImGui::PopItemWidth();
+
+			if (ImGui::Button("Create player"))
+			{
+				USportPlayer::Make(m_newPlayer.firstName, m_newPlayer.lastName, m_newPlayer.displayName, *m_selectedTeam);
+			}
+
+			ImGui::Unindent();
+			ImGui::TreePop();
+		}
+
+		ImGui::Unindent();
 	}
 }
 

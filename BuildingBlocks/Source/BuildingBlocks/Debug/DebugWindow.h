@@ -33,7 +33,7 @@ public:
 	{
 	public:
 		Sport sport;
-		const int nameLength = 21;
+		static const int nameLength = 21;
 		char teamName[21] = { 0 };
 		Country selectedNationality = Country::Unknown;
 		float score = 0;
@@ -42,9 +42,10 @@ public:
 	struct PlayerData
 	{
 	public:
-		const int nameLength = 21;
+		static const int nameLength = 21;
 		char firstName[21] = { 0 };
 		char lastName[21] = { 0 };
+		char displayName[21] = { 0 };
 	};
 
 	UDebugWindow();
@@ -78,6 +79,7 @@ private:
 	bool m_deserializeSucceeded = true;
 	AModularObject* m_selectedObject = nullptr;
 	TeamData m_newTeam;
+	PlayerData m_newPlayer;
 	UTeam* m_selectedTeam = nullptr;
 #endif
 };
