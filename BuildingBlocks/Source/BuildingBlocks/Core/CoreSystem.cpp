@@ -3,6 +3,7 @@
 
 #include "CoreSystem.h"
 #include "../Debug/Debug.h"
+#include "Runtime/Online/HTTP/Public/Http.h"
 
 TUniquePtr<UCoreSystem> UCoreSystem::m_instance;
 
@@ -24,6 +25,9 @@ void UCoreSystem::Init()
 	m_sportDataHandler = NewObject<USportDataHandler>();
 
 	m_htttpTestObject= NewObject<UHTTPTestObject>();
+
+	m_f1Api = NewObject<UFormula1Api>();
+	m_f1Api->Init(FHttpModule::Get());
 }
 
 void UCoreSystem::OnStart()

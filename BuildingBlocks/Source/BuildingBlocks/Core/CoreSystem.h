@@ -10,6 +10,8 @@
 #include "../Debug/DebugWindow.h"
 
 #include "../SportData/SportDataHandler.h"
+
+#include "../APIs/Formula1Api.h"
 #include "../HTTPTestObject.h"
 
 #include "CoreSystem.generated.h"
@@ -65,6 +67,16 @@ public:
 		return m_htttpTestObject;
 	}
 
+	UFormula1Api* const GetF1Api()
+	{
+		if (m_f1Api == nullptr)
+		{
+			UE_DEBUG_BREAK();
+			UDebug::Warning("Requested F1 Api which is nullptr");
+		}
+		return m_f1Api;
+	}
+
 private:
 	static TUniquePtr<UCoreSystem> m_instance;
 
@@ -82,5 +94,8 @@ private:
 
 	UPROPERTY();
 	UHTTPTestObject* m_htttpTestObject;
+
+	UPROPERTY();
+	UFormula1Api* m_f1Api;
 	
 };
