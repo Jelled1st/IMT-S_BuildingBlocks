@@ -71,8 +71,6 @@ private:
 	void DrawSportDatabase();
 	void DrawCreateTeamMenu();
 	void DrawSportData(USportDataHandler& sportData, Sport sport);
-	
-	void Debug_GetF1TeamsFromAPI();
 
 	void DrawPresetMenu();
 	FString m_jsonString = "";
