@@ -426,7 +426,7 @@ void UDebugWindow::DrawSportData(USportDataHandler& sportData, Sport sport)
 		{
 			showAdditionalTeamInfo = true;
 		}
-		if (ImGui::Button(UUtility::FStringToCharPtr(*team->GetName()), ImVec2(nameSize, 20)))
+		if (ImGui::Button(TCHAR_TO_ANSI(*team->GetName()), ImVec2(nameSize, 20)))
 		{
 			m_selectedTeam = team;
 			showAdditionalTeamInfo = true;
@@ -445,7 +445,7 @@ void UDebugWindow::DrawSportData(USportDataHandler& sportData, Sport sport)
 		ImGui::SameLine(nameSize + barSize + barSize + scoreSize + barSize);
 		ImGui::Text("|");
 		ImGui::SameLine(nameSize + barSize + barSize + scoreSize + barSize + barSize);
-		ImGui::Text(UUtility::FStringToCharPtr(*team->GetNationalityAsString()));
+		ImGui::Text(TCHAR_TO_ANSI(*team->GetNationalityAsString()));
 	}
 	
 	if (showAdditionalTeamInfo && m_selectedTeam != nullptr)
@@ -460,11 +460,12 @@ void UDebugWindow::DrawSportData(USportDataHandler& sportData, Sport sport)
 		const TArray<USportPlayer*>& players = m_selectedTeam->GetPlayers();
 		int playersInRow = 5;
 
+		ImGui::Indent();
 		for (int i = 0; i < players.Num(); ++i)
 		{
 			USportPlayer* player = players[i];
 
-			ImGui::Text(UUtility::FStringToCharPtr(player->GetDisplayName()));
+			ImGui::Text(TCHAR_TO_ANSI(*player->GetDisplayName()));
 			
 			bool isLast = i == players.Num() - 1;
 			if (i + 1 % playersInRow != 0 && !isLast)
@@ -472,6 +473,7 @@ void UDebugWindow::DrawSportData(USportDataHandler& sportData, Sport sport)
 				ImGui::SameLine();
 			}
 		}
+		ImGui::Unindent();
 		ImGui::NewLine();
 
 		if (ImGui::TreeNode("Create player"))
