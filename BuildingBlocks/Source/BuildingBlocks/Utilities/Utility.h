@@ -46,7 +46,7 @@ public:
 		}
 
 #if WITH_EDITOR
-		return enumPtr->GetDisplayNameText(enumValue).ToString();
+		return enumPtr->GetDisplayNameTextByIndex(enumValue).ToString();
 #else
 		return enumPtr->GetEnumName(enumValue);
 #endif
