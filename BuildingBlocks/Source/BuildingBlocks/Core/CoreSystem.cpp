@@ -37,7 +37,7 @@ void UCoreSystem::OnStart()
 	//get request example, can be called from wherever needed
 	m_htttpTestObject->Start();
 
-	m_f1Api->PullApiData(true);
+	m_f1Api->PullApiDataAsync();
 }
 
 void UCoreSystem::Shutdown()

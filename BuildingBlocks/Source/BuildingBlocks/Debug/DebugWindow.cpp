@@ -392,7 +392,7 @@ void UDebugWindow::DrawSportData(USportDataHandler& sportData, Sport sport)
 	{
 		if (ImGui::Button("Update from API"))
 		{
-			Debug_GetF1TeamsFromAPI();
+			UCoreSystem::Get().GetF1Api()->ImportDataToSportHandler();
 		}
 	}
 
