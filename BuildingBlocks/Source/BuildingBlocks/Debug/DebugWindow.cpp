@@ -458,22 +458,9 @@ void UDebugWindow::DrawSportData(USportDataHandler& sportData, Sport sport)
 
 		ImGui::Text("Players");
 		const TArray<USportPlayer*>& players = m_selectedTeam->GetPlayers();
-		int playersInRow = 5;
+		
+		DrawPlayersTable(players, sport);
 
-		ImGui::Indent();
-		for (int i = 0; i < players.Num(); ++i)
-		{
-			USportPlayer* player = players[i];
-
-			ImGui::Text(TCHAR_TO_ANSI(*player->GetDisplayName()));
-			
-			bool isLast = i == players.Num() - 1;
-			if (i + 1 % playersInRow != 0 && !isLast)
-			{
-				ImGui::SameLine();
-			}
-		}
-		ImGui::Unindent();
 		ImGui::NewLine();
 
 		if (ImGui::TreeNode("Create player"))
@@ -510,6 +497,70 @@ void UDebugWindow::DrawSportData(USportDataHandler& sportData, Sport sport)
 		}
 
 		ImGui::Unindent();
+	}
+}
+
+void UDebugWindow::DrawPlayersTable(const TArray<USportPlayer*>& players, Sport sport)
+{
+	static int nrSize = 40;
+	static int nameSize = 200;
+	static int scoreSize = 200;
+	static int nationalitySize = 140;
+	static int barSize = 10;
+	
+	ImGui::Text("Nr.");
+	ImGui::SameLine(nrSize + barSize);
+	ImGui::Text("|");
+	ImGui::SameLine(nrSize + barSize*2);
+
+	ImGui::Text("Name");
+	ImGui::SameLine(nrSize + nameSize + barSize*3);
+	ImGui::Text("|");
+	ImGui::SameLine(nrSize + nameSize + barSize*4);
+
+	ImGui::Text("score");
+	ImGui::SameLine(nrSize + nameSize + scoreSize + barSize*5);
+	ImGui::Text("|");
+	ImGui::SameLine(nrSize + nameSize + scoreSize + barSize*6);
+
+	ImGui::Text("nationality");
+
+	ImGui::Text("=========================================================================================");
+
+	bool showAdditionalPlayerInfo = false;
+	for (USportPlayer* player : players)
+	{
+		if (m_selectedPlayer == player)
+		{
+			showAdditionalPlayerInfo = true;
+		}
+
+		ImGui::Text(TCHAR_TO_ANSI(*player->GetNumberAsString()));
+		ImGui::SameLine(nrSize + barSize);
+		ImGui::Text("|");
+		ImGui::SameLine(nrSize + barSize * 2);
+
+		if (ImGui::Button(TCHAR_TO_ANSI(*player->GetFullName()), ImVec2(nameSize, 20)))
+		{
+			m_selectedPlayer = player;
+			showAdditionalPlayerInfo = true;
+		}
+		ImGui::SameLine(nrSize + nameSize + barSize * 3);
+		ImGui::Text("|");
+		ImGui::SameLine(nrSize + nameSize + barSize * 4);
+
+		ImGui::PushID(UUtility::FStringToCharPtr(*FString::Printf(TEXT("%s_score"), *player->GetName())));
+		ImGui::PushItemWidth(scoreSize);
+		static float score;
+		ImGui::SliderFloat("", &score, 0, 0);
+		ImGui::PopItemWidth();
+		ImGui::PopID();
+
+		ImGui::SameLine(nrSize + nameSize + scoreSize + barSize * 5);
+		ImGui::Text("|");
+		ImGui::SameLine(nrSize + nameSize + scoreSize + barSize * 6);
+
+		ImGui::Text(TCHAR_TO_ANSI(*player->nationalityAsString));
 	}
 }
 
@@ -609,9 +660,5 @@ void UDebugWindow::ImGuiSliderVector(const char* label, FVector& vector, float x
 
 	ImGui::PopItemWidth();
 	ImGui::PopID();
-}
-
-{
-
 }
 #endif

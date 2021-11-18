@@ -302,6 +302,7 @@ void UFormula1Api::ImportDataToSportHandler()
 		if (team != nullptr)
 		{
 			USportPlayer& player = USportPlayer::Make(driver.firstName, driver.lastName, driver.codeName, *team);
+			player.nationalityAsString = driver.nationality;
 		}
 		else
 		{

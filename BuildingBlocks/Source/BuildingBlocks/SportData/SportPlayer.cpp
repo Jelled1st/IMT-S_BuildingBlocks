@@ -37,3 +37,13 @@ FString USportPlayer::GetDisplayName() const
 {
 	return m_displayName;
 }
+
+int USportPlayer::GetNumber() const
+{
+	return m_number;
+}
+
+FString USportPlayer::GetNumberAsString() const
+{
+	return FString::FromInt(m_number);
+}

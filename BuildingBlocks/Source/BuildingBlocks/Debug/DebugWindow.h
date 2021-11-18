@@ -56,6 +56,13 @@ public:
 #if WITH_IMGUI
 	void DrawWindow();
 
+	enum TableDrawOption
+	{
+		None,
+		SeperateFirst,
+		SeperateAll,
+	};
+
 	static void ImGuiSliderVector(const char* label, FVector& vector, float xLimit = 1000, float yLimit = 1000, float zLimit = 1000);
 #endif
 
@@ -71,6 +78,7 @@ private:
 	void DrawSportDatabase();
 	void DrawCreateTeamMenu();
 	void DrawSportData(USportDataHandler& sportData, Sport sport);
+	void DrawPlayersTable(const TArray<USportPlayer*>& players, Sport sport);
 
 	void DrawPresetMenu();
 	FString m_jsonString = "";
@@ -79,5 +87,6 @@ private:
 	TeamData m_newTeam;
 	PlayerData m_newPlayer;
 	UTeam* m_selectedTeam = nullptr;
+	USportPlayer* m_selectedPlayer = nullptr;
 #endif
 };

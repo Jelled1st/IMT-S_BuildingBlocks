@@ -22,6 +22,12 @@ public:
 
 	FString GetFullName() const;
 	FString GetDisplayName() const;
+	int GetNumber() const;
+	FString GetNumberAsString() const;
+	FString GetNationalityAsString() const;
+
+	UPROPERTY() TEnumAsByte<Country> nationality;
+	UPROPERTY() FString nationalityAsString;
 
 private:
 	UPROPERTY() FString m_firstName;
@@ -33,7 +39,5 @@ private:
 	UPROPERTY() int m_length;
 	UPROPERTY() float m_weight;
 	UPROPERTY() float m_number;
-	UPROPERTY() TEnumAsByte<Country> m_nationality;
-	UPROPERTY() FString m_nationalityAsString;
 	UPROPERTY() TEnumAsByte<Sport> m_sport;
 };
