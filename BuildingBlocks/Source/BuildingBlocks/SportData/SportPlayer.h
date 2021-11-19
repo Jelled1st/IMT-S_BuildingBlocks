@@ -19,11 +19,18 @@ public:
 	~USportPlayer();
 
 	static USportPlayer& Make(FString firstName, FString lastName, FString displayName, UTeam& team);
+	bool Init(FString firstName, FString lastName, FString displayName, UTeam& team);
 
 	FString GetFullName() const;
 	FString GetDisplayName() const;
+	int GetNumber() const;
+	FString GetNumberAsString() const;
+	FString GetNationalityAsString() const;
 
-private:
+	UPROPERTY() TEnumAsByte<Country> nationality;
+	UPROPERTY() FString nationalityAsString;
+
+protected:
 	UPROPERTY() FString m_firstName;
 	UPROPERTY() FString m_lastName;
 	UPROPERTY() FString m_displayName;
@@ -33,7 +40,5 @@ private:
 	UPROPERTY() int m_length;
 	UPROPERTY() float m_weight;
 	UPROPERTY() float m_number;
-	UPROPERTY() TEnumAsByte<Country> m_nationality;
-	UPROPERTY() FString m_nationalityAsString;
 	UPROPERTY() TEnumAsByte<Sport> m_sport;
 };

@@ -30,11 +30,12 @@ public:
 	const TArray<USportPlayer*>& GetPlayers();
 
 	UPROPERTY() bool isInitialized = false;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) int wins;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) float score;
 
 private:
 	UPROPERTY() FString teamName;
 	UPROPERTY() TArray<USportPlayer*> players;
-	UPROPERTY() float score;
 	UPROPERTY() FString currentChampionship;
 	UPROPERTY() FString teamBoss;
 	UPROPERTY() TEnumAsByte<Country> nationality;

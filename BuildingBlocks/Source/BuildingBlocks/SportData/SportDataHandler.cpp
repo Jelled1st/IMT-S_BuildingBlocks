@@ -93,6 +93,20 @@ const TArray<UTeam*>& USportDataHandler::GetTeams(Sport sport)
 	}
 }
 
+UTeam* USportDataHandler::FindTeam(FString name, Sport sport)
+{
+	const TArray<UTeam*>& teams = GetTeams(sport);
+
+	for (UTeam* team : teams)
+	{
+		if (team->GetName() == name)
+		{
+			return team;
+		}
+	}
+	return nullptr;
+}
+
 TArray<UTeam*> USportDataHandler::GetAllTeams()
 {
 	TArray<UTeam*> allTeams;

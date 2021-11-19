@@ -392,7 +392,7 @@ void UDebugWindow::DrawSportData(USportDataHandler& sportData, Sport sport)
 	{
 		if (ImGui::Button("Update from API"))
 		{
-			Debug_GetF1TeamsFromAPI();
+			UCoreSystem::Get().GetF1Api()->ImportDataToSportHandler();
 		}
 	}
 
@@ -426,7 +426,7 @@ void UDebugWindow::DrawSportData(USportDataHandler& sportData, Sport sport)
 		{
 			showAdditionalTeamInfo = true;
 		}
-		if (ImGui::Button(UUtility::FStringToCharPtr(*team->GetName()), ImVec2(nameSize, 20)))
+		if (ImGui::Button(TCHAR_TO_ANSI(*team->GetName()), ImVec2(nameSize, 20)))
 		{
 			m_selectedTeam = team;
 			showAdditionalTeamInfo = true;
@@ -445,32 +445,122 @@ void UDebugWindow::DrawSportData(USportDataHandler& sportData, Sport sport)
 		ImGui::SameLine(nameSize + barSize + barSize + scoreSize + barSize);
 		ImGui::Text("|");
 		ImGui::SameLine(nameSize + barSize + barSize + scoreSize + barSize + barSize);
-		ImGui::Text(UUtility::FStringToCharPtr(*team->GetNationalityAsString()));
+		ImGui::Text(TCHAR_TO_ANSI(*team->GetNationalityAsString()));
 	}
 	
 	if (showAdditionalTeamInfo && m_selectedTeam != nullptr)
 	{
 		ImGui::Separator();
 
-		ImGui::Text(UUtility::FStringToCharPtr(*m_selectedTeam->GetName()));
-		ImGui::NewLine();
+		ImGui::Text(TCHAR_TO_ANSI(*m_selectedTeam->GetName()));
+
+		ImGui::Indent();
 
 		ImGui::Text("Players");
 		const TArray<USportPlayer*>& players = m_selectedTeam->GetPlayers();
-		int playersInRow = 5;
+		
+		DrawPlayersTable(players, sport);
 
-		for (int i = 0; i < players.Num(); ++i)
+		ImGui::NewLine();
+
+		if (ImGui::TreeNode("Create player"))
 		{
-			USportPlayer* player = players[i];
+			ImGui::Indent();
 
-			ImGui::Text(UUtility::FStringToCharPtr(player->GetDisplayName()));
-			
-			bool isLast = i == players.Num() - 1;
-			if (i + 1 % playersInRow != 0 && !isLast)
+			ImGui::PushItemWidth(200);
+
+			ImGui::Text("Name");
+			ImGui::PushID("first_name");
+			ImGui::InputText("", m_newPlayer.firstName, PlayerData::nameLength);
+			ImGui::PopID();
+
+			ImGui::SameLine();
+
+			ImGui::PushID("last_name");
+			ImGui::InputText("Last name", m_newPlayer.lastName, PlayerData::nameLength);
+			ImGui::PopID();
+
+			ImGui::Text("Display name");
+			ImGui::PushID("display_name");
+			ImGui::InputText("", m_newPlayer.displayName, PlayerData::nameLength);
+			ImGui::PopID();
+
+			ImGui::PopItemWidth();
+
+			if (ImGui::Button("Create player"))
 			{
-				ImGui::SameLine();
+				USportPlayer::Make(m_newPlayer.firstName, m_newPlayer.lastName, m_newPlayer.displayName, *m_selectedTeam);
 			}
+
+			ImGui::Unindent();
+			ImGui::TreePop();
 		}
+
+		ImGui::Unindent();
+	}
+}
+
+void UDebugWindow::DrawPlayersTable(const TArray<USportPlayer*>& players, Sport sport)
+{
+	static int nrSize = 40;
+	static int nameSize = 200;
+	static int scoreSize = 200;
+	static int nationalitySize = 140;
+	static int barSize = 10;
+	
+	ImGui::Text("Nr.");
+	ImGui::SameLine(nrSize + barSize);
+	ImGui::Text("|");
+	ImGui::SameLine(nrSize + barSize*2);
+
+	ImGui::Text("Name");
+	ImGui::SameLine(nrSize + nameSize + barSize*3);
+	ImGui::Text("|");
+	ImGui::SameLine(nrSize + nameSize + barSize*4);
+
+	ImGui::Text("score");
+	ImGui::SameLine(nrSize + nameSize + scoreSize + barSize*5);
+	ImGui::Text("|");
+	ImGui::SameLine(nrSize + nameSize + scoreSize + barSize*6);
+
+	ImGui::Text("nationality");
+
+	ImGui::Text("=========================================================================================");
+
+	bool showAdditionalPlayerInfo = false;
+	for (USportPlayer* player : players)
+	{
+		if (m_selectedPlayer == player)
+		{
+			showAdditionalPlayerInfo = true;
+		}
+
+		ImGui::Text(TCHAR_TO_ANSI(*player->GetNumberAsString()));
+		ImGui::SameLine(nrSize + barSize);
+		ImGui::Text("|");
+		ImGui::SameLine(nrSize + barSize * 2);
+
+		if (ImGui::Button(TCHAR_TO_ANSI(*player->GetFullName()), ImVec2(nameSize, 20)))
+		{
+			m_selectedPlayer = player;
+			showAdditionalPlayerInfo = true;
+		}
+		ImGui::SameLine(nrSize + nameSize + barSize * 3);
+		ImGui::Text("|");
+		ImGui::SameLine(nrSize + nameSize + barSize * 4);
+
+		ImGui::PushID(UUtility::FStringToCharPtr(*FString::Printf(TEXT("%s_score"), *player->GetName())));
+		ImGui::PushItemWidth(scoreSize);
+		static float score;
+		ImGui::SliderFloat("", &score, 0, 0);
+		ImGui::PopItemWidth();
+		ImGui::PopID();
+
+		ImGui::SameLine(nrSize + nameSize + scoreSize + barSize * 5);
+		ImGui::Text("|");
+		ImGui::SameLine(nrSize + nameSize + scoreSize + barSize * 6);
+
+		ImGui::Text(TCHAR_TO_ANSI(*player->nationalityAsString));
 	}
 }
 
@@ -570,19 +660,5 @@ void UDebugWindow::ImGuiSliderVector(const char* label, FVector& vector, float x
 
 	ImGui::PopItemWidth();
 	ImGui::PopID();
-}
-
-void UDebugWindow::Debug_GetF1TeamsFromAPI()
-{
-	UHTTPTestObject* apiObject = UCoreSystem::Get().GetHttpTestObject();
-	TArray<FString> teams = apiObject->GetTeamNames();
-
-	for (FString team : teams)
-	{
-		float score = apiObject->GetTeamScore(team);
-		FString nationality = apiObject->GetTeamNationality(team);
-
-		UTeam::Make(team, Sport::Formula1, score, nationality);
-	}
 }
 #endif

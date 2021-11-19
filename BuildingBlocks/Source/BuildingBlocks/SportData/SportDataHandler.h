@@ -28,6 +28,8 @@ public:
 	const TArray<UTeam*>& GetTeams(Sport sport);
 	TArray<UTeam*> GetAllTeams();
 
+	UTeam* FindTeam(FString name, Sport sport);
+
 private:
 	UPROPERTY();
 	TArray<UTeam*> m_cricketTeams;
