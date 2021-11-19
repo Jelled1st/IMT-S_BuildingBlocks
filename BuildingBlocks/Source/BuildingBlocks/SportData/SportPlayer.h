@@ -19,6 +19,7 @@ public:
 	~USportPlayer();
 
 	static USportPlayer& Make(FString firstName, FString lastName, FString displayName, UTeam& team);
+	bool Init(FString firstName, FString lastName, FString displayName, UTeam& team);
 
 	FString GetFullName() const;
 	FString GetDisplayName() const;
@@ -29,7 +30,7 @@ public:
 	UPROPERTY() TEnumAsByte<Country> nationality;
 	UPROPERTY() FString nationalityAsString;
 
-private:
+protected:
 	UPROPERTY() FString m_firstName;
 	UPROPERTY() FString m_lastName;
 	UPROPERTY() FString m_displayName;
