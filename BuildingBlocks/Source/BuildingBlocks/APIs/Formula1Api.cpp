@@ -15,6 +15,20 @@ UFormula1Api::UFormula1Api()
 
 }
 
+UFormula1Api::~UFormula1Api()
+{
+	m_isShuttingDown = true;
+	while (m_threadHelper->IsRunning())
+	{
+	}
+
+	m_drivers.Empty();
+	m_constructors.Empty();
+	m_teamDriversResponse.teamApiResponses.Empty();
+
+	delete m_threadHelper;
+}
+
 void UFormula1Api::Init(FHttpModule& newHttpModule)
 {
 	m_httpModule = &newHttpModule;
@@ -37,13 +51,25 @@ void UFormula1Api::PullApiDataAsync()
 
 void UFormula1Api::PullConstructorsData()
 {
+	if (m_isShuttingDown)
+	{
+		return;
+	}
+
 	m_criticalSection.Lock();
+	m_constructors.Empty();
+
 	m_constructorsResponse.isFinished = false;
 	m_constructorsResponse.isSuccessful = false;
 	m_criticalSection.Unlock();
 
 	static auto callback = [this](FHttpRequestPtr request, FHttpResponsePtr response, bool isResponseSuccessful)
 	{
+		if (m_isShuttingDown)
+		{
+			return;
+		}
+
 		if (!isResponseSuccessful)
 		{
 			UDebug::Error("PullTeamsData was unsuccessful");
@@ -67,6 +93,11 @@ void UFormula1Api::PullConstructorsData()
 
 			for (int i = 0; i < constructorCount; i++) 
 			{
+				if (m_isShuttingDown)
+				{
+					return;
+				}
+
 				TSharedPtr<FJsonObject> constructor = JsonObject->GetObjectField("MRData")->GetObjectField("StandingsTable")->GetArrayField("StandingsLists")[0]->AsObject()->GetArrayField("ConstructorStandings")[i]->AsObject();
 
 				FString constructorId = constructor->GetObjectField("Constructor")->GetStringField("constructorId");
@@ -108,6 +139,11 @@ void UFormula1Api::PullConstructorsData()
 		}
 	};
 
+	if (m_isShuttingDown)
+	{
+		return;
+	}
+
 	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = m_httpModule->CreateRequest();
 	Request->OnProcessRequestComplete().BindLambda(callback);
 
@@ -121,13 +157,25 @@ void UFormula1Api::PullConstructorsData()
 
 void UFormula1Api::PullDriverInformation()
 {
+	if (m_isShuttingDown)
+	{
+		return;
+	}
+
 	m_criticalSection.Lock();
+	m_drivers.Empty();
+
 	m_driversResponse.isFinished = false;
 	m_driversResponse.isSuccessful = false;
 	m_criticalSection.Unlock();
 
 	auto callback = [this](FHttpRequestPtr request, FHttpResponsePtr response, bool isSuccessful)
 	{
+		if (m_isShuttingDown)
+		{
+			return;
+		}
+
 		if (!isSuccessful)
 		{
 			UDebug::Error("PullTeamsData was unsuccessful");
@@ -151,6 +199,11 @@ void UFormula1Api::PullDriverInformation()
 
 			for (int i = 0; i < driverCount; i++) 
 			{
+				if (m_isShuttingDown)
+				{
+					return;
+				}
+
 				TSharedPtr<FJsonObject> driverObject = JsonObject->GetObjectField("MRData")->GetObjectField("DriverTable")->GetArrayField("Drivers")[i]->AsObject();
 
 				FString driverId = driverObject->GetStringField("driverId");
@@ -193,6 +246,11 @@ void UFormula1Api::PullDriverInformation()
 		}
 	};
 
+	if (m_isShuttingDown)
+	{
+		return;
+	}
+
 	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = m_httpModule->CreateRequest();
 	Request->OnProcessRequestComplete().BindLambda(callback);
 
@@ -206,6 +264,11 @@ void UFormula1Api::PullDriverInformation()
 
 void UFormula1Api::PullTeamDrivers()
 {
+	if (m_isShuttingDown)
+	{
+		return;
+	}
+
 	m_criticalSection.Lock();
 	m_teamDriversResponse.expectedResponses = m_constructors.Num();
 	m_teamDriversResponse.teamApiResponses.Empty();
@@ -214,8 +277,18 @@ void UFormula1Api::PullTeamDrivers()
 	int constructorIndex = 0;
 	for (ConstructorData& constructor : m_constructors)
 	{
+		if (m_isShuttingDown)
+		{
+			return;
+		}
+
 		auto callback = [this, &constructor, constructorIndex](FHttpRequestPtr request, FHttpResponsePtr response, bool isSuccessful)
 		{
+			if (m_isShuttingDown)
+			{
+				return;
+			}
+
 			if (!isSuccessful)
 			{
 				UDebug::Error("PullTeamsData was unsuccessful");
@@ -269,6 +342,10 @@ void UFormula1Api::PullTeamDrivers()
 			}
 		};
 
+		if (m_isShuttingDown)
+		{
+			return;
+		}
 		TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = m_httpModule->CreateRequest();
 		Request->OnProcessRequestComplete().BindLambda(callback);
 
@@ -362,8 +439,8 @@ bool UFormula1Api::IsContructorDataPulled(bool& wasSuccessful)
 	isFinished = m_constructorsResponse.isFinished;
 	wasSuccessful = m_constructorsResponse.isSuccessful;
 	m_criticalSection.Unlock();
-	
-	return isFinished;
+
+	return isFinished || m_isShuttingDown;
 }
 
 bool UFormula1Api::IsDriversInfoPulled(bool& wasSuccessful)
@@ -375,7 +452,7 @@ bool UFormula1Api::IsDriversInfoPulled(bool& wasSuccessful)
 	wasSuccessful = m_driversResponse.isSuccessful;
 	m_criticalSection.Unlock();
 
-	return isFinished;
+	return isFinished || m_isShuttingDown;
 }
 
 bool UFormula1Api::IsTeamDriversPulled(bool& wasSuccessful)
@@ -407,5 +484,5 @@ bool UFormula1Api::IsTeamDriversPulled(bool& wasSuccessful)
 
 	m_criticalSection.Unlock();
 
-	return isFinished;
+	return isFinished || m_isShuttingDown;
 }

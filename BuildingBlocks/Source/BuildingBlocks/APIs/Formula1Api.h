@@ -62,6 +62,8 @@ public:
 	};
 
 	UFormula1Api();
+	~UFormula1Api();
+
 	void Init(FHttpModule& newHttpModule);
 
 	void PullApiDataAsync();
@@ -91,4 +93,6 @@ private:
 	ResponseData m_constructorsResponse;
 	ResponseData m_driversResponse;
 	TeamDriversResponseData m_teamDriversResponse;
+
+	bool m_isShuttingDown = false;
 };

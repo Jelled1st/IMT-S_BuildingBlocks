@@ -11,6 +11,7 @@ class BUILDINGBLOCKS_API FFormula1ApiThreadHelper : public FRunnable
 {
 public:
 	FFormula1ApiThreadHelper(UFormula1Api& f1Api);
+	~FFormula1ApiThreadHelper();
 
 	bool IsRunning();
 

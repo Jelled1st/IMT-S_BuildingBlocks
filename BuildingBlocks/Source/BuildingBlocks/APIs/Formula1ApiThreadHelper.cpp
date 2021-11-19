@@ -9,6 +9,11 @@ FFormula1ApiThreadHelper::FFormula1ApiThreadHelper(UFormula1Api& f1Api) : FRunna
 
 }
 
+FFormula1ApiThreadHelper::~FFormula1ApiThreadHelper()
+{
+
+}
+
 bool FFormula1ApiThreadHelper::Init()
 {
 	UDebug::Log("Formula1ApiThreadHelper::Init()");
@@ -20,26 +25,24 @@ uint32 FFormula1ApiThreadHelper::Run()
 {
 	UDebug::Log("Formula1ApiThreadHelper::Run()");
 
-	bool isPulling = true;
+	m_isRunning = true;
+	bool wasSuccesfull = false;
 
-	while (isPulling)
-	{
-		m_isRunning = true;
-		bool wasSuccesfull = false;
+	UDebug::Log("PullConstructorsData()");
+	m_f1Api->PullConstructorsData();
+	while (!m_f1Api->IsContructorDataPulled(wasSuccesfull)) {};
 
-		m_f1Api->PullConstructorsData();
-		while (!m_f1Api->IsContructorDataPulled(wasSuccesfull)) {};
+	UDebug::Log("PullDriverInformation()");
+	wasSuccesfull = false;
+	m_f1Api->PullDriverInformation();
+	while (!m_f1Api->IsDriversInfoPulled(wasSuccesfull)) {};
 
-		wasSuccesfull = false;
-		m_f1Api->PullDriverInformation();
-		while (!m_f1Api->IsDriversInfoPulled(wasSuccesfull)) {};
+	UDebug::Log("PullTeamDrivers()");
+	wasSuccesfull = false;
+	m_f1Api->PullTeamDrivers();
+	while (!m_f1Api->IsTeamDriversPulled(wasSuccesfull)) {};
 
-		wasSuccesfull = false;
-		m_f1Api->PullTeamDrivers();
-		while (!m_f1Api->IsTeamDriversPulled(wasSuccesfull)) {};
-
-		isPulling = false;
-	}
+	UDebug::Log("pulling is done");
 
 	UDebug::Log("returning Formula1ApiThreadHelper::Run()");
 	return 0;
