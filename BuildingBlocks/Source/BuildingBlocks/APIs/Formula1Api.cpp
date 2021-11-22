@@ -12,7 +12,7 @@
 
 UFormula1Api::UFormula1Api()
 {
-
+	m_isShuttingDown = false;
 }
 
 UFormula1Api::~UFormula1Api()
@@ -171,6 +171,7 @@ void UFormula1Api::PullDriverInformation()
 
 	auto callback = [this](FHttpRequestPtr request, FHttpResponsePtr response, bool isSuccessful)
 	{
+		UDebug::Log("PullTeamsData callback");
 		if (m_isShuttingDown)
 		{
 			return;

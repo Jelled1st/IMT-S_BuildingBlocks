@@ -43,6 +43,8 @@ void UCoreSystem::OnStart()
 void UCoreSystem::Shutdown()
 {
 	m_instance.Release();
+
+	UDebug::Log("CoreSystem - Shutdown()");
 }
 
 UCoreSystem& UCoreSystem::Get()
