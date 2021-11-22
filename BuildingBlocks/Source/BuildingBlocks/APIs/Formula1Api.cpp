@@ -18,18 +18,23 @@ UFormula1Api::UFormula1Api()
 UFormula1Api::~UFormula1Api()
 {
 	m_isShuttingDown = true;
+
 	if (m_threadHelper != nullptr)
 	{
 		while (m_threadHelper->IsRunning())
 		{
 		}
+		m_thread->Kill(true);
 	}
 
 	m_drivers.Empty();
 	m_constructors.Empty();
 	m_teamDriversResponse.teamApiResponses.Empty();
 
-	delete m_threadHelper;
+	if (m_threadHelper != nullptr)
+	{
+		delete m_threadHelper;
+	}
 }
 
 void UFormula1Api::Init(FHttpModule& newHttpModule)
@@ -66,96 +71,93 @@ void UFormula1Api::PullConstructorsData()
 	m_constructorsResponse.isSuccessful = false;
 	m_criticalSection.Unlock();
 
-	static auto callback = [this](FHttpRequestPtr request, FHttpResponsePtr response, bool isResponseSuccessful)
-	{
-		if (m_isShuttingDown)
-		{
-			return;
-		}
-
-		if (!isResponseSuccessful)
-		{
-			UDebug::Error("PullTeamsData was unsuccessful");
-			UDebug::ToScreen("Error: PullTeamsData was unsuccessful");
-
-			m_criticalSection.Lock();
-			m_constructorsResponse.isFinished = true;
-			m_constructorsResponse.isSuccessful = false;
-			m_criticalSection.Unlock();
-
-			return;
-		}
-
-		TSharedPtr<FJsonObject> JsonObject;
-		TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(response->GetContentAsString());
-
-		if (FJsonSerializer::Deserialize(Reader, JsonObject))
-		{
-			FString constructorCountString = JsonObject->GetObjectField("MRData")->GetStringField("total");
-			int32 constructorCount = UUtility::FStringToInt(constructorCountString);
-
-			for (int i = 0; i < constructorCount; i++) 
-			{
-				if (m_isShuttingDown)
-				{
-					return;
-				}
-
-				TSharedPtr<FJsonObject> constructor = JsonObject->GetObjectField("MRData")->GetObjectField("StandingsTable")->GetArrayField("StandingsLists")[0]->AsObject()->GetArrayField("ConstructorStandings")[i]->AsObject();
-
-				FString constructorId = constructor->GetObjectField("Constructor")->GetStringField("constructorId");
-				FString constructorName = constructor->GetObjectField("Constructor")->GetStringField("name");
-				FString nationality = constructor->GetObjectField("Constructor")->GetStringField("nationality");
-				double points = constructor->GetNumberField("points");
-				double wins = constructor->GetNumberField("wins");
-
-				ConstructorData newTeam
-				{
-					constructorId,
-					constructorName,
-					nationality,
-					static_cast<float>(points),
-					static_cast<int>(wins),
-					"Unknown",
-					"Unknown",
-				};
-
-				m_criticalSection.Lock();
-				m_constructors.Add(newTeam);
-				m_criticalSection.Unlock();
-			}
-
-			m_criticalSection.Lock();
-			m_constructorsResponse.isFinished = true;
-			m_constructorsResponse.isSuccessful = true;
-			m_criticalSection.Unlock();
-		}
-		else
-		{
-			UDebug::Error("API deserialization unsuccessful");
-			UDebug::ToScreen("Error: API deserialization unsuccessful");
-
-			m_criticalSection.Lock();
-			m_constructorsResponse.isFinished = true;
-			m_constructorsResponse.isSuccessful = false;
-			m_criticalSection.Unlock();
-		}
-	};
-
 	if (m_isShuttingDown)
 	{
 		return;
 	}
 
-	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = m_httpModule->CreateRequest();
-	Request->OnProcessRequestComplete().BindLambda(callback);
+	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> request = m_httpModule->CreateRequest();
+	request->OnProcessRequestComplete().BindUObject(this, &UFormula1Api::ConstructorDataCallback);
 
 	//process GET request
-	Request->SetURL("http://ergast.com/api/f1/2021/constructorStandings.json");
-	Request->SetVerb("GET");
-	Request->SetHeader(TEXT("User-Agent"), "X-UnrealEngine-Agent");
-	Request->SetHeader("Content-Type", TEXT("application/json"));
-	Request->ProcessRequest();
+	request->SetURL("http://ergast.com/api/f1/2021/constructorStandings.json");
+	request->SetVerb("GET");
+	request->SetHeader(TEXT("User-Agent"), "X-UnrealEngine-Agent");
+	request->SetHeader("Content-Type", TEXT("application/json"));
+	request->ProcessRequest();
+}
+
+void UFormula1Api::ConstructorDataCallback(FHttpRequestPtr request, FHttpResponsePtr response, bool isSuccessful)
+{
+	UDebug::Log("PullConstructorsData callback");
+
+	if (!isSuccessful)
+	{
+		UDebug::Error("PullTeamsData was unsuccessful");
+		UDebug::ToScreen("Error: PullTeamsData was unsuccessful");
+
+		m_criticalSection.Lock();
+		m_constructorsResponse.isFinished = true;
+		m_constructorsResponse.isSuccessful = false;
+		m_criticalSection.Unlock();
+
+		return;
+	}
+
+	TSharedPtr<FJsonObject> JsonObject;
+	TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(response->GetContentAsString());
+
+	if (FJsonSerializer::Deserialize(Reader, JsonObject))
+	{
+		FString constructorCountString = JsonObject->GetObjectField("MRData")->GetStringField("total");
+		int32 constructorCount = UUtility::FStringToInt(constructorCountString);
+
+		for (int i = 0; i < constructorCount; i++)
+		{
+			if (m_isShuttingDown)
+			{
+				return;
+			}
+
+			TSharedPtr<FJsonObject> constructor = JsonObject->GetObjectField("MRData")->GetObjectField("StandingsTable")->GetArrayField("StandingsLists")[0]->AsObject()->GetArrayField("ConstructorStandings")[i]->AsObject();
+
+			FString constructorId = constructor->GetObjectField("Constructor")->GetStringField("constructorId");
+			FString constructorName = constructor->GetObjectField("Constructor")->GetStringField("name");
+			FString nationality = constructor->GetObjectField("Constructor")->GetStringField("nationality");
+			double points = constructor->GetNumberField("points");
+			double wins = constructor->GetNumberField("wins");
+
+			ConstructorData newTeam
+			{
+				constructorId,
+				constructorName,
+				nationality,
+				static_cast<float>(points),
+				static_cast<int>(wins),
+				"Unknown",
+				"Unknown",
+			};
+
+			m_criticalSection.Lock();
+			m_constructors.Add(newTeam);
+			m_criticalSection.Unlock();
+		}
+
+		m_criticalSection.Lock();
+		m_constructorsResponse.isFinished = true;
+		m_constructorsResponse.isSuccessful = true;
+		m_criticalSection.Unlock();
+	}
+	else
+	{
+		UDebug::Error("API deserialization unsuccessful");
+		UDebug::ToScreen("Error: API deserialization unsuccessful");
+
+		m_criticalSection.Lock();
+		m_constructorsResponse.isFinished = true;
+		m_constructorsResponse.isSuccessful = false;
+		m_criticalSection.Unlock();
+	}
 }
 
 void UFormula1Api::PullDriverInformation()
@@ -172,91 +174,13 @@ void UFormula1Api::PullDriverInformation()
 	m_driversResponse.isSuccessful = false;
 	m_criticalSection.Unlock();
 
-	auto callback = [this](FHttpRequestPtr request, FHttpResponsePtr response, bool isSuccessful)
-	{
-		UDebug::Log("PullTeamsData callback");
-		if (m_isShuttingDown)
-		{
-			return;
-		}
-
-		if (!isSuccessful)
-		{
-			UDebug::Error("PullTeamsData was unsuccessful");
-			UDebug::ToScreen("Error: PullTeamsData was unsuccessful");
-
-			m_criticalSection.Lock();
-			m_driversResponse.isFinished = true;
-			m_driversResponse.isSuccessful = false;
-			m_criticalSection.Unlock();
-
-			return;
-		}
-
-		TSharedPtr<FJsonObject> JsonObject;
-		TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(response->GetContentAsString());
-
-		if (FJsonSerializer::Deserialize(Reader, JsonObject))
-		{
-			FString driverCountString = JsonObject->GetObjectField("MRData")->GetStringField("total");
-			int32 driverCount = UUtility::FStringToInt(driverCountString);
-
-			for (int i = 0; i < driverCount; i++) 
-			{
-				if (m_isShuttingDown)
-				{
-					return;
-				}
-
-				TSharedPtr<FJsonObject> driverObject = JsonObject->GetObjectField("MRData")->GetObjectField("DriverTable")->GetArrayField("Drivers")[i]->AsObject();
-
-				FString driverId = driverObject->GetStringField("driverId");
-				FString firstName = driverObject->GetStringField("givenName");
-				FString lastName = driverObject->GetStringField("familyName");
-				FString codeName = driverObject->GetStringField("code");
-				double number = driverObject->GetNumberField("permanentNumber");
-				FString nationality = driverObject->GetStringField("nationality");
-
-				DriverData driver
-				{
-					driverId,
-					firstName,
-					lastName,
-					codeName,
-					static_cast<int>(number),
-					nationality,
-					"Unknown"
-				};
-
-				m_criticalSection.Lock();
-				m_drivers.Add(driver);
-				m_criticalSection.Unlock();
-			}
-
-			m_criticalSection.Lock();
-			m_driversResponse.isFinished = true;
-			m_driversResponse.isSuccessful = true;
-			m_criticalSection.Unlock();
-		}
-		else
-		{
-			UDebug::Error("API deserialization unsuccessful");
-			UDebug::ToScreen("Error: API deserialization unsuccessful");
-
-			m_criticalSection.Lock();
-			m_driversResponse.isFinished = true;
-			m_driversResponse.isSuccessful = false;
-			m_criticalSection.Unlock();
-		}
-	};
-
 	if (m_isShuttingDown)
 	{
 		return;
 	}
 
 	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = m_httpModule->CreateRequest();
-	Request->OnProcessRequestComplete().BindLambda(callback);
+	Request->OnProcessRequestComplete().BindUObject(this, &UFormula1Api::DriverDataCallback);
 
 	//process GET request
 	Request->SetURL("http://ergast.com/api/f1/2021/drivers.json");
@@ -264,6 +188,80 @@ void UFormula1Api::PullDriverInformation()
 	Request->SetHeader(TEXT("User-Agent"), "X-UnrealEngine-Agent");
 	Request->SetHeader("Content-Type", TEXT("application/json"));
 	Request->ProcessRequest();
+}
+
+void UFormula1Api::DriverDataCallback(FHttpRequestPtr request, FHttpResponsePtr response, bool isSuccessful)
+{
+	UDebug::Log("PullTeamsData callback");
+
+	if (!isSuccessful)
+	{
+		UDebug::Error("PullTeamsData was unsuccessful");
+		UDebug::ToScreen("Error: PullTeamsData was unsuccessful");
+
+		m_criticalSection.Lock();
+		m_driversResponse.isFinished = true;
+		m_driversResponse.isSuccessful = false;
+		m_criticalSection.Unlock();
+
+		return;
+	}
+
+	TSharedPtr<FJsonObject> JsonObject;
+	TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(response->GetContentAsString());
+
+	if (FJsonSerializer::Deserialize(Reader, JsonObject))
+	{
+		FString driverCountString = JsonObject->GetObjectField("MRData")->GetStringField("total");
+		int32 driverCount = UUtility::FStringToInt(driverCountString);
+
+		for (int i = 0; i < driverCount; i++)
+		{
+			if (m_isShuttingDown)
+			{
+				return;
+			}
+
+			TSharedPtr<FJsonObject> driverObject = JsonObject->GetObjectField("MRData")->GetObjectField("DriverTable")->GetArrayField("Drivers")[i]->AsObject();
+
+			FString driverId = driverObject->GetStringField("driverId");
+			FString firstName = driverObject->GetStringField("givenName");
+			FString lastName = driverObject->GetStringField("familyName");
+			FString codeName = driverObject->GetStringField("code");
+			double number = driverObject->GetNumberField("permanentNumber");
+			FString nationality = driverObject->GetStringField("nationality");
+
+			DriverData driver
+			{
+				driverId,
+				firstName,
+				lastName,
+				codeName,
+				static_cast<int>(number),
+				nationality,
+				"Unknown"
+			};
+
+			m_criticalSection.Lock();
+			m_drivers.Add(driver);
+			m_criticalSection.Unlock();
+		}
+
+		m_criticalSection.Lock();
+		m_driversResponse.isFinished = true;
+		m_driversResponse.isSuccessful = true;
+		m_criticalSection.Unlock();
+	}
+	else
+	{
+		UDebug::Error("API deserialization unsuccessful");
+		UDebug::ToScreen("Error: API deserialization unsuccessful");
+
+		m_criticalSection.Lock();
+		m_driversResponse.isFinished = true;
+		m_driversResponse.isSuccessful = false;
+		m_criticalSection.Unlock();
+	}
 }
 
 void UFormula1Api::PullTeamDrivers()
@@ -288,11 +286,6 @@ void UFormula1Api::PullTeamDrivers()
 
 		auto callback = [this, &constructor, constructorIndex](FHttpRequestPtr request, FHttpResponsePtr response, bool isSuccessful)
 		{
-			if (m_isShuttingDown)
-			{
-				return;
-			}
-
 			if (!isSuccessful)
 			{
 				UDebug::Error("PullTeamsData was unsuccessful");

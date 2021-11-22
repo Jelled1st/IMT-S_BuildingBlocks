@@ -79,6 +79,9 @@ public:
 	bool IsTeamDriversPulled(bool& wasSuccessful);
 
 private:
+	void ConstructorDataCallback(FHttpRequestPtr request, FHttpResponsePtr response, bool isSuccessful);
+	void DriverDataCallback(FHttpRequestPtr request, FHttpResponsePtr response, bool isSuccessful);
+
 	DriverData* FindDriver(FString name, NameFilter filter = NameFilter::FirstName);
 
 	FHttpModule* m_httpModule;
