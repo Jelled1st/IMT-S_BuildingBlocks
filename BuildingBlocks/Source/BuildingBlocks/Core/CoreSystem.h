@@ -16,7 +16,7 @@
 
 #include "CoreSystem.generated.h"
 
-UCLASS()
+UCLASS(Blueprintable)
 class BUILDINGBLOCKS_API UCoreSystem : public UGameInstance
 {
 	GENERATED_BODY()
@@ -57,6 +57,7 @@ public:
 		return *m_sportDataHandler;
 	}
 
+	UFUNCTION(BlueprintCallable)
 	UHTTPTestObject* GetHttpTestObject()
 	{
 		if (m_htttpTestObject == nullptr)

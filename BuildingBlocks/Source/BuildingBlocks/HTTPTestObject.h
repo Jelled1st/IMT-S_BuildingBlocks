@@ -10,7 +10,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(Blueprintable)
 class BUILDINGBLOCKS_API UHTTPTestObject : public UObject
 {
 	GENERATED_BODY()
@@ -18,12 +18,13 @@ class BUILDINGBLOCKS_API UHTTPTestObject : public UObject
 public:
 
 	UHTTPTestObject();
+	UFUNCTION(BlueprintCallable)
 	void Start();
 
 	FHttpModule* httpModule;
 
 
-	UFUNCTION()
+	
 		//TODO: add bindable object and url to get request in order to minimize amount of get requests
 		void HttpGetRequest();
 		void HttpGetRacersOf2020();
@@ -39,6 +40,7 @@ public:
 	void OnResponseReceivedTracks(FHttpRequestPtr request, FHttpResponsePtr response, bool isSuccessful);
 	void OnResponseReceivedSponsors(FHttpRequestPtr request, FHttpResponsePtr response, bool isSuccessful);
 
+	UFUNCTION(BlueprintCallable)
 	TArray<FString> GetTeamNames();
 	TArray<FString> GetTeamScore();
 	TArray<FString> GetTeamNationalities();
