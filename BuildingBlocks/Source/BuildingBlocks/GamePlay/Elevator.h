@@ -12,6 +12,12 @@ class BUILDINGBLOCKS_API AElevator : public AActor
 	GENERATED_BODY()
 	
 public:	
+	enum ElevatorState
+	{
+		Idle,
+		Moving,
+	};
+
 	// Sets default values for this actor's properties
 	AElevator();
 
@@ -21,8 +27,29 @@ protected:
 
 public:	
 	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	virtual void Tick(float deltaTime) override;
+
+	UFUNCTION(BlueprintCallable)
+	void MoveUp(int floorCount);
+
+	UFUNCTION(BlueprintCallable)
+	void MoveDown(int floorCount);
+
+	UPROPERTY(EditAnywhere);
+	AActor* elevatorPlateau;
+
+	UPROPERTY(EditAnywhere);
+	TArray<AActor*> floors;
 
 	UPROPERTY(EditAnywhere);
 	TArray<AActor*> actors;
+
+	UPROPERTY(EditAnywhere);
+	float speed = 2.0f;
+
+private:
+	int m_currentFloorIndex;
+
+	ElevatorState m_state = ElevatorState::Idle;
+	int m_desinationIndex = 0;
 };
