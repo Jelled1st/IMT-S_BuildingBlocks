@@ -18,8 +18,11 @@ UFormula1Api::UFormula1Api()
 UFormula1Api::~UFormula1Api()
 {
 	m_isShuttingDown = true;
-	while (m_threadHelper->IsRunning())
+	if (m_threadHelper != nullptr)
 	{
+		while (m_threadHelper->IsRunning())
+		{
+		}
 	}
 
 	m_drivers.Empty();
