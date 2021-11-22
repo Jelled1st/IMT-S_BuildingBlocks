@@ -17,9 +17,11 @@ void AElevator::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	for(USceneComponent* component : worldComponents)
+	FAttachmentTransformRules attachmentRules = FAttachmentTransformRules(EAttachmentRule::KeepWorld, false);
+
+	for(AActor* actor : actors)
 	{
-		//component->AttachTo(RootComponent);
+		actor->AttachToComponent(RootComponent, attachmentRules);
 	}
 }
 
@@ -27,6 +29,7 @@ void AElevator::BeginPlay()
 void AElevator::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
 
 }
 
