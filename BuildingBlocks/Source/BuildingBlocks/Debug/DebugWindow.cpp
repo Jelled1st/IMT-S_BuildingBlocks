@@ -14,6 +14,9 @@
 #include "Json.h"
 #include "Containers/Map.h"
 
+#include "../Gameplay/ElevatorHandler.h"
+#include "../Gameplay/Elevator.h"
+
 #include <string>
 
 UDebugWindow::UDebugWindow()
@@ -41,6 +44,12 @@ void UDebugWindow::DrawWindow()
 		if (ImGui::BeginTabItem("Operator Controls"))
 		{
 			DrawOperatorControls();
+			ImGui::EndTabItem();
+		}
+
+		if (ImGui::BeginTabItem("Elevators"))
+		{
+			DrawElevatorControls();
 			ImGui::EndTabItem();
 		}
 
@@ -349,6 +358,45 @@ void UDebugWindow::DrawObjectTransform(AModularObject& object)
 	transform.SetScale3D(scale);
 
 	object.SetActorTransform(transform);
+}
+
+void UDebugWindow::DrawElevatorControls()
+{
+	if (!UCoreSystem::Exists())
+	{
+		return;
+	}
+
+	UElevatorHandler* elevatorHandler = UCoreSystem::Get().GetElevatorHandler();
+
+	if (elevatorHandler == nullptr)
+	{
+		return;
+	}
+
+	static const int nameSize = 150;
+	static const ImVec2 buttonSize = ImVec2(80, 20);
+
+	const TArray<AElevator*>& elevators = elevatorHandler->GetElevators();
+
+	for (AElevator* elevator : elevators)
+	{
+		ImGui::Text(TCHAR_TO_ANSI(*elevator->GetName()));
+
+		ImGui::SameLine(nameSize);
+
+		if (ImGui::Button("Down", buttonSize))
+		{
+			elevator->MoveDown(1);
+		}
+
+		ImGui::SameLine();
+
+		if (ImGui::Button("Up", buttonSize))
+		{
+			elevator->MoveUp(1);
+		}
+	}
 }
 
 void UDebugWindow::DrawSportDatabase()

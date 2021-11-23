@@ -17,6 +17,8 @@ public:
 	void Register(AElevator& elevator);
 	void Unregister(AElevator& elevator);
 
+	const TArray<AElevator*>& GetElevators() const;
+
 private:
 	UPROPERTY();
 	TArray<AElevator*> m_elevators;

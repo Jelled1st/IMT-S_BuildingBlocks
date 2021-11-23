@@ -12,3 +12,8 @@ void UElevatorHandler::Unregister(AElevator& evelator)
 {
 	m_elevators.Remove(&evelator);
 }
+
+const TArray<AElevator*>& UElevatorHandler::GetElevators() const
+{
+	return m_elevators;
+}

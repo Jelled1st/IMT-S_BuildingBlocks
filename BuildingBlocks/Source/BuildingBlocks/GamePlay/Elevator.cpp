@@ -1,9 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
+#include "Elevator.h"
 #include "GenericPlatform/GenericPlatformMath.h"
 #include "../Core/CoreSystem.h"
-#include "Elevator.h"
 
 // Sets default values
 AElevator::AElevator()

@@ -74,6 +74,8 @@ private:
 	void DrawOperatorControls();
 	void DrawObjectControls(AModularObject& object);
 	void DrawObjectTransform(AModularObject& object);
+
+	void DrawElevatorControls();
 	
 	void DrawSportDatabase();
 	void DrawCreateTeamMenu();
