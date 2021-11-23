@@ -23,6 +23,7 @@ public:
 
 	const TArray<UTeam*>& GetCricketTeams();
 	const TArray<UTeam*>& GetFootballTeams();
+	UFUNCTION(BlueprintCallable)
 	const TArray<UTeam*>& GetF1Teams();
 
 	const TArray<UTeam*>& GetTeams(Sport sport);

@@ -48,6 +48,17 @@ public:
 		}
 	};
 
+	UFUNCTION(BlueprintCallable)
+	USportDataHandler* GetBPSportDataHandler()
+	{
+		if (m_sportDataHandler == nullptr)
+		{
+			UE_DEBUG_BREAK();
+		}
+		return m_sportDataHandler;
+	}
+
+
 	USportDataHandler& GetSportDataHandler()
 	{
 		if (m_sportDataHandler == nullptr)

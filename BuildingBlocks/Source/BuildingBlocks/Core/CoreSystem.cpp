@@ -38,6 +38,7 @@ void UCoreSystem::OnStart()
 	m_htttpTestObject->Start();
 
 	m_f1Api->PullApiDataAsync();
+
 }
 
 void UCoreSystem::Shutdown()

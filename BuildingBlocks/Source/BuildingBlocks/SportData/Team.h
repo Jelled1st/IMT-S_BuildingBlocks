@@ -22,11 +22,16 @@ public:
 
 	void AddPlayer(USportPlayer& player);
 
+
 	Sport GetSport();
+	UFUNCTION(BlueprintCallable)
 	FString GetName();
+	UFUNCTION(BlueprintCallable)
 	float GetScore();
 	Country GetNationality();
+	UFUNCTION(BlueprintCallable)
 	FString GetNationalityAsString();
+	UFUNCTION(BlueprintCallable)
 	const TArray<USportPlayer*>& GetPlayers();
 
 	UPROPERTY() bool isInitialized = false;
