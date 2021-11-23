@@ -19,6 +19,8 @@
 
 #include <string>
 
+bool UDebugWindow::debugWindowEnabled = true;
+
 UDebugWindow::UDebugWindow()
 {
 }
@@ -37,6 +39,11 @@ void UDebugWindow::Start()
 #if WITH_IMGUI
 void UDebugWindow::DrawWindow()
 {
+	if (!debugWindowEnabled)
+	{
+		return;
+	}
+
 	ImGui::Begin("Debug Window");
 
 	if (ImGui::BeginTabBar("TabBar"))

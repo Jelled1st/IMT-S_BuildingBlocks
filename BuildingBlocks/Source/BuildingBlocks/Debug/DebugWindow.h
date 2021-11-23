@@ -29,6 +29,8 @@ class BUILDINGBLOCKS_API UDebugWindow : public UObject
 	GENERATED_BODY()
 
 public:
+	static bool debugWindowEnabled;
+
 	struct TeamData
 	{
 	public:
