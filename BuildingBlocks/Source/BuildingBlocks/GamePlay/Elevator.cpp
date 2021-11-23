@@ -2,6 +2,7 @@
 
 
 #include "GenericPlatform/GenericPlatformMath.h"
+#include "../Core/CoreSystem.h"
 #include "Elevator.h"
 
 // Sets default values
@@ -18,6 +19,11 @@ void AElevator::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	UElevatorHandler* elevatorHandler = UCoreSystem::Get().GetElevatorHandler();
+
+	check(elevatorHandler != nullptr);
+	elevatorHandler->Register(*this);
+
 	FAttachmentTransformRules attachmentRules = FAttachmentTransformRules(EAttachmentRule::KeepWorld, false);
 
 	for (AActor* floor : floors)
@@ -28,6 +34,21 @@ void AElevator::BeginPlay()
 	for(AActor* actor : actors)
 	{
 		actor->AttachToComponent(RootComponent, attachmentRules);
+	}
+}
+
+void AElevator::BeginDestroy()
+{
+	Super::BeginDestroy();
+
+	if (UCoreSystem::Exists())
+	{
+		UElevatorHandler* elevatorHandler = UCoreSystem::Get().GetElevatorHandler();
+
+		if (elevatorHandler != nullptr)
+		{
+			elevatorHandler->Register(*this);
+		}
 	}
 }
 

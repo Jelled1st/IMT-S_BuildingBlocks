@@ -29,6 +29,8 @@ public:
 	// Called every frame
 	virtual void Tick(float deltaTime) override;
 
+	virtual void BeginDestroy() override;
+
 	UFUNCTION(BlueprintCallable)
 	void MoveUp(int floorCount);
 

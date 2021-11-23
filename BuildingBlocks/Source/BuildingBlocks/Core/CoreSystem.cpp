@@ -26,6 +26,8 @@ void UCoreSystem::Init()
 
 	m_htttpTestObject= NewObject<UHTTPTestObject>();
 
+	m_elevatorHandler = NewObject<UElevatorHandler>();
+
 	m_f1Api = NewObject<UFormula1Api>();
 	m_f1Api->Init(FHttpModule::Get());
 }

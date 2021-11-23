@@ -14,6 +14,8 @@
 #include "../APIs/Formula1Api.h"
 #include "../HTTPTestObject.h"
 
+#include "../Gameplay/ElevatorHandler.h"
+
 #include "CoreSystem.generated.h"
 
 UCLASS(Blueprintable)
@@ -79,7 +81,7 @@ public:
 		return m_htttpTestObject;
 	}
 
-	UFormula1Api* const GetF1Api()
+	UFormula1Api* const GetF1Api() const
 	{
 		if (m_f1Api == nullptr)
 		{
@@ -87,6 +89,16 @@ public:
 			UDebug::Warning("Requested F1 Api which is nullptr");
 		}
 		return m_f1Api;
+	}
+
+	UElevatorHandler* const GetElevatorHandler() const
+	{
+		if (m_elevatorHandler == nullptr)
+		{
+			UE_DEBUG_BREAK();
+			UDebug::Warning("Requested Elevator handler, which is nullptr");
+		}
+		return m_elevatorHandler;
 	}
 
 private:
@@ -110,4 +122,6 @@ private:
 	UPROPERTY();
 	UFormula1Api* m_f1Api;
 	
+	UPROPERTY();
+	UElevatorHandler* m_elevatorHandler;
 };
