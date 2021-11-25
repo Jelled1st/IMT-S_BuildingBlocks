@@ -82,6 +82,8 @@ public:
 	bool IsDriversInfoPulled(bool& wasSuccessful);
 	bool IsTeamDriversPulled(bool& wasSuccessful);
 
+	void SendApiDataEvent();
+
 private:
 	void ConstructorDataCallback(FHttpRequestPtr request, FHttpResponsePtr response, bool isSuccessful);
 	void DriverDataCallback(FHttpRequestPtr request, FHttpResponsePtr response, bool isSuccessful);
@@ -102,6 +104,8 @@ private:
 	TeamDriversResponseData m_teamDriversResponse;
 
 	bool m_isShuttingDown = false;
+
+	bool m_sendApiDataEvent = false;
 
 	bool m_isCreatedOnRunning = false;
 };

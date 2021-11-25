@@ -3,8 +3,6 @@
 
 #include "Formula1ApiThreadHelper.h"
 #include "../Debug/Debug.h"
-#include "../Core/CoreSystem.h"
-#include "../EventSystem/EventSystem.h"
 
 FFormula1ApiThreadHelper::FFormula1ApiThreadHelper(UFormula1Api& f1Api) : FRunnable(), m_f1Api(&f1Api)
 {
@@ -46,14 +44,7 @@ uint32 FFormula1ApiThreadHelper::Run()
 
 	UDebug::Log("pulling is done");
 
-	if (UCoreSystem::Exists())
-	{
-		UEventSystem* const eventSystem = UCoreSystem::Get().GetEventSystem();
-		if (eventSystem != nullptr)
-		{
-			eventSystem->CallApiDataLoadedEvent(Sport::Formula1);
-		}
-	}
+	m_f1Api->SendApiDataEvent();
 
 	UDebug::Log("returning Formula1ApiThreadHelper::Run()");
 	return 0;

@@ -7,6 +7,7 @@
 #include "../SportData/Team.h"
 #include "../SportData/SportPlayer.h"
 #include "../Core/CoreSystem.h"
+#include "../EventSystem/EventSystem.h"
 #include "../Debug/Debug.h"
 #include "Formula1ApiThreadHelper.h"
 
@@ -52,6 +53,19 @@ void UFormula1Api::Init(FHttpModule& newHttpModule)
 
 void UFormula1Api::Tick(float deltaTime)
 {
+	if (m_sendApiDataEvent)
+	{
+		if (UCoreSystem::Exists())
+		{
+			UEventSystem* const eventSystem = UCoreSystem::Get().GetEventSystem();
+			if (eventSystem != nullptr)
+			{
+				eventSystem->CallApiDataLoadedEvent(Sport::Formula1);
+			}
+		}
+
+		m_sendApiDataEvent = false;
+	}
 }
 
 bool UFormula1Api::IsTickable() const
@@ -498,4 +512,9 @@ bool UFormula1Api::IsTeamDriversPulled(bool& wasSuccessful)
 	m_criticalSection.Unlock();
 
 	return isFinished || m_isShuttingDown;
+}
+
+void UFormula1Api::SendApiDataEvent()
+{
+	m_sendApiDataEvent = true;
 }
