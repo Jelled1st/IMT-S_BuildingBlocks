@@ -12,6 +12,10 @@ AElevator::AElevator()
 	PrimaryActorTick.bCanEverTick = true;
 
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
+
+	visualComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Visual component"));
+
+	visualComponent->SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned
@@ -24,17 +28,18 @@ void AElevator::BeginPlay()
 	check(elevatorHandler != nullptr);
 	elevatorHandler->Register(*this);
 
-	FAttachmentTransformRules attachmentRules = FAttachmentTransformRules(EAttachmentRule::KeepWorld, false);
+	check(floors.Num() != 0);
 
-	for (AActor* floor : floors)
+	if (startFloor < 0 || startFloor >= floors.Num())
 	{
-		floor->AttachToComponent(RootComponent, attachmentRules);
+		startFloor = 0;
 	}
 
-	for(AActor* actor : actors)
-	{
-		actor->AttachToComponent(RootComponent, attachmentRules);
-	}
+	float startFloorHeight = floors[startFloor]->GetActorLocation().Y;
+
+	m_startPosition = GetActorLocation();
+	m_startPosition.Y = startFloorHeight;
+	SetActorLocation(m_startPosition);
 }
 
 void AElevator::BeginDestroy()
@@ -62,8 +67,8 @@ void AElevator::Tick(float deltaTime)
 		AActor* floorActor = floors[m_desinationIndex];
 		FVector destination = floorActor->GetActorLocation();
 
-		FVector plateauPos = elevatorPlateau->GetActorLocation();
-		float zDiff = plateauPos.Z - destination.Z;
+		FVector pos = GetActorLocation();
+		float zDiff = destination.Z - pos.Z;
 		float zDiffAbs = FGenericPlatformMath::Abs(zDiff);
 		float movement = speed * deltaTime;
 		
@@ -81,9 +86,10 @@ void AElevator::Tick(float deltaTime)
 			movement = -movement;
 		}
 
-		FVector rootPos = RootComponent->GetComponentLocation();
-		rootPos.Z += movement;
-		RootComponent->SetWorldLocation(rootPos);
+		pos.Z += movement;
+		SetActorLocation(pos);
+
+		cameraActor->GetWorldOffset() = GetActorLocation() - m_startPosition;
 	}
 }
 

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "ElevatorCameraActor.h"
 #include "Elevator.generated.h"
 
 UCLASS()
@@ -38,20 +39,25 @@ public:
 	void MoveDown(int floorCount);
 
 	UPROPERTY(EditAnywhere);
-	AActor* elevatorPlateau;
-
-	UPROPERTY(EditAnywhere);
 	TArray<AActor*> floors;
 
 	UPROPERTY(EditAnywhere);
-	TArray<AActor*> actors;
+	int startFloor = 0;
+
+	UPROPERTY(EditAnywhere);
+	AElevatorCameraActor* cameraActor;
 
 	UPROPERTY(EditAnywhere);
 	float speed = 2.0f;
+
+	UPROPERTY(EditAnywhere);
+	UStaticMeshComponent* visualComponent;
 
 private:
 	int m_currentFloorIndex;
 
 	ElevatorState m_state = ElevatorState::Idle;
 	int m_desinationIndex = 0;
+
+	FVector m_startPosition;
 };
