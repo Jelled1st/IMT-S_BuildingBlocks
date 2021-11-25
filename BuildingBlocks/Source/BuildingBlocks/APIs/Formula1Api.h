@@ -10,7 +10,7 @@
 class FFormula1ApiThreadHelper;
 
 UCLASS()
-class BUILDINGBLOCKS_API UFormula1Api : public UObject
+class BUILDINGBLOCKS_API UFormula1Api : public UObject, public FTickableGameObject
 {
 	GENERATED_BODY()
 
@@ -66,6 +66,10 @@ public:
 
 	void Init(FHttpModule& newHttpModule);
 
+	virtual void Tick(float deltaTime) override;
+	virtual bool IsTickable() const override;
+	virtual TStatId GetStatId() const override;
+
 	void PullApiDataAsync();
 
 	void ImportDataToSportHandler();
@@ -98,4 +102,6 @@ private:
 	TeamDriversResponseData m_teamDriversResponse;
 
 	bool m_isShuttingDown = false;
+
+	bool m_isCreatedOnRunning = false;
 };

@@ -13,6 +13,8 @@
 UFormula1Api::UFormula1Api()
 {
 	m_isShuttingDown = false;
+
+	m_isCreatedOnRunning = GIsRunning;
 }
 
 UFormula1Api::~UFormula1Api()
@@ -46,6 +48,20 @@ void UFormula1Api::Init(FHttpModule& newHttpModule)
 
 	m_constructors = TArray<ConstructorData>();
 	m_drivers = TArray<DriverData>();
+}
+
+void UFormula1Api::Tick(float deltaTime)
+{
+}
+
+bool UFormula1Api::IsTickable() const
+{
+	return m_isCreatedOnRunning;
+}
+
+TStatId UFormula1Api::GetStatId() const
+{
+	return UObject::GetStatID();
 }
 
 void UFormula1Api::PullApiDataAsync()
