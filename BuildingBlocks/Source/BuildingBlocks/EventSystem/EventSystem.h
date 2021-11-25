@@ -6,8 +6,9 @@
 #include "../SportData/Sport.h"
 #include "EventSystem.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FApiDataLoadedDelegate, Sport, sport);
 
-UCLASS()
+UCLASS(BlueprintType)
 class BUILDINGBLOCKS_API UEventSystem : public UObject
 {
 	GENERATED_BODY()
@@ -35,6 +36,14 @@ public:
 	void CallApiDataLoadedEvent(Sport sport)
 	{
 		m_apiDataLoadedEvent.Broadcast(sport);
+	}
+
+	UPROPERTY(BlueprintAssignable);
+	FApiDataLoadedDelegate apiDataLoadedDelegate;
+
+	void OnApiDataLoadedEventCallback(Sport sport)
+	{
+		apiDataLoadedDelegate.Broadcast(sport);
 	}
 
 private:
