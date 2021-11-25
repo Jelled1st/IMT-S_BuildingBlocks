@@ -2,6 +2,8 @@
 
 
 #include "SportDataHandler.h"
+#include "../Core/CoreSystem.h"
+#include "../EventSystem/EventSystem.h"
 #include "Sport.h"
 
 USportDataHandler::USportDataHandler()
@@ -9,6 +11,11 @@ USportDataHandler::USportDataHandler()
 	m_cricketTeams = TArray<UTeam*>(nullptr, 0);
 	m_footballTeams = TArray<UTeam*>(nullptr, 0);
 	m_f1Teams = TArray<UTeam*>(nullptr, 0);
+
+	if (UCoreSystem::Exists())
+	{
+		UCoreSystem::Get().GetEventSystem().OnApiDataLoaded().AddUObject(this, &USportDataHandler::OnSportDataLoaded);
+	}
 }
 
 USportDataHandler::~USportDataHandler()
@@ -123,4 +130,20 @@ TArray<UTeam*> USportDataHandler::GetAllTeams()
 		allTeams.Add(team);
 	}
 	return allTeams;
+}
+
+void USportDataHandler::OnSportDataLoaded(Sport sport)
+{
+	if (sport == Sport::Formula1)
+	{
+		if (UCoreSystem::Exists())
+		{
+			UFormula1Api* f1Api = UCoreSystem::Get().GetF1Api();
+
+			if (f1Api != nullptr)
+			{
+				f1Api->ImportDataToSportHandler();
+			}
+		}
+	}
 }

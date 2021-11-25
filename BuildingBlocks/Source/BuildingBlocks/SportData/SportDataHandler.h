@@ -31,6 +31,8 @@ public:
 
 	UTeam* FindTeam(FString name, Sport sport);
 
+	void OnSportDataLoaded(Sport sport);
+
 private:
 	UPROPERTY();
 	TArray<UTeam*> m_cricketTeams;
