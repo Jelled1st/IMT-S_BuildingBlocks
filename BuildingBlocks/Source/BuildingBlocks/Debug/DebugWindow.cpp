@@ -88,41 +88,72 @@ void UDebugWindow::DrawWindow()
 
 void UDebugWindow::DrawOperatorControls()
 {
+	static const int groupSize = 110;
+	static const ImVec2 buttonSize = ImVec2(groupSize, 25);
+	static const int verticalLineSize = 30;
+	static const int verticalLineSpacing = 20;
+
 	if (ImGui::TreeNode("Presets"))
 	{
 		DrawPresetMenu();
 		ImGui::TreePop();
 	}
 
-	if (ImGui::BeginTabBar("OperatorControlsBar"))
-	{
-		TArray<AModularObject*>& modularObjs = UCoreSystem::Get().GetModularitySystem()->GetRegisteredObjects();
-		
-		if (modularObjs.Num() > 0)
-		{
-			for (AModularObject* obj : modularObjs)
-			{
-				FString name = obj->GetName();
-				if (ImGui::BeginTabItem(TCHAR_TO_ANSI(*name)))
-				{
-					m_selectedObject = obj;
+	ImGui::BeginGroup();
 
-					ImGui::EndTabItem();
-				}
+	TArray<AModularObject*>& modularObjs = UCoreSystem::Get().GetModularitySystem()->GetRegisteredObjects();
+		
+	AModularObject* currentSelected = m_selectedObject;
+
+	if (modularObjs.Num() > 0)
+	{
+		for (AModularObject* obj : modularObjs)
+		{
+			if (obj == currentSelected)
+			{
+				ImGui::PushStyleColor(0, ImVec4(0, 1, 0, 1));
+			}
+
+			FString name = obj->GetName();
+			if (ImGui::Button(TCHAR_TO_ANSI(*name), buttonSize))
+			{
+				m_selectedObject = obj;
+			}
+
+			if (obj == currentSelected)
+			{
+				ImGui::PopStyleColor();
 			}
 		}
-		else
-		{
-			m_selectedObject = nullptr;
-		}
-
-		if (m_selectedObject != nullptr)
-		{
-			DrawObjectControls(*m_selectedObject);
-		}
-
-		ImGui::EndTabBar();
 	}
+	else
+	{
+		m_selectedObject = nullptr;
+	}
+
+	ImGui::EndGroup();
+
+	ImGui::SameLine(groupSize + verticalLineSpacing);
+
+	ImGui::BeginGroup();
+
+	for (int i = 0; i < verticalLineSize; ++i)
+	{
+		ImGui::Text("|");
+	}
+
+	ImGui::EndGroup();
+
+	ImGui::SameLine(groupSize + verticalLineSpacing * 2);
+
+	ImGui::BeginGroup();
+
+	if (m_selectedObject != nullptr)
+	{
+		DrawObjectControls(*m_selectedObject);
+	}
+
+	ImGui::EndGroup();
 }
 
 void UDebugWindow::DrawPresetMenu()
