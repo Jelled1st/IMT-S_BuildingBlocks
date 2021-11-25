@@ -33,6 +33,7 @@ public:
 	static UCoreSystem& Get();
 	static bool Exists();
 
+	UFUNCTION(BlueprintCallable)
 	UEventSystem* const GetEventSystem() const
 	{
 		if (m_eventSystem == nullptr)
