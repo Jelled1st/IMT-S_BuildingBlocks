@@ -48,7 +48,11 @@ uint32 FFormula1ApiThreadHelper::Run()
 
 	if (UCoreSystem::Exists())
 	{
-		UCoreSystem::Get().GetEventSystem().CallApiDataLoadedEvent(Sport::Formula1);
+		UEventSystem* const eventSystem = UCoreSystem::Get().GetEventSystem();
+		if (eventSystem != nullptr)
+		{
+			eventSystem->CallApiDataLoadedEvent(Sport::Formula1);
+		}
 	}
 
 	UDebug::Log("returning Formula1ApiThreadHelper::Run()");

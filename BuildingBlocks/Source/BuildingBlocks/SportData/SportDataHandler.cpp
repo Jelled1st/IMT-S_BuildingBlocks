@@ -14,7 +14,11 @@ USportDataHandler::USportDataHandler()
 
 	if (UCoreSystem::Exists())
 	{
-		UCoreSystem::Get().GetEventSystem().OnApiDataLoaded().AddUObject(this, &USportDataHandler::OnSportDataLoaded);
+		UEventSystem* const eventSystem = UCoreSystem::Get().GetEventSystem();
+		if (eventSystem != nullptr)
+		{
+			eventSystem->OnApiDataLoaded().AddUObject(this, &USportDataHandler::OnSportDataLoaded);
+		}
 	}
 }
 

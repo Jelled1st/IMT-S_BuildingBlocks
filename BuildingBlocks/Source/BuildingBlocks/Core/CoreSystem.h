@@ -33,13 +33,14 @@ public:
 	static UCoreSystem& Get();
 	static bool Exists();
 
-	UEventSystem& GetEventSystem()
+	UEventSystem* const GetEventSystem() const
 	{
 		if (m_eventSystem == nullptr)
 		{
 			UE_DEBUG_BREAK();
+			UDebug::Warning("GetEventSystem is nullptr");
 		}
-		return *m_eventSystem;
+		return m_eventSystem;
 	}
 
 	UModularitySystem* GetModularitySystem()
