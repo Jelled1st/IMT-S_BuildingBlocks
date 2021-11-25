@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "Elevator.h"
 #include "ElevatorHandler.h"
+#include "Elevator.h"
 
 void UElevatorHandler::Register(AElevator& evelator)
 {
