@@ -63,4 +63,17 @@ public:
 		// unsafe - no way to detect errors
 		return FCString::Atof(*string);
 	}
+
+	template <class T>
+	static T* ConvertSoftPtr(const TSoftObjectPtr<T>& softPtr, bool assertIfInvalid = true)
+	{
+		if (softPtr.IsValid())
+		{
+			return softPtr.Get();
+		}
+		else if(assertIfInvalid)
+		{
+			check(false);
+		}
+	}
 };
