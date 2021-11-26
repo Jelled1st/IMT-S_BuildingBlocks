@@ -33,7 +33,7 @@ public:
 	{
 	public:
 		Sport sport;
-		const int nameLength = 21;
+		static const int nameLength = 21;
 		char teamName[21] = { 0 };
 		Country selectedNationality = Country::Unknown;
 		float score = 0;
@@ -42,9 +42,10 @@ public:
 	struct PlayerData
 	{
 	public:
-		const int nameLength = 21;
+		static const int nameLength = 21;
 		char firstName[21] = { 0 };
 		char lastName[21] = { 0 };
+		char displayName[21] = { 0 };
 	};
 
 	UDebugWindow();
@@ -54,6 +55,13 @@ public:
 
 #if WITH_IMGUI
 	void DrawWindow();
+
+	enum TableDrawOption
+	{
+		None,
+		SeperateFirst,
+		SeperateAll,
+	};
 
 	static void ImGuiSliderVector(const char* label, FVector& vector, float xLimit = 1000, float yLimit = 1000, float zLimit = 1000);
 #endif
@@ -70,14 +78,15 @@ private:
 	void DrawSportDatabase();
 	void DrawCreateTeamMenu();
 	void DrawSportData(USportDataHandler& sportData, Sport sport);
-	
-	void Debug_GetF1TeamsFromAPI();
+	void DrawPlayersTable(const TArray<USportPlayer*>& players, Sport sport);
 
 	void DrawPresetMenu();
 	FString m_jsonString = "";
 	bool m_deserializeSucceeded = true;
 	AModularObject* m_selectedObject = nullptr;
 	TeamData m_newTeam;
+	PlayerData m_newPlayer;
 	UTeam* m_selectedTeam = nullptr;
+	USportPlayer* m_selectedPlayer = nullptr;
 #endif
 };

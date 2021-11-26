@@ -181,6 +181,7 @@ void UHTTPTestObject::OnResponseReceivedTracks(FHttpRequestPtr request, FHttpRes
 
 void UHTTPTestObject::OnResponseReceivedSponsors(FHttpRequestPtr request, FHttpResponsePtr response, bool isSuccessful)
 {
+	
 	TSharedPtr<FJsonObject> JsonObject;
 	TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(response->GetContentAsString());
 
@@ -207,7 +208,7 @@ void UHTTPTestObject::OnResponseReceivedSponsors(FHttpRequestPtr request, FHttpR
 }
 
 TArray<FString> UHTTPTestObject::GetTeamNames()
-{
+{	
 	return f1Teams2021;
 }
 
