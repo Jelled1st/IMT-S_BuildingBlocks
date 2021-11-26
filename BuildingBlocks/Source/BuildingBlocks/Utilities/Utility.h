@@ -75,5 +75,7 @@ public:
 		{
 			check(false);
 		}
+
+		return nullptr;
 	}
 };
