@@ -3,6 +3,7 @@
 #include "Elevator.h"
 #include "GenericPlatform/GenericPlatformMath.h"
 #include "../Core/CoreSystem.h"
+#include "../Utilities/Utility.h"
 
 
 // Sets default values
@@ -12,10 +13,6 @@ AElevator::AElevator()
 	PrimaryActorTick.bCanEverTick = true;
 
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
-
-	visualComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Visual component"));
-
-	visualComponent->SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned
@@ -28,18 +25,32 @@ void AElevator::BeginPlay()
 	check(elevatorHandler != nullptr);
 	elevatorHandler->Register(*this);
 
-	check(floors.Num() != 0);
+	ConvertSoftPtrs();
 
-	if (startFloor < 0 || startFloor >= floors.Num())
+	check(m_floors.Num() != 0);
+
+	if (startFloor < 0 || startFloor >= m_floors.Num())
 	{
 		startFloor = 0;
 	}
 
-	float startFloorHeight = floors[startFloor]->GetActorLocation().Y;
+	float startFloorHeight = m_floors[startFloor]->GetActorLocation().Y;
 
-	m_startPosition = GetActorLocation();
+	m_startPosition = m_elevatorPlatform->GetActorLocation();
 	m_startPosition.Y = startFloorHeight;
-	SetActorLocation(m_startPosition);
+	m_elevatorPlatform->SetActorLocation(m_startPosition);
+}
+
+void AElevator::ConvertSoftPtrs()
+{
+	for (TSoftObjectPtr<AActor> floor : floorsSoftPtr)
+	{
+		m_floors.Add(UUtility::ConvertSoftPtr(floor));
+	}
+
+	m_elevatorPlatform = UUtility::ConvertSoftPtr(elevatorPlatformSoftPtr);
+
+	m_cameraActor = UUtility::ConvertSoftPtr(cameraActorSoftPtr);
 }
 
 void AElevator::BeginDestroy()
@@ -64,10 +75,10 @@ void AElevator::Tick(float deltaTime)
 
 	if (m_state != ElevatorState::Idle)
 	{
-		AActor* floorActor = floors[m_desinationIndex];
+		AActor* floorActor = m_floors[m_desinationIndex];
 		FVector destination = floorActor->GetActorLocation();
 
-		FVector pos = GetActorLocation();
+		FVector pos = m_elevatorPlatform->GetActorLocation();
 		float zDiff = destination.Z - pos.Z;
 		float zDiffAbs = FGenericPlatformMath::Abs(zDiff);
 		float movement = speed * deltaTime;
@@ -87,16 +98,16 @@ void AElevator::Tick(float deltaTime)
 		}
 
 		pos.Z += movement;
-		SetActorLocation(pos);
+		m_elevatorPlatform->SetActorLocation(pos);
 
-		cameraActor->GetWorldOffset() = GetActorLocation() - m_startPosition;
+		m_cameraActor->GetWorldOffset() = pos - m_startPosition;
 	}
 }
 
 void AElevator::MoveUp(int floorCount)
 {
 	int dest = m_desinationIndex + floorCount;
-	if (dest < floors.Num())
+	if (dest < m_floors.Num())
 	{
 		m_desinationIndex = dest;
 		m_state = ElevatorState::Moving;

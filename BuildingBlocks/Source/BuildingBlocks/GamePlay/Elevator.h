@@ -39,25 +39,36 @@ public:
 	void MoveDown(int floorCount);
 
 	UPROPERTY(EditAnywhere);
-	TArray<AActor*> floors;
+	TArray<TSoftObjectPtr<AActor>> floorsSoftPtr;
 
 	UPROPERTY(EditAnywhere);
 	int startFloor = 0;
 
 	UPROPERTY(EditAnywhere);
-	AElevatorCameraActor* cameraActor;
+	TSoftObjectPtr<AElevatorCameraActor> cameraActorSoftPtr;
 
 	UPROPERTY(EditAnywhere);
 	float speed = 2.0f;
 
 	UPROPERTY(EditAnywhere);
-	UStaticMeshComponent* visualComponent;
+	TSoftObjectPtr<AActor> elevatorPlatformSoftPtr;
 
 private:
+	void ConvertSoftPtrs();
+
 	int m_currentFloorIndex;
 
 	ElevatorState m_state = ElevatorState::Idle;
 	int m_desinationIndex = 0;
 
 	FVector m_startPosition;
+
+	UPROPERTY();
+	AActor* m_elevatorPlatform;
+
+	UPROPERTY();
+	TArray<AActor*> m_floors;
+
+	UPROPERTY();
+	AElevatorCameraActor* m_cameraActor;
 };
