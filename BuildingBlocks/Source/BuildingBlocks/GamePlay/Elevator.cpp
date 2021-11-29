@@ -118,7 +118,12 @@ void AElevator::MoveDown(int floorCount)
 	}
 }
 
-void AElevator::AddChild(UElevatorChildComponent* child)
+void AElevator::AddChild(UElevatorChildComponent& child)
 {
-	m_children.Add(child);
+	m_children.Add(&child);
+}
+
+void AElevator::RemoveChild(UElevatorChildComponent& child)
+{
+	m_children.Remove(&child);
 }

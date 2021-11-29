@@ -53,6 +53,21 @@ void UElevatorChildComponent::TickComponent(float deltaTime, ELevelTick tickType
 	}
 }
 
+void UElevatorChildComponent::BeginDestroy()
+{
+	Super::BeginDestroy();
+
+	if (UCoreSystem::Exists())
+	{
+		AElevator* elevator = UCoreSystem::Get().GetElevator();
+
+		if (elevator != nullptr)
+		{
+			elevator->RemoveChild(*this);
+		}
+	}
+}
+
 FVector& UElevatorChildComponent::GetWorldOffset()
 {
 	return m_worldOffset;
@@ -60,6 +75,5 @@ FVector& UElevatorChildComponent::GetWorldOffset()
 
 void UElevatorChildComponent::OnElevatorSpawn(AElevator* elevator)
 {
-	elevator->AddChild(this);
-	UDebug::Log("Elevator spawned");
+	elevator->AddChild(*this);
 }

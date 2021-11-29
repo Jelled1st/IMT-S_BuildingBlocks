@@ -51,7 +51,8 @@ public:
 	UPROPERTY(EditAnywhere);
 	TSoftObjectPtr<AActor> elevatorPlatformSoftPtr;
 
-	void AddChild(UElevatorChildComponent* child);
+	void AddChild(UElevatorChildComponent& child);
+	void RemoveChild(UElevatorChildComponent& child);
 
 private:
 	void ConvertSoftPtrs();
