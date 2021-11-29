@@ -8,6 +8,7 @@ UEventSystem::UEventSystem()
 	apiDataLoadedDelegate = FApiDataLoadedDelegate();
 
 	m_apiDataLoadedEvent.AddUObject(this, &UEventSystem::OnApiDataLoadedEventCallback);
+
 }
 
 UEventSystem::~UEventSystem()

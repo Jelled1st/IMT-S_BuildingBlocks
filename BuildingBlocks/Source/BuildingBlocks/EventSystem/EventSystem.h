@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "../SportData/Sport.h"
+#include "../Gameplay/Elevator.h"
 #include "EventSystem.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FApiDataLoadedDelegate, Sport, sport);
@@ -46,8 +47,22 @@ public:
 		apiDataLoadedDelegate.Broadcast(sport);
 	}
 
+
+	DECLARE_EVENT_OneParam(EventSystem, ElevatorSpawnedEvent, AElevator* const)
+	ElevatorSpawnedEvent& OnElevatorSpawn()
+	{
+		return m_elevatorSpawnedEvent;
+	}
+
+	void CallElevatorSpawned(AElevator* const elevator)
+	{
+		m_elevatorSpawnedEvent.Broadcast(elevator);
+	}
+
 private:
 	TestEvent m_testEvent;
 
 	ApiDataLoadedEvent m_apiDataLoadedEvent;
+
+	ElevatorSpawnedEvent m_elevatorSpawnedEvent;
 };
