@@ -7,6 +7,8 @@
 #include "ElevatorCameraActor.h"
 #include "Elevator.generated.h"
 
+class UElevatorChildComponent;
+
 UCLASS()
 class BUILDINGBLOCKS_API AElevator : public AActor
 {
@@ -53,6 +55,14 @@ public:
 	UPROPERTY(EditAnywhere);
 	TSoftObjectPtr<AActor> elevatorPlatformSoftPtr;
 
+	UPROPERTY(EditAnywhere);
+	TArray<TSoftObjectPtr<UElevatorChildComponent>> elevatorChildrenSoftPtr;
+
+	void AddChild(UElevatorChildComponent* child)
+	{
+		m_children.Add(child);
+	}
+
 private:
 	void ConvertSoftPtrs();
 
@@ -71,4 +81,7 @@ private:
 
 	UPROPERTY();
 	AElevatorCameraActor* m_cameraActor;
+
+	UPROPERTY();
+	TArray<UElevatorChildComponent*> m_children;
 };

@@ -3,6 +3,7 @@
 #include "Elevator.h"
 #include "GenericPlatform/GenericPlatformMath.h"
 #include "../Core/CoreSystem.h"
+#include "ElevatorChildComponent.h"
 #include "../Utilities/Utility.h"
 
 
@@ -20,10 +21,12 @@ void AElevator::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	UElevatorHandler* elevatorHandler = UCoreSystem::Get().GetElevatorHandler();
-
-	check(elevatorHandler != nullptr);
-	elevatorHandler->Register(*this);
+	if (UCoreSystem::Exists())
+	{
+		UEventSystem* eventSystem = UCoreSystem::Get().GetEventSystem();
+		check(eventSystem != nullptr);
+		eventSystem->CallElevatorSpawned(this);
+	}
 
 	ConvertSoftPtrs();
 
@@ -50,22 +53,17 @@ void AElevator::ConvertSoftPtrs()
 
 	m_elevatorPlatform = UUtility::ConvertSoftPtr(elevatorPlatformSoftPtr);
 
-	m_cameraActor = UUtility::ConvertSoftPtr(cameraActorSoftPtr);
+	//m_cameraActor = UUtility::ConvertSoftPtr(cameraActorSoftPtr);
+
+	for (TSoftObjectPtr<UElevatorChildComponent> child : elevatorChildrenSoftPtr)
+	{
+		m_children.Add(UUtility::ConvertSoftPtr(child));
+	}
 }
 
 void AElevator::BeginDestroy()
 {
 	Super::BeginDestroy();
-
-	if (UCoreSystem::Exists())
-	{
-		UElevatorHandler* elevatorHandler = UCoreSystem::Get().GetElevatorHandler();
-
-		if (elevatorHandler != nullptr)
-		{
-			elevatorHandler->Register(*this);
-		}
-	}
 }
 
 // Called every frame
@@ -100,7 +98,10 @@ void AElevator::Tick(float deltaTime)
 		pos.Z += movement;
 		m_elevatorPlatform->SetActorLocation(pos);
 
-		m_cameraActor->GetWorldOffset() = pos - m_startPosition;
+		for (UElevatorChildComponent* child : m_children)
+		{
+			child->GetWorldOffset() = pos - m_startPosition;
+		}
 	}
 }
 
