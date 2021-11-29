@@ -52,13 +52,6 @@ void AElevator::ConvertSoftPtrs()
 	}
 
 	m_elevatorPlatform = UUtility::ConvertSoftPtr(elevatorPlatformSoftPtr);
-
-	//m_cameraActor = UUtility::ConvertSoftPtr(cameraActorSoftPtr);
-
-	for (TSoftObjectPtr<UElevatorChildComponent> child : elevatorChildrenSoftPtr)
-	{
-		m_children.Add(UUtility::ConvertSoftPtr(child));
-	}
 }
 
 void AElevator::BeginDestroy()
@@ -123,4 +116,9 @@ void AElevator::MoveDown(int floorCount)
 		m_desinationIndex = dest;
 		m_state = ElevatorState::Moving;
 	}
+}
+
+void AElevator::AddChild(UElevatorChildComponent* child)
+{
+	m_children.Add(child);
 }

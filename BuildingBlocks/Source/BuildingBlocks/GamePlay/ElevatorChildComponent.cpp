@@ -3,7 +3,6 @@
 
 #include "ElevatorChildComponent.h"
 #include "../Core/CoreSystem.h"
-#include "ElevatorHandler.h"
 #include "Elevator.h"
 #include "../Debug/Debug.h"
 

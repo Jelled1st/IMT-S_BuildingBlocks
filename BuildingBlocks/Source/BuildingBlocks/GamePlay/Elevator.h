@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "ElevatorCameraActor.h"
 #include "Elevator.generated.h"
 
 class UElevatorChildComponent;
@@ -47,21 +46,12 @@ public:
 	int startFloor = 0;
 
 	UPROPERTY(EditAnywhere);
-	TSoftObjectPtr<AElevatorCameraActor> cameraActorSoftPtr;
-
-	UPROPERTY(EditAnywhere);
 	float speed = 2.0f;
 
 	UPROPERTY(EditAnywhere);
 	TSoftObjectPtr<AActor> elevatorPlatformSoftPtr;
 
-	UPROPERTY(EditAnywhere);
-	TArray<TSoftObjectPtr<UElevatorChildComponent>> elevatorChildrenSoftPtr;
-
-	void AddChild(UElevatorChildComponent* child)
-	{
-		m_children.Add(child);
-	}
+	void AddChild(UElevatorChildComponent* child);
 
 private:
 	void ConvertSoftPtrs();
@@ -78,9 +68,6 @@ private:
 
 	UPROPERTY();
 	TArray<AActor*> m_floors;
-
-	UPROPERTY();
-	AElevatorCameraActor* m_cameraActor;
 
 	UPROPERTY();
 	TArray<UElevatorChildComponent*> m_children;

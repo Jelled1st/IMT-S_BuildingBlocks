@@ -14,7 +14,6 @@
 #include "Json.h"
 #include "Containers/Map.h"
 
-#include "../Gameplay/ElevatorHandler.h"
 #include "../Gameplay/Elevator.h"
 
 #include <string>
