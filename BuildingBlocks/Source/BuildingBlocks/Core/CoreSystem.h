@@ -14,7 +14,7 @@
 #include "../APIs/Formula1Api.h"
 #include "../HTTPTestObject.h"
 
-#include "../Gameplay/ElevatorHandler.h"
+#include "../Gameplay/Elevator.h"
 
 #include "CoreSystem.generated.h"
 
@@ -93,17 +93,19 @@ public:
 		return m_f1Api;
 	}
 
-	UElevatorHandler* const GetElevatorHandler() const
+	AElevator* const GetElevator() const
 	{
-		if (m_elevatorHandler == nullptr)
+		if (m_elevator == nullptr)
 		{
 			UE_DEBUG_BREAK();
-			UDebug::Warning("Requested Elevator handler, which is nullptr");
+			UDebug::Warning("Requested Elevator, which is nullptr");
 		}
-		return m_elevatorHandler;
+		return m_elevator;
 	}
 
 private:
+	void OnElevatorSpawn(AElevator* elevator);
+
 	static TUniquePtr<UCoreSystem> m_instance;
 
 	UPROPERTY();
@@ -125,5 +127,5 @@ private:
 	UFormula1Api* m_f1Api;
 	
 	UPROPERTY();
-	UElevatorHandler* m_elevatorHandler;
+	AElevator* m_elevator;
 };

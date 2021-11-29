@@ -22,11 +22,11 @@ void UCoreSystem::Init()
 	m_modularitySystem = NewObject<UModularitySystem>();
 
 	m_eventSystem = NewObject<UEventSystem>();
+	m_eventSystem->OnElevatorSpawn().AddUObject(this, &UCoreSystem::OnElevatorSpawn);
+
 	m_sportDataHandler = NewObject<USportDataHandler>();
 
 	m_htttpTestObject= NewObject<UHTTPTestObject>();
-
-	m_elevatorHandler = NewObject<UElevatorHandler>();
 
 	m_f1Api = NewObject<UFormula1Api>();
 	m_f1Api->Init(FHttpModule::Get());
@@ -58,4 +58,9 @@ UCoreSystem& UCoreSystem::Get()
 bool UCoreSystem::Exists()
 {
 	return m_instance.IsValid();
+}
+
+void UCoreSystem::OnElevatorSpawn(AElevator* elevator)
+{
+	m_elevator = elevator;
 }

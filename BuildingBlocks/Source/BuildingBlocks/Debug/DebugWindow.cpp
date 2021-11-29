@@ -102,7 +102,7 @@ void UDebugWindow::DrawOperatorControls()
 	ImGui::BeginGroup();
 
 	TArray<AModularObject*>& modularObjs = UCoreSystem::Get().GetModularitySystem()->GetRegisteredObjects();
-		
+
 	AModularObject* currentSelected = m_selectedObject;
 
 	if (modularObjs.Num() > 0)
@@ -231,7 +231,7 @@ void UDebugWindow::DrawPresetMenu()
 
 			TMap<FString, TSharedPtr<FJsonValue>> globalJsonValues = jsonLoadObject->Values;
 
-			for ( TPair<FString, TSharedPtr<FJsonValue>> objectJsonValue : globalJsonValues)
+			for (TPair<FString, TSharedPtr<FJsonValue>> objectJsonValue : globalJsonValues)
 			{
 				if (objectJsonValue.Value->Type != EJson::Object)
 				{
@@ -340,7 +340,7 @@ void UDebugWindow::DrawObjectControls(AModularObject& object)
 	{
 		AModularObject::ParameterType parameterType = parameter.Value.Key;
 
-		switch(parameterType)
+		switch (parameterType)
 		{
 		case AModularObject::ParameterType::Bool:
 		{
@@ -352,7 +352,7 @@ void UDebugWindow::DrawObjectControls(AModularObject& object)
 			FString* stringPtr = reinterpret_cast<FString*>(parameter.Value.Value);
 			char* stringAsChar = TCHAR_TO_ANSI(*(*stringPtr));
 
-			ImGui::InputText(TCHAR_TO_ANSI(*parameter.Key), stringAsChar , 1000);
+			ImGui::InputText(TCHAR_TO_ANSI(*parameter.Key), stringAsChar, 1000);
 
 			FString outValue = FString(stringAsChar);
 
@@ -405,9 +405,9 @@ void UDebugWindow::DrawElevatorControls()
 		return;
 	}
 
-	UElevatorHandler* elevatorHandler = UCoreSystem::Get().GetElevatorHandler();
+	AElevator* elevator = UCoreSystem::Get().GetElevator();
 
-	if (elevatorHandler == nullptr)
+	if (elevator == nullptr)
 	{
 		return;
 	}
@@ -415,25 +415,20 @@ void UDebugWindow::DrawElevatorControls()
 	static const int nameSize = 150;
 	static const ImVec2 buttonSize = ImVec2(80, 20);
 
-	const TArray<AElevator*>& elevators = elevatorHandler->GetElevators();
+	ImGui::Text(TCHAR_TO_ANSI(*elevator->GetName()));
 
-	for (AElevator* elevator : elevators)
+	ImGui::SameLine(nameSize);
+
+	if (ImGui::Button("Down", buttonSize))
 	{
-		ImGui::Text(TCHAR_TO_ANSI(*elevator->GetName()));
+		elevator->MoveDown(1);
+	}
 
-		ImGui::SameLine(nameSize);
+	ImGui::SameLine();
 
-		if (ImGui::Button("Down", buttonSize))
-		{
-			elevator->MoveDown(1);
-		}
-
-		ImGui::SameLine();
-
-		if (ImGui::Button("Up", buttonSize))
-		{
-			elevator->MoveUp(1);
-		}
+	if (ImGui::Button("Up", buttonSize))
+	{
+		elevator->MoveUp(1);
 	}
 }
 
@@ -493,7 +488,7 @@ void UDebugWindow::DrawSportData(USportDataHandler& sportData, Sport sport)
 	ImGui::SameLine(nameSize + barSize + barSize + scoreSize + barSize + barSize);
 
 	ImGui::Text("nationality");
-	
+
 	ImGui::Text("====================================================================");
 
 	float highestScore = 0;
@@ -533,7 +528,7 @@ void UDebugWindow::DrawSportData(USportDataHandler& sportData, Sport sport)
 		ImGui::SameLine(nameSize + barSize + barSize + scoreSize + barSize + barSize);
 		ImGui::Text(TCHAR_TO_ANSI(*team->GetNationalityAsString()));
 	}
-	
+
 	if (showAdditionalTeamInfo && m_selectedTeam != nullptr)
 	{
 		ImGui::Separator();
@@ -544,7 +539,7 @@ void UDebugWindow::DrawSportData(USportDataHandler& sportData, Sport sport)
 
 		ImGui::Text("Players");
 		const TArray<USportPlayer*>& players = m_selectedTeam->GetPlayers();
-		
+
 		DrawPlayersTable(players, sport);
 
 		ImGui::NewLine();
@@ -593,21 +588,21 @@ void UDebugWindow::DrawPlayersTable(const TArray<USportPlayer*>& players, Sport 
 	static int scoreSize = 200;
 	static int nationalitySize = 140;
 	static int barSize = 10;
-	
+
 	ImGui::Text("Nr.");
 	ImGui::SameLine(nrSize + barSize);
 	ImGui::Text("|");
-	ImGui::SameLine(nrSize + barSize*2);
+	ImGui::SameLine(nrSize + barSize * 2);
 
 	ImGui::Text("Name");
-	ImGui::SameLine(nrSize + nameSize + barSize*3);
+	ImGui::SameLine(nrSize + nameSize + barSize * 3);
 	ImGui::Text("|");
-	ImGui::SameLine(nrSize + nameSize + barSize*4);
+	ImGui::SameLine(nrSize + nameSize + barSize * 4);
 
 	ImGui::Text("score");
-	ImGui::SameLine(nrSize + nameSize + scoreSize + barSize*5);
+	ImGui::SameLine(nrSize + nameSize + scoreSize + barSize * 5);
 	ImGui::Text("|");
-	ImGui::SameLine(nrSize + nameSize + scoreSize + barSize*6);
+	ImGui::SameLine(nrSize + nameSize + scoreSize + barSize * 6);
 
 	ImGui::Text("nationality");
 
@@ -700,7 +695,7 @@ void UDebugWindow::DrawCreateTeamMenu()
 			}
 
 			bool isLast = i == countries.Num() - 1;
-			if ((i+1) % rowElements != 0 && !isLast)
+			if ((i + 1) % rowElements != 0 && !isLast)
 			{
 				ImGui::SameLine();
 			}
