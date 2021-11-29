@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "ElevatorSpeed.h"
 #include "Elevator.generated.h"
 
 class UElevatorChildComponent;
@@ -46,10 +47,10 @@ public:
 	int startFloor = 0;
 
 	UPROPERTY(EditAnywhere);
-	float speed = 2.0f;
+	TSoftObjectPtr<AActor> elevatorPlatformSoftPtr;
 
 	UPROPERTY(EditAnywhere);
-	TSoftObjectPtr<AActor> elevatorPlatformSoftPtr;
+	UElevatorSpeed* speed;
 
 	void AddChild(UElevatorChildComponent& child);
 	void RemoveChild(UElevatorChildComponent& child);

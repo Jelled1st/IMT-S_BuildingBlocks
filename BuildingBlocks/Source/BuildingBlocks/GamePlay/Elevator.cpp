@@ -14,6 +14,8 @@ AElevator::AElevator()
 	PrimaryActorTick.bCanEverTick = true;
 
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
+
+	speed = NewObject<UElevatorSpeed>();
 }
 
 // Called when the game starts or when spawned
@@ -72,7 +74,7 @@ void AElevator::Tick(float deltaTime)
 		FVector pos = m_elevatorPlatform->GetActorLocation();
 		float zDiff = destination.Z - pos.Z;
 		float zDiffAbs = FGenericPlatformMath::Abs(zDiff);
-		float movement = speed * deltaTime;
+		float movement = speed->maxSpeed * deltaTime;
 		
 		bool willOvershoot = movement >= zDiffAbs;
 		if (willOvershoot)
