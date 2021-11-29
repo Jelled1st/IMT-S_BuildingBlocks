@@ -14,8 +14,6 @@ AElevator::AElevator()
 	PrimaryActorTick.bCanEverTick = true;
 
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
-
-	speed = NewObject<UElevatorSpeed>();
 }
 
 // Called when the game starts or when spawned
@@ -71,33 +69,66 @@ void AElevator::Tick(float deltaTime)
 		AActor* floorActor = m_floors[m_desinationIndex];
 		FVector destination = floorActor->GetActorLocation();
 
-		FVector pos = m_elevatorPlatform->GetActorLocation();
-		float zDiff = destination.Z - pos.Z;
-		float zDiffAbs = FGenericPlatformMath::Abs(zDiff);
-		float movement = speed->maxSpeed * deltaTime;
-		
-		bool willOvershoot = movement >= zDiffAbs;
-		if (willOvershoot)
+		FVector position = m_elevatorPlatform->GetActorLocation();
+		FVector newPosition;
+
+		if (Move(position, newPosition, destination, deltaTime))
 		{
-			movement = zDiffAbs;
 			m_state = ElevatorState::Idle;
 			m_currentFloorIndex = m_desinationIndex;
 		}
 
-		bool isMovingDown = zDiff < 0;
-		if (isMovingDown)
-		{
-			movement = -movement;
-		}
-
-		pos.Z += movement;
-		m_elevatorPlatform->SetActorLocation(pos);
+		m_elevatorPlatform->SetActorLocation(newPosition);
 
 		for (UElevatorChildComponent* child : m_children)
 		{
-			child->GetWorldOffset() = pos - m_startPosition;
+			child->GetWorldOffset() = newPosition - m_startPosition;
 		}
 	}
+}
+
+bool AElevator::Move(const FVector& position, FVector& outPosition, const FVector& destination, float deltaTime)
+{
+	outPosition = position;
+	bool isMovementDone = false;
+
+	float zDiff = destination.Z - position.Z;
+	float zDiffAbs = FGenericPlatformMath::Abs(zDiff);
+	
+	bool slowDown = zDiffAbs <= speed.slowDownDistance;
+	bool speedUp = !slowDown;
+
+	if (slowDown)
+	{
+		speed.Min();
+	}
+	if(speedUp)
+	{
+		speed.currentSpeed = speed.currentSpeed + speed.acceleration;
+	}
+	speed.currentSpeed *= (1.0f - speed.friction);
+	speed.Max();
+
+	float movement = speed.currentSpeed * deltaTime;
+
+	bool willOvershoot = movement >= zDiffAbs;
+	if (willOvershoot)
+	{
+		movement = zDiffAbs;
+		isMovementDone = true;
+
+		speed.Reset();
+	}
+
+	bool isMovingDown = zDiff < 0;
+	if (isMovingDown)
+	{
+		movement = -movement;
+	}
+
+	outPosition.Z += movement;
+
+	return isMovementDone;
 }
 
 void AElevator::MoveUp(int floorCount)

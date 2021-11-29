@@ -50,12 +50,15 @@ public:
 	TSoftObjectPtr<AActor> elevatorPlatformSoftPtr;
 
 	UPROPERTY(EditAnywhere);
-	UElevatorSpeed* speed;
+	FElevatorSpeed speed;
 
 	void AddChild(UElevatorChildComponent& child);
 	void RemoveChild(UElevatorChildComponent& child);
 
 private:
+	// Returns if movement is done
+	bool Move(const FVector& position, FVector& outPosition, const FVector& destination, float deltaTime);
+
 	void ConvertSoftPtrs();
 
 	int m_currentFloorIndex;
