@@ -8,7 +8,7 @@ public class BuildingBlocks : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "ImGui", "Json", "Http", "JsonUtilities"});
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "ImGui", "Json", "Http", "JsonUtilities", "Slate"});
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 
