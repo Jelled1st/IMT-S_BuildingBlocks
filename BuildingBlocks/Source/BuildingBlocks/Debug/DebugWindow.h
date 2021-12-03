@@ -96,6 +96,9 @@ private:
 	UTeam* m_selectedTeam = nullptr;
 	USportPlayer* m_selectedPlayer = nullptr;
 
+	static const int presetNameLength;
+	char m_presetName[21] = { 0 };
+
 #if OPERATOR_WINDOW
 	TSharedPtr<SWindow> m_window;
 	TSharedPtr<SViewport> m_viewport;

@@ -3,6 +3,8 @@
 
 #include "PresetHandler.h"
 #include "../Debug/Debug.h"
+#include "ModularObject.h"
+#include "../Core/CoreSystem.h"
 
 const FString UPresetHandler::m_subFolders = "BuildingBlocks";
 const FString UPresetHandler::m_filePath = "presets.json";
@@ -17,6 +19,150 @@ UPresetHandler::~UPresetHandler()
 
 }
 
+bool UPresetHandler::SavePreset(const FString& presetName)
+{
+	TSharedPtr<FJsonObject> jsonWriteObject = MakeShareable(new FJsonObject);
+
+	TArray<AModularObject*>& modularObjs = UCoreSystem::Get().GetModularitySystem()->GetRegisteredObjects();
+	for (AModularObject* obj : modularObjs)
+	{
+		FString name = obj->GetName();
+
+		TMap<FString, TPair<AModularObject::ParameterType, void*>>& parameters = obj->GetParameters();
+
+		TSharedPtr<FJsonObject> jsonSubObject = MakeShareable(new FJsonObject);
+		jsonSubObject->SetStringField("Name", name);
+
+		for (TPair<FString, TPair<AModularObject::ParameterType, void* >> parameter : parameters)
+		{
+			FString parameterName = parameter.Key;
+			AModularObject::ParameterType parameterType = parameter.Value.Key;
+			switch (parameterType)
+			{
+			case AModularObject::ParameterType::Bool:
+			{
+				bool boolValue = *reinterpret_cast<bool*>(parameter.Value.Value);
+				jsonSubObject->SetBoolField(parameterName, boolValue);
+				break;
+			}
+			case AModularObject::ParameterType::String:
+			{
+				FString stringValue = *reinterpret_cast<FString*>(parameter.Value.Value);
+				jsonSubObject->SetStringField(parameterName, stringValue);
+				break;
+			}
+			case AModularObject::ParameterType::Double:
+			{
+				double doubleValue = *reinterpret_cast<double*>(parameter.Value.Value);
+				jsonSubObject->SetNumberField(parameterName, static_cast<double>(doubleValue));
+				break;
+			}
+
+			}
+		}
+
+		jsonWriteObject->SetObjectField(name, jsonSubObject);
+	}
+
+	FString presetAsJson;
+	TSharedRef<TJsonWriter<>> JsonWriter = TJsonWriterFactory<>::Create(&presetAsJson);
+
+	if (FJsonSerializer::Serialize(jsonWriteObject.ToSharedRef(), JsonWriter))
+	{
+		if (m_presetsAsJson.Contains(presetName))
+		{
+			m_presetsAsJson[presetName] = presetAsJson;
+		}
+		else
+		{
+			m_presetsAsJson.Add(presetName, presetAsJson);
+		}
+
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+bool UPresetHandler::LoadPreset(const FString& presetName)
+{
+	FString presetAsJson;
+
+	if (m_presetsAsJson.Contains(presetName))
+	{
+		presetAsJson = m_presetsAsJson[presetName];
+	}
+	else
+	{
+		return false;
+	}
+
+	TSharedPtr<FJsonObject> jsonLoadObject = MakeShareable(new FJsonObject);
+	TSharedRef<TJsonReader<>> jsonReader = TJsonReaderFactory<>::Create(presetAsJson);
+
+	bool isDeserializeSuccessful = false;
+
+	if (FJsonSerializer::Deserialize(jsonReader, jsonLoadObject))
+	{
+		isDeserializeSuccessful = true;
+
+		TArray<AModularObject*> modularObjs = UCoreSystem::Get().GetModularitySystem()->GetRegisteredObjects();
+		TMap<FString, AModularObject*> objectByName;
+
+		for (AModularObject* obj : modularObjs)
+		{
+			objectByName.Add(obj->GetName(), obj);
+		}
+
+		TMap<FString, TSharedPtr<FJsonValue>> globalJsonValues = jsonLoadObject->Values;
+
+		for (TPair<FString, TSharedPtr<FJsonValue>> objectJsonValue : globalJsonValues)
+		{
+			if (objectJsonValue.Value->Type != EJson::Object)
+			{
+				UDebug::Log(FString::Printf(TEXT("Unexpected type in json object {0}"), *objectJsonValue.Key));
+			}
+			else
+			{
+				AModularObject* modularObject = objectByName[objectJsonValue.Key];
+				TSharedPtr<FJsonObject> jsonObject = objectJsonValue.Value->AsObject();
+
+				TMap<FString, TSharedPtr<FJsonValue>> jsonValues = jsonObject->Values;
+
+				for (TPair<FString, TSharedPtr<FJsonValue>> jsonValue : jsonValues)
+				{
+					FString valueName = jsonValue.Key;
+					TSharedPtr<FJsonValue> abstractValue = jsonValue.Value;
+
+					EJson type = abstractValue->Type;
+
+					if (type == EJson::String)
+					{
+						FString value = abstractValue->AsString();
+						modularObject->SetParameterValue(valueName, value);
+					}
+
+					if (type == EJson::Boolean)
+					{
+						bool value = abstractValue->AsBool();
+						modularObject->SetParameterValue(valueName, value);
+					}
+
+					if (type == EJson::Number)
+					{
+						double value = abstractValue->AsNumber();
+						modularObject->SetParameterValue(valueName, value);
+					}
+				}
+			}
+		}
+	}
+
+	return isDeserializeSuccessful;
+}
+
 FString UPresetHandler::GetFullDirectory()
 {
 	FString persistentDir = FPlatformProcess::UserSettingsDir();
@@ -25,6 +171,16 @@ FString UPresetHandler::GetFullDirectory()
 }
 
 bool UPresetHandler::SavePresetsToFile()
+{
+	return false;
+}
+
+bool UPresetHandler::LoadPresetsFromFile()
+{
+	return false;
+}
+
+bool UPresetHandler::SaveStringToFile(const FString& presetsAsJson)
 {
 	FString fullDir = GetFullDirectory();
 	UDebug::Log(*FString::Printf(TEXT("Writing to directory: %s"), *fullDir));
@@ -45,10 +201,10 @@ bool UPresetHandler::SavePresetsToFile()
 		UDebug::Warning(*FString::Printf(TEXT("File '%s' does not exist"), *filePath));
 	}
 
-	return FFileHelper::SaveStringToFile(TEXT("This is overwriting test"), *filePath);
+	return FFileHelper::SaveStringToFile(*presetsAsJson, *filePath);
 }
 
-bool UPresetHandler::LoadPresetsFromFile()
+bool UPresetHandler::LoadStringFromFile(FString& presetsAsJson)
 {
 	FString fullDir = GetFullDirectory();
 	UDebug::Log(*FString::Printf(TEXT("Reading from directory: %s"), *fullDir));
@@ -71,10 +227,18 @@ bool UPresetHandler::LoadPresetsFromFile()
 		return false;
 	}
 
-	FString fileData;
-	bool isSuccessful = FFileHelper::LoadFileToString(fileData, *filePath);
-
-	UDebug::Log(*FString::Printf(TEXT("Loaded string: %s"), *fileData));
-
+	bool isSuccessful = FFileHelper::LoadFileToString(presetsAsJson, *filePath);
 	return isSuccessful;
+}
+
+TArray<FString> UPresetHandler::GetPresetNames() const
+{
+	TArray<FString> presetNames;
+	
+	for (TPair<FString, FString> preset : m_presetsAsJson)
+	{
+		presetNames.Add(preset.Key);
+	}
+
+	return presetNames;
 }
