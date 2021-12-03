@@ -51,8 +51,6 @@ void UDebugWindow::Start()
 
 	slateApp.AddWindow(windowRef, true);
 
-	windowRef->
-
 	FImGuiDelegates::OnWorldDebug().AddLambda([this]() { DrawWindow(); });
 #endif
 }
