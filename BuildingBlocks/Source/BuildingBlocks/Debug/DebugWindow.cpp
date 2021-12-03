@@ -48,10 +48,14 @@ void UDebugWindow::Start()
 	TSharedRef<SWindow> windowRef = m_window.ToSharedRef();
 
 	FSlateApplication& slateApp = FSlateApplication::Get();
-
 	slateApp.AddWindow(windowRef, true);
 
+	m_viewport = SNew(SViewport);
+	windowRef->SetContent(m_viewport.ToSharedRef());
+	m_viewport->SetForegroundColor(TAttribute<FSlateColor>());
+
 	FImGuiDelegates::OnWorldDebug().AddLambda([this]() { DrawWindow(); });
+
 #endif
 }
 

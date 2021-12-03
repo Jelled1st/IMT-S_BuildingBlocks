@@ -95,5 +95,6 @@ private:
 	USportPlayer* m_selectedPlayer = nullptr;
 
 	TSharedPtr<SWindow> m_window;
+	TSharedPtr<SViewport> m_viewport;
 #endif
 };
