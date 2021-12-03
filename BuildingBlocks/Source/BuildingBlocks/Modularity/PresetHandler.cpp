@@ -17,11 +17,6 @@ UPresetHandler::~UPresetHandler()
 
 }
 
-bool UPresetHandler::LoadPresetsFromFile()
-{
-	return false;
-}
-
 FString UPresetHandler::GetFullDirectory()
 {
 	FString persistentDir = FPlatformProcess::UserSettingsDir();
@@ -51,4 +46,35 @@ bool UPresetHandler::SavePresetsToFile()
 	}
 
 	return FFileHelper::SaveStringToFile(TEXT("This is overwriting test"), *filePath);
+}
+
+bool UPresetHandler::LoadPresetsFromFile()
+{
+	FString fullDir = GetFullDirectory();
+	UDebug::Log(*FString::Printf(TEXT("Reading from directory: %s"), *fullDir));
+
+	IFileManager& fileManager = IFileManager::Get();
+
+	if (!fileManager.DirectoryExists(*fullDir))
+	{
+		UDebug::Warning(*FString::Printf(TEXT("Directory '%s' does not exist"), *fullDir));
+
+		return false;
+	}
+
+	FString filePath = fullDir + m_filePath;
+
+	if (!fileManager.FileExists(*filePath))
+	{
+		UDebug::Warning(*FString::Printf(TEXT("File '%s' does not exist"), *filePath));
+
+		return false;
+	}
+
+	FString fileData;
+	bool isSuccessful = FFileHelper::LoadFileToString(fileData, *filePath);
+
+	UDebug::Log(*FString::Printf(TEXT("Loaded string: %s"), *fileData));
+
+	return isSuccessful;
 }
