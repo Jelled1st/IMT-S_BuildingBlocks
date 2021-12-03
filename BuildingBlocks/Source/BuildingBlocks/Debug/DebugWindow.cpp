@@ -205,6 +205,19 @@ void UDebugWindow::DrawPresetMenu()
 		}
 	}
 
+	if (ImGui::Button("Load presets through manager"))
+	{
+		if (UCoreSystem::Exists())
+		{
+			UPresetHandler* handler = UCoreSystem::Get().GetPresetHandler();
+
+			if (handler != nullptr)
+			{
+				handler->LoadPresetsFromFile();
+			}
+		}
+	}
+
 	if (ImGui::Button("Save preset"))
 	{
 		TSharedPtr<FJsonObject> jsonWriteObject = MakeShareable(new FJsonObject);
