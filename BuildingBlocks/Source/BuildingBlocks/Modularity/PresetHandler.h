@@ -19,7 +19,10 @@ public:
 	bool SavePresetsToFile();
 
 private:
+	const static FString m_subFolders;
 	const static FString m_filePath;
+
+	FString GetFullDirectory();
 
 	TMap<FString, FString> m_presetsAsJson;
 };
