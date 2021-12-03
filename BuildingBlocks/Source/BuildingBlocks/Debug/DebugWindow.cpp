@@ -31,6 +31,28 @@ UDebugWindow::~UDebugWindow()
 void UDebugWindow::Start()
 {
 #if WITH_IMGUI
+	FSlateRenderer* renderer = FSlateApplication::Get().GetRenderer();
+
+	m_window = SNew(SWindow)
+		.AutoCenter(EAutoCenter::None)
+		.Title(FText::FromString(TEXT("Control Window")))
+		.IsInitiallyMaximized(false)
+		.ScreenPosition(FVector2D(0, 0))
+		.ClientSize(FVector2D(500, 800))
+		.CreateTitleBar(true)
+		.SizingRule(ESizingRule::UserSized)
+		.SupportsMaximize(false)
+		.SupportsMinimize(true)
+		.HasCloseButton(true);
+
+	TSharedRef<SWindow> windowRef = m_window.ToSharedRef();
+
+	FSlateApplication& slateApp = FSlateApplication::Get();
+
+	slateApp.AddWindow(windowRef, true);
+
+	windowRef->
+
 	FImGuiDelegates::OnWorldDebug().AddLambda([this]() { DrawWindow(); });
 #endif
 }

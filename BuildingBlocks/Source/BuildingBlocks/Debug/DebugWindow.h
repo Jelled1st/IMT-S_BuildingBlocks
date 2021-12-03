@@ -92,5 +92,7 @@ private:
 	PlayerData m_newPlayer;
 	UTeam* m_selectedTeam = nullptr;
 	USportPlayer* m_selectedPlayer = nullptr;
+
+	TSharedPtr<SWindow> m_window;
 #endif
 };
