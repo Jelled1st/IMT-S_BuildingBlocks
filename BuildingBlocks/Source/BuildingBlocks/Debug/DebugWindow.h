@@ -54,6 +54,7 @@ public:
 	~UDebugWindow();
 
 	void Start();
+	void Shutdown();
 
 #if WITH_IMGUI
 	void DrawWindow();

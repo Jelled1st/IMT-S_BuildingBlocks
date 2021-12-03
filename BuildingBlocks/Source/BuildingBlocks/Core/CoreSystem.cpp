@@ -45,6 +45,7 @@ void UCoreSystem::OnStart()
 
 void UCoreSystem::Shutdown()
 {
+	m_debugWindow->Shutdown();
 	m_instance.Release();
 
 	UDebug::Log("CoreSystem - Shutdown()");

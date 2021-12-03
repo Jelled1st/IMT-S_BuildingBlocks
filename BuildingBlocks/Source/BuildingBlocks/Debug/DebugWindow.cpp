@@ -55,6 +55,12 @@ void UDebugWindow::Start()
 #endif
 }
 
+void UDebugWindow::Shutdown()
+{
+	m_window->RequestDestroyWindow();
+	m_window.Reset();
+}
+
 #if WITH_IMGUI
 void UDebugWindow::DrawWindow()
 {
