@@ -192,6 +192,19 @@ void UDebugWindow::DrawOperatorControls()
 
 void UDebugWindow::DrawPresetMenu()
 {
+	if (ImGui::Button("Save presets through manager"))
+	{
+		if (UCoreSystem::Exists())
+		{
+			UPresetHandler* handler = UCoreSystem::Get().GetPresetHandler();
+
+			if (handler != nullptr)
+			{
+				handler->SavePresetsToFile();
+			}
+		}
+	}
+
 	if (ImGui::Button("Save preset"))
 	{
 		TSharedPtr<FJsonObject> jsonWriteObject = MakeShareable(new FJsonObject);
