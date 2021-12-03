@@ -31,6 +31,8 @@ UDebugWindow::~UDebugWindow()
 void UDebugWindow::Start()
 {
 #if WITH_IMGUI
+
+#if OPERATOR_WINDOW
 	FSlateRenderer* renderer = FSlateApplication::Get().GetRenderer();
 
 	m_window = SNew(SWindow)
@@ -54,15 +56,18 @@ void UDebugWindow::Start()
 	windowRef->SetContent(m_viewport.ToSharedRef());
 	m_viewport->SetForegroundColor(TAttribute<FSlateColor>());
 
-	FImGuiDelegates::OnWorldDebug().AddLambda([this]() { DrawWindow(); });
+#endif
 
+	FImGuiDelegates::OnWorldDebug().AddLambda([this]() { DrawWindow(); });
 #endif
 }
 
 void UDebugWindow::Shutdown()
 {
+#if OPERATOR_WINDOW
 	m_window->RequestDestroyWindow();
 	m_window.Reset();
+#endif
 }
 
 #if WITH_IMGUI

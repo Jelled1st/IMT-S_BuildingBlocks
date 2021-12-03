@@ -23,6 +23,8 @@ class AModularObject;
 
 #include "DebugWindow.generated.h"
 
+#define OPERATOR_WINDOW false
+
 UCLASS()
 class BUILDINGBLOCKS_API UDebugWindow : public UObject
 {
@@ -94,7 +96,10 @@ private:
 	UTeam* m_selectedTeam = nullptr;
 	USportPlayer* m_selectedPlayer = nullptr;
 
+#if OPERATOR_WINDOW
 	TSharedPtr<SWindow> m_window;
 	TSharedPtr<SViewport> m_viewport;
+#endif
+
 #endif
 };
