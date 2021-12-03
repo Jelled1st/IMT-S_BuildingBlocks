@@ -7,6 +7,7 @@
 #include "../EventSystem/EventSystem.h"
 
 #include "../Modularity/ModularitySystem.h"
+#include "../Modularity/PresetHandler.h"
 #include "../Debug/DebugWindow.h"
 
 #include "../SportData/SportDataHandler.h"
@@ -46,11 +47,23 @@ public:
 
 	UModularitySystem* GetModularitySystem()
 	{
-		return m_modularitySystem;
+		if (m_modularitySystem == nullptr)
 		{
 			UE_DEBUG_BREAK();
+			UDebug::Warning("modularitySystem is nullptr");
 		}
+		return m_modularitySystem;
 	};
+
+	UPresetHandler* GetPresetHandler()
+	{
+		if (m_presetHandler == nullptr)
+		{
+			UE_DEBUG_BREAK();
+			UDebug::Warning("PresetHandler is nullptr");
+		}
+		return m_presetHandler;
+	}
 
 	UFUNCTION(BlueprintCallable)
 	USportDataHandler* GetBPSportDataHandler()
@@ -128,4 +141,7 @@ private:
 	
 	UPROPERTY();
 	AElevator* m_elevator;
+
+	UPROPERTY();
+	UPresetHandler* m_presetHandler;
 };

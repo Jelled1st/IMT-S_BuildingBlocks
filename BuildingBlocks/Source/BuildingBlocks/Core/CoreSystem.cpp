@@ -20,6 +20,7 @@ void UCoreSystem::Init()
 
 	m_debugWindow = NewObject<UDebugWindow>();
 	m_modularitySystem = NewObject<UModularitySystem>();
+	m_presetHandler = NewObject<UPresetHandler>();
 
 	m_eventSystem = NewObject<UEventSystem>();
 	m_eventSystem->OnElevatorSpawn().AddUObject(this, &UCoreSystem::OnElevatorSpawn);
