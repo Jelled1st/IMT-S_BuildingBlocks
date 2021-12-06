@@ -6,7 +6,6 @@
 #include "UObject/NoExportTypes.h"
 #include "Team.h"
 #include "SportPlayer.h"
-#include "PlayerName.h"
 #include "SportDataHandler.generated.h"
 
 UCLASS(BlueprintType)

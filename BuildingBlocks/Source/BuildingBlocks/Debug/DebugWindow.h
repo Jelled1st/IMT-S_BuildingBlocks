@@ -9,7 +9,6 @@
 #include "../SportData/SportDataHandler.h"
 #include "../SportData/Team.h"
 #include "../SportData/SportPlayer.h"
-#include "../SportData/PlayerName.h"
 #include "../SportData/Country.h"
 #include "../SportData/Sport.h"
 
