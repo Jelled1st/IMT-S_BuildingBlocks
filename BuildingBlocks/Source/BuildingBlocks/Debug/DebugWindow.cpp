@@ -321,15 +321,44 @@ void UDebugWindow::DrawObjectControls(AModularObject& object)
 
 	TMap<FString, TPair<AModularObject::ParameterType, void*>>& parameters = object.GetParameters();
 
+	FString currentGrouping = "";
+
 	for (TPair<FString, TPair<AModularObject::ParameterType, void* >> parameter : parameters)
 	{
+		FString parameterName = parameter.Key;
+
+		if (parameterName.Contains(TEXT(".")))
+		{
+			int seperatorIndex = parameterName.Find(TEXT("."));
+
+			FString groupName = parameterName.Mid(0, seperatorIndex);
+			parameterName = parameterName.Mid(seperatorIndex + 1, parameterName.Len() - seperatorIndex - 1);
+
+			if (groupName != currentGrouping)
+			{
+				ImGui::NewLine();
+				ImGui::Text(TCHAR_TO_ANSI(*groupName));
+				ImGui::PushID(TCHAR_TO_ANSI(*groupName));
+			}
+			currentGrouping = groupName;
+		}
+		else
+		{
+			if (currentGrouping != "")
+			{
+				ImGui::PopID();
+				ImGui::NewLine();
+			}
+			currentGrouping = "";
+		}
+
 		AModularObject::ParameterType parameterType = parameter.Value.Key;
 
 		switch (parameterType)
 		{
 		case AModularObject::ParameterType::Bool:
 		{
-			ImGui::Checkbox(TCHAR_TO_ANSI(*parameter.Key), reinterpret_cast<bool*>(parameter.Value.Value));
+			ImGui::Checkbox(TCHAR_TO_ANSI(*parameterName), reinterpret_cast<bool*>(parameter.Value.Value));
 			break;
 		}
 		case AModularObject::ParameterType::String:
@@ -337,7 +366,7 @@ void UDebugWindow::DrawObjectControls(AModularObject& object)
 			FString* stringPtr = reinterpret_cast<FString*>(parameter.Value.Value);
 			char* stringAsChar = TCHAR_TO_ANSI(*(*stringPtr));
 
-			ImGui::InputText(TCHAR_TO_ANSI(*parameter.Key), stringAsChar, 1000);
+			ImGui::InputText(TCHAR_TO_ANSI(*parameterName), stringAsChar, 1000);
 
 			FString outValue = FString(stringAsChar);
 
@@ -349,7 +378,7 @@ void UDebugWindow::DrawObjectControls(AModularObject& object)
 			double* doubleValue = reinterpret_cast<double*>(parameter.Value.Value);
 			float floatValue = static_cast<float>(*doubleValue);
 
-			ImGui::SliderFloat(TCHAR_TO_ANSI(*parameter.Key), &floatValue, m_rangeMin, m_rangeMax);
+			ImGui::SliderFloat(TCHAR_TO_ANSI(*parameterName), &floatValue, m_rangeMin, m_rangeMax);
 
 			*doubleValue = static_cast<double>(floatValue);
 
@@ -357,6 +386,11 @@ void UDebugWindow::DrawObjectControls(AModularObject& object)
 		}
 
 		}
+	}
+	if (currentGrouping != "")
+	{
+		ImGui::PopID();
+		ImGui::NewLine();
 	}
 }
 
