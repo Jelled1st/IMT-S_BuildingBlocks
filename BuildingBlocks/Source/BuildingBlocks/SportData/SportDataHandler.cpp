@@ -73,22 +73,22 @@ bool USportDataHandler::UnregisterTeam(UTeam& team)
 	return false;
 }
 
-const TArray<UTeam*>& USportDataHandler::GetCricketTeams()
+const TArray<UTeam*>& USportDataHandler::GetCricketTeams() const
 {
 	return m_cricketTeams;
 }
 
-const TArray<UTeam*>& USportDataHandler::GetFootballTeams()
+const TArray<UTeam*>& USportDataHandler::GetFootballTeams() const
 {
 	return m_footballTeams;
 }
 
-const TArray<UTeam*>& USportDataHandler::GetF1Teams()
+const TArray<UTeam*>& USportDataHandler::GetF1Teams() const
 {
 	return m_f1Teams;
 }
 
-const TArray<UTeam*>& USportDataHandler::GetTeams(Sport sport)
+const TArray<UTeam*>& USportDataHandler::GetTeams(Sport sport) const
 {
 	if (sport == Sport::Cricket)
 	{
@@ -104,7 +104,7 @@ const TArray<UTeam*>& USportDataHandler::GetTeams(Sport sport)
 	}
 }
 
-UTeam* USportDataHandler::FindTeam(FString name, Sport sport)
+UTeam* USportDataHandler::FindTeam(FString name, Sport sport) const
 {
 	const TArray<UTeam*>& teams = GetTeams(sport);
 
@@ -118,7 +118,7 @@ UTeam* USportDataHandler::FindTeam(FString name, Sport sport)
 	return nullptr;
 }
 
-TArray<UTeam*> USportDataHandler::GetAllTeams()
+TArray<UTeam*> USportDataHandler::GetAllTeams() const
 {
 	TArray<UTeam*> allTeams;
 	for (UTeam* team : m_cricketTeams)
@@ -150,4 +150,45 @@ void USportDataHandler::OnSportDataLoaded(Sport sport)
 			}
 		}
 	}
+}
+
+float USportDataHandler::GetHighestScoreInSport(Sport sport) const
+{
+	const TArray<UTeam*>& teams = GetTeams(sport);
+
+	float highestScore = 0;
+
+	for (UTeam* team : teams)
+	{
+		if (team->score > highestScore)
+		{
+			highestScore = team->score;
+		}
+	}
+
+	return highestScore;
+}
+
+float USportDataHandler::GetHighestDriverScoreF1() const
+{
+	const TArray<UTeam*>& teams = GetF1Teams();
+
+	float highestScore = 0;
+
+	for (UTeam* team : teams)
+	{
+		const TArray<USportPlayer*>& players = team->GetPlayers();
+
+		for (USportPlayer* player : players)
+		{
+			UF1Driver* driver = static_cast<UF1Driver*>(player);
+
+			if (driver->championshipPoints > highestScore)
+			{
+				highestScore = driver->championshipPoints;
+			}
+		}
+	}
+
+	return highestScore;
 }

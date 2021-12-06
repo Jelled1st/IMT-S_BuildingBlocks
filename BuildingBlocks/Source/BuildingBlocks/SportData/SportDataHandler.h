@@ -6,6 +6,7 @@
 #include "UObject/NoExportTypes.h"
 #include "Team.h"
 #include "SportPlayer.h"
+#include "F1Driver.h"
 #include "SportDataHandler.generated.h"
 
 UCLASS(BlueprintType)
@@ -20,17 +21,20 @@ public:
 	bool RegisterTeam(UTeam& team);
 	bool UnregisterTeam(UTeam& team);
 
-	const TArray<UTeam*>& GetCricketTeams();
-	const TArray<UTeam*>& GetFootballTeams();
+	const TArray<UTeam*>& GetCricketTeams() const;
+	const TArray<UTeam*>& GetFootballTeams() const;
 	UFUNCTION(BlueprintCallable)
-	const TArray<UTeam*>& GetF1Teams();
+	const TArray<UTeam*>& GetF1Teams() const;
 
-	const TArray<UTeam*>& GetTeams(Sport sport);
-	TArray<UTeam*> GetAllTeams();
+	const TArray<UTeam*>& GetTeams(Sport sport) const;
+	TArray<UTeam*> GetAllTeams() const;
 
-	UTeam* FindTeam(FString name, Sport sport);
+	UTeam* FindTeam(FString name, Sport sport) const;
 
 	void OnSportDataLoaded(Sport sport);
+
+	float GetHighestScoreInSport(Sport sport) const;
+	float GetHighestDriverScoreF1() const;
 
 private:
 	UPROPERTY();
