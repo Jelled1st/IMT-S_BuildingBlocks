@@ -99,6 +99,9 @@ private:
 	static const int presetNameLength;
 	char m_presetName[21] = { 0 };
 
+	int m_rangeMin = -1000;
+	int m_rangeMax = 1000;
+
 #if OPERATOR_WINDOW
 	TSharedPtr<SWindow> m_window;
 	TSharedPtr<SViewport> m_viewport;

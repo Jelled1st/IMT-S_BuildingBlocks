@@ -136,6 +136,15 @@ void UDebugWindow::DrawOperatorControls()
 		ImGui::TreePop();
 	}
 
+	ImGui::Separator();
+
+	ImGui::Text("Adjust the range of sliders. Use CTRL + click to enter manually");
+
+	ImGui::SliderInt("Range min", &m_rangeMin, -1000, 0);
+	ImGui::SliderInt("Range max", &m_rangeMax, 0, 1000);
+
+	ImGui::Separator();
+
 	ImGui::BeginGroup();
 
 	TArray<AModularObject*>& modularObjs = UCoreSystem::Get().GetModularitySystem()->GetRegisteredObjects();
@@ -264,8 +273,6 @@ void UDebugWindow::DrawPresetMenu()
 	{
 		handler->LoadPreset(UUtility::CharPtrToFString(m_presetName));
 	}
-
-	ImGui::Separator();
 }
 
 void UDebugWindow::DrawObjectControls(AModularObject& object)
@@ -274,8 +281,6 @@ void UDebugWindow::DrawObjectControls(AModularObject& object)
 
 	static float arrowButtonSpacing = 40;
 	static float textSpacing = 160;
-
-	DrawObjectTransform(object);
 
 	ImGui::PushID("MeshSelection");
 	if (ImGui::Button("<"))
@@ -344,7 +349,7 @@ void UDebugWindow::DrawObjectControls(AModularObject& object)
 			double* doubleValue = reinterpret_cast<double*>(parameter.Value.Value);
 			float floatValue = static_cast<float>(*doubleValue);
 
-			ImGui::SliderFloat(TCHAR_TO_ANSI(*parameter.Key), &floatValue, -100000, 100000);
+			ImGui::SliderFloat(TCHAR_TO_ANSI(*parameter.Key), &floatValue, m_rangeMin, m_rangeMax);
 
 			*doubleValue = static_cast<double>(floatValue);
 
