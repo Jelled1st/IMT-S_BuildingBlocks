@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Country.h"
 #include "Sport.h"
+#include "Misc/DateTime.h"
 #include "SportPlayer.generated.h"
 
 class UTeam;
@@ -36,7 +37,8 @@ protected:
 	UPROPERTY() FString m_displayName;
 
 	UPROPERTY() UTeam* m_team;
-	UPROPERTY() int m_age;
+	UPROPERTY() FDateTime m_dateOfBirth;
+
 	UPROPERTY() int m_length;
 	UPROPERTY() float m_weight;
 	UPROPERTY() float m_number;
