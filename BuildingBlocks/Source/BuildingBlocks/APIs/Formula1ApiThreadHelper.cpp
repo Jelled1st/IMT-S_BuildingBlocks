@@ -34,13 +34,13 @@ uint32 FFormula1ApiThreadHelper::Run()
 
 	UDebug::Log("PullDriverInformation()");
 	wasSuccesfull = false;
-	m_f1Api->PullDriverInformation();
-	while (!m_f1Api->IsDriversInfoPulled(wasSuccesfull)) {};
+	m_f1Api->PullDriverChampionship();
+	while (!m_f1Api->IsDriverChampionshipPulled(wasSuccesfull)) {};
 
-	UDebug::Log("PullTeamDrivers()");
+	/*UDebug::Log("PullTeamDrivers()");
 	wasSuccesfull = false;
 	m_f1Api->PullTeamDrivers();
-	while (!m_f1Api->IsTeamDriversPulled(wasSuccesfull)) {};
+	while (!m_f1Api->IsTeamDriversPulled(wasSuccesfull)) {};*/
 
 	UDebug::Log("pulling is done");
 

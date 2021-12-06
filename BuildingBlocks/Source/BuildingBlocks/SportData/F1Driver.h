@@ -18,4 +18,5 @@ public:
 	bool Init(FString firstName, FString lastName, FString displayName, UTeam& team);
 
 	UPROPERTY() float championshipPoints;
+	UPROPERTY() int wins;
 };

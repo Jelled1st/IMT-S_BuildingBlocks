@@ -223,12 +223,12 @@ void UFormula1Api::PullDriverInformation()
 
 void UFormula1Api::DriverDataCallback(FHttpRequestPtr request, FHttpResponsePtr response, bool isSuccessful)
 {
-	UDebug::Log("PullTeamsData callback");
+	UDebug::Log("PullDriverInformation callback");
 
 	if (!isSuccessful)
 	{
-		UDebug::Error("PullTeamsData was unsuccessful");
-		UDebug::ToScreen("Error: PullTeamsData was unsuccessful");
+		UDebug::Error("PullDriverInformation was unsuccessful");
+		UDebug::ToScreen("Error: PullDriverInformation was unsuccessful");
 
 		m_criticalSection.Lock();
 		m_driversResponse.isFinished = true;
@@ -293,6 +293,122 @@ void UFormula1Api::DriverDataCallback(FHttpRequestPtr request, FHttpResponsePtr 
 		m_criticalSection.Lock();
 		m_driversResponse.isFinished = true;
 		m_driversResponse.isSuccessful = false;
+		m_criticalSection.Unlock();
+	}
+}
+
+void UFormula1Api::PullDriverChampionship()
+{
+	if (m_isShuttingDown)
+	{
+		return;
+	}
+
+	m_criticalSection.Lock();
+	m_driverChampionshipResponse.isFinished = false;
+	m_driverChampionshipResponse.isSuccessful = false;
+	m_criticalSection.Unlock();
+
+	if (m_isShuttingDown)
+	{
+		return;
+	}
+
+	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = m_httpModule->CreateRequest();
+	Request->OnProcessRequestComplete().BindUObject(this, &UFormula1Api::DriverChampionShipCallback);
+
+	//process GET request
+	Request->SetURL("http://ergast.com/api/f1/2021/driverstandings.json");
+	Request->SetVerb("GET");
+	Request->SetHeader(TEXT("User-Agent"), "X-UnrealEngine-Agent");
+	Request->SetHeader("Content-Type", TEXT("application/json"));
+	Request->ProcessRequest();
+}
+
+void UFormula1Api::DriverChampionShipCallback(FHttpRequestPtr request, FHttpResponsePtr response, bool isSuccessful)
+{
+	UDebug::Log("PullDriverChampionship callback");
+
+	if (!isSuccessful)
+	{
+		UDebug::Error("PullDriverChampionship was unsuccessful");
+		UDebug::ToScreen("Error: PullDriverChampionship was unsuccessful");
+
+		m_criticalSection.Lock();
+		m_driverChampionshipResponse.isFinished = true;
+		m_driverChampionshipResponse.isSuccessful = false;
+		m_criticalSection.Unlock();
+
+		return;
+	}
+
+	TSharedPtr<FJsonObject> JsonObject;
+	TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(response->GetContentAsString());
+
+	if (FJsonSerializer::Deserialize(Reader, JsonObject))
+	{
+		FString driverCountString = JsonObject->GetObjectField("MRData")->GetStringField("total");
+		int32 driverCount = UUtility::FStringToInt(driverCountString);
+
+		for (int i = 0; i < driverCount; i++)
+		{
+			if (m_isShuttingDown)
+			{
+				return;
+			}
+
+			TSharedPtr<FJsonObject> standingsListObject = JsonObject->GetObjectField("MRData")->GetObjectField("StandingsTable")->GetArrayField("StandingsLists")[0]->AsObject();
+			TSharedPtr<FJsonObject> standingsObject = standingsListObject->GetArrayField("DriverStandings")[i]->AsObject();
+			TSharedPtr<FJsonObject> driverObject = standingsObject->GetObjectField("Driver");
+			TSharedPtr<FJsonObject> constructorObject = standingsObject->GetArrayField("Constructors")[0]->AsObject();
+
+			double points = standingsObject->GetNumberField("points");
+			double wins = standingsObject->GetNumberField("wins");
+			double position = standingsObject->GetNumberField("position");
+
+			FString driverId = driverObject->GetStringField("driverId");
+			FString firstName = driverObject->GetStringField("givenName");
+			FString lastName = driverObject->GetStringField("familyName");
+			FString codeName = driverObject->GetStringField("code");
+			double number = driverObject->GetNumberField("permanentNumber");
+			FString nationality = driverObject->GetStringField("nationality");
+			FString dob = driverObject->GetStringField("dateOfBirth");
+
+			FString constructorId = constructorObject->GetStringField("constructorId");
+			FString constructorName = constructorObject->GetStringField("name");
+
+			DriverData driver
+			{
+				driverId,
+				firstName,
+				lastName,
+				codeName,
+				static_cast<int>(number),
+				nationality,
+				constructorName,
+				dob,
+				static_cast<float>(points),
+				static_cast<int>(wins),
+			};
+
+			m_criticalSection.Lock();
+			m_drivers.Add(driver);
+			m_criticalSection.Unlock();
+		}
+
+		m_criticalSection.Lock();
+		m_driverChampionshipResponse.isFinished = true;
+		m_driverChampionshipResponse.isSuccessful = true;
+		m_criticalSection.Unlock();
+	}
+	else
+	{
+		UDebug::Error("API deserialization unsuccessful");
+		UDebug::ToScreen("Error: API deserialization unsuccessful");
+
+		m_criticalSection.Lock();
+		m_driverChampionshipResponse.isFinished = true;
+		m_driverChampionshipResponse.isSuccessful = false;
 		m_criticalSection.Unlock();
 	}
 }
@@ -412,6 +528,8 @@ void UFormula1Api::ImportDataToSportHandler()
 			f1Driver.nationalityAsString = driver.nationality;
 			f1Driver.SetNumber(driver.number);
 			f1Driver.SetDateOfBirth(UnpackDateOfBirthString(driver));
+			f1Driver.championshipPoints = driver.points;
+			f1Driver.wins = driver.wins;
 
 		}
 		else
@@ -515,6 +633,18 @@ bool UFormula1Api::IsTeamDriversPulled(bool& wasSuccessful)
 		wasSuccessful = false;
 	}
 
+	m_criticalSection.Unlock();
+
+	return isFinished || m_isShuttingDown;
+}
+
+bool UFormula1Api::IsDriverChampionshipPulled(bool& wasSuccessful)
+{
+	bool isFinished = false;
+
+	m_criticalSection.Lock();
+	isFinished = m_driverChampionshipResponse.isFinished;
+	wasSuccessful = m_driverChampionshipResponse.isSuccessful;
 	m_criticalSection.Unlock();
 
 	return isFinished || m_isShuttingDown;
