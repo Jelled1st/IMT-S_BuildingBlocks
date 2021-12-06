@@ -172,12 +172,67 @@ FString UPresetHandler::GetFullDirectory()
 
 bool UPresetHandler::SavePresetsToFile()
 {
-	return false;
+	TSharedPtr<FJsonObject> jsonWriteObject = MakeShareable(new FJsonObject);
+
+	for (TPair<FString, FString> preset : m_presetsAsJson)
+	{
+		FString name = preset.Key;
+		FString json = preset.Value;
+
+		jsonWriteObject->SetStringField(name, json);
+	}
+
+	FString jsonString;
+	TSharedRef<TJsonWriter<>> JsonWriter = TJsonWriterFactory<>::Create(&jsonString);
+
+	if (!FJsonSerializer::Serialize(jsonWriteObject.ToSharedRef(), JsonWriter))
+	{
+		return false;
+	}
+
+	return SaveStringToFile(jsonString);
 }
 
 bool UPresetHandler::LoadPresetsFromFile()
 {
-	return false;
+	FString jsonString;
+
+	if (!LoadStringFromFile(jsonString))
+	{
+		return false;
+	}
+
+	TSharedPtr<FJsonObject> jsonLoadObject = MakeShareable(new FJsonObject);
+	TSharedRef<TJsonReader<>> jsonReader = TJsonReaderFactory<>::Create(jsonString);
+
+	bool isDeserializeSuccessful = false;
+
+	if (FJsonSerializer::Deserialize(jsonReader, jsonLoadObject))
+	{
+		m_presetsAsJson.Empty();
+
+		isDeserializeSuccessful = true;
+
+		TMap<FString, TSharedPtr<FJsonValue>> jsonPairs = jsonLoadObject->Values;
+
+		for (TPair<FString, TSharedPtr<FJsonValue>> jsonPair : jsonPairs)
+		{
+			FString valueName = jsonPair.Key;
+			TSharedPtr<FJsonValue> abstractValue = jsonPair.Value;
+
+			if (jsonPair.Value->Type == EJson::String)
+			{
+				FString value = abstractValue->AsString();
+				m_presetsAsJson.Add(valueName, value);
+			}
+			else
+			{
+				UDebug::Log(FString::Printf(TEXT("Unexpected type in json object %s"), *jsonPair.Key));
+			}
+		}
+	}
+
+	return isDeserializeSuccessful;
 }
 
 bool UPresetHandler::SaveStringToFile(const FString& presetsAsJson)

@@ -219,6 +219,10 @@ void UDebugWindow::DrawPresetMenu()
 		handler->LoadPresetsFromFile();
 	}
 
+	ImGui::NewLine();
+
+	ImGui::Text("Presets");
+
 	const static int presetsPerRow = 5;
 	TArray<FString> presets = handler->GetPresetNames();
 
@@ -243,6 +247,10 @@ void UDebugWindow::DrawPresetMenu()
 		++index;
 	}
 
+	ImGui::NewLine();
+
+	ImGui::Text("Save new preset");
+
 	ImGui::InputText("Preset Name", m_presetName, presetNameLength);
 
 	if (ImGui::Button("Save preset"))
@@ -256,6 +264,8 @@ void UDebugWindow::DrawPresetMenu()
 	{
 		handler->LoadPreset(UUtility::CharPtrToFString(m_presetName));
 	}
+
+	ImGui::Separator();
 }
 
 void UDebugWindow::DrawObjectControls(AModularObject& object)
