@@ -54,7 +54,10 @@ public:
 	bool SwapMat(int index);
 
 	UStaticMesh& GetMesh();
+	bool TrySetMeshByName(const FString& meshName);
+
 	UMaterialInterface& GetMaterial();
+	bool TrySetMaterialByName(const FString& materialName);
 
 	void SetupParameter(bool& value, FString name);
 	void SetupParameter(FString& value, FString name);

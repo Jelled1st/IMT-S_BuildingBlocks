@@ -33,6 +33,9 @@ bool UPresetHandler::SavePreset(const FString& presetName)
 		TSharedPtr<FJsonObject> jsonSubObject = MakeShareable(new FJsonObject);
 		jsonSubObject->SetStringField("Name", name);
 
+		jsonSubObject->SetStringField("mesh", obj->GetMesh().GetName());
+		jsonSubObject->SetStringField("material", obj->GetMaterial().GetName());
+
 		for (TPair<FString, TPair<AModularObject::ParameterType, void* >> parameter : parameters)
 		{
 			FString parameterName = parameter.Key;
@@ -140,8 +143,21 @@ bool UPresetHandler::LoadPreset(const FString& presetName)
 
 					if (type == EJson::String)
 					{
+
 						FString value = abstractValue->AsString();
-						modularObject->SetParameterValue(valueName, value);
+
+						if (valueName == "mesh")
+						{
+							modularObject->TrySetMeshByName(value);
+						}
+						else if (valueName == "material")
+						{
+							modularObject->TrySetMaterialByName(value);
+						}
+						else
+						{
+							modularObject->SetParameterValue(valueName, value);
+						}
 					}
 
 					if (type == EJson::Boolean)

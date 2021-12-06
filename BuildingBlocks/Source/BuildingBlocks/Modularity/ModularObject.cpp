@@ -122,9 +122,41 @@ UStaticMesh& AModularObject::GetMesh()
 	return *visualComponent->GetStaticMesh();
 }
 
+bool AModularObject::TrySetMeshByName(const FString& meshName)
+{
+	int index = 0;
+	for (UStaticMesh* mesh : meshAssets)
+	{
+		if (mesh->GetName() == meshName)
+		{
+			return SwapMesh(index);
+		}
+
+		++index;
+	}
+
+	return false;
+}
+
 UMaterialInterface& AModularObject::GetMaterial()
 {
 	return *visualComponent->GetMaterial(0);
+}
+
+bool AModularObject::TrySetMaterialByName(const FString& materialName)
+{
+	int index = 0;
+	for (UMaterialInterface* material : materialAssets)
+	{
+		if (material->GetName() == materialName)
+		{
+			return SwapMat(index);
+		}
+
+		++index;
+	}
+
+	return false;
 }
 
 void AModularObject::SetupParameter(bool& value, FString name)
