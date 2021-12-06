@@ -17,5 +17,5 @@ public:
 	static UF1Driver& Make(FString firstName, FString lastName, FString displayName, UTeam& team);
 	bool Init(FString firstName, FString lastName, FString displayName, UTeam& team);
 
-	UPROPERTY() float m_championshipPoints;
+	UPROPERTY() float championshipPoints;
 };

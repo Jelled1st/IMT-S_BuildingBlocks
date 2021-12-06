@@ -13,7 +13,9 @@
 #include "Dom/JsonObject.h"
 #include "Json.h"
 #include "Containers/Map.h"
+#include "../SportData/F1Driver.h"
 
+#include "Misc/DateTime.h"
 #include "../Gameplay/Elevator.h"
 
 #include <string>
@@ -630,12 +632,14 @@ void UDebugWindow::DrawPlayersTable(const TArray<USportPlayer*>& players, Sport 
 	bool showAdditionalPlayerInfo = false;
 	for (USportPlayer* player : players)
 	{
+		UF1Driver* driver = static_cast<UF1Driver*>(player);
+
 		if (m_selectedPlayer == player)
 		{
 			showAdditionalPlayerInfo = true;
 		}
 
-		ImGui::Text(TCHAR_TO_ANSI(*player->GetNumberAsString()));
+		ImGui::Text(TCHAR_TO_ANSI(*driver->GetNumberAsString()));
 		ImGui::SameLine(nrSize + barSize);
 		ImGui::Text("|");
 		ImGui::SameLine(nrSize + barSize * 2);
@@ -649,9 +653,9 @@ void UDebugWindow::DrawPlayersTable(const TArray<USportPlayer*>& players, Sport 
 		ImGui::Text("|");
 		ImGui::SameLine(nrSize + nameSize + barSize * 4);
 
-		ImGui::PushID(UUtility::FStringToCharPtr(*FString::Printf(TEXT("%s_score"), *player->GetName())));
+		ImGui::PushID(UUtility::FStringToCharPtr(*FString::Printf(TEXT("%s_score"), *driver->GetName())));
 		ImGui::PushItemWidth(scoreSize);
-		static float score;
+		float score = driver->championshipPoints;
 		ImGui::SliderFloat("", &score, 0, 0);
 		ImGui::PopItemWidth();
 		ImGui::PopID();
@@ -660,7 +664,37 @@ void UDebugWindow::DrawPlayersTable(const TArray<USportPlayer*>& players, Sport 
 		ImGui::Text("|");
 		ImGui::SameLine(nrSize + nameSize + scoreSize + barSize * 6);
 
-		ImGui::Text(TCHAR_TO_ANSI(*player->nationalityAsString));
+		ImGui::Text(TCHAR_TO_ANSI(*driver->GetNationalityAsString()));
+	}
+
+	if (showAdditionalPlayerInfo && m_selectedPlayer != nullptr)
+	{
+		UF1Driver* driver = static_cast<UF1Driver*>(m_selectedPlayer);
+
+		ImGui::Separator();
+		ImGui::Indent();
+		ImGui::Text(TCHAR_TO_ANSI(*driver->GetFullName()));
+		ImGui::NewLine();
+
+		ImGui::Text("Number: ");
+		ImGui::SameLine();
+		ImGui::Text(TCHAR_TO_ANSI(*driver->GetNumberAsString()));
+
+		ImGui::Text("Score: ");
+		ImGui::SameLine();
+		ImGui::Text(TCHAR_TO_ANSI(*FString::FromInt(driver->championshipPoints)));
+
+		ImGui::Text("Nationality: ");
+		ImGui::SameLine();
+		ImGui::Text(TCHAR_TO_ANSI(*driver->GetNationalityAsString()));
+
+		FDateTime dob = driver->GetDateOfBirth();
+		ImGui::Text("Date of Birth: ");
+		ImGui::SameLine();
+		ImGui::Text(TCHAR_TO_ANSI(*FString::Printf(TEXT("%d/%d/%d"), dob.GetDay(), dob.GetMonth(), dob.GetYear())));
+
+
+		ImGui::Unindent();
 	}
 }
 

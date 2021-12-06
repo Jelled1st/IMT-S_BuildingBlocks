@@ -46,6 +46,7 @@ public:
 		int number;
 		FString nationality;
 		FString constructorName;
+		FString dob;
 	};
 
 	struct ResponseData
@@ -87,6 +88,8 @@ public:
 private:
 	void ConstructorDataCallback(FHttpRequestPtr request, FHttpResponsePtr response, bool isSuccessful);
 	void DriverDataCallback(FHttpRequestPtr request, FHttpResponsePtr response, bool isSuccessful);
+
+	FDateTime UnpackDateOfBirthString(const DriverData& driver);
 
 	DriverData* FindDriver(FString name, NameFilter filter = NameFilter::FirstName);
 

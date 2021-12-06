@@ -6,6 +6,7 @@
 #include "../Utilities/Utility.h"
 #include "../SportData/Team.h"
 #include "../SportData/SportPlayer.h"
+#include "../SportData/F1Driver.h"
 #include "../Core/CoreSystem.h"
 #include "../EventSystem/EventSystem.h"
 #include "../Debug/Debug.h"
@@ -260,6 +261,7 @@ void UFormula1Api::DriverDataCallback(FHttpRequestPtr request, FHttpResponsePtr 
 			FString codeName = driverObject->GetStringField("code");
 			double number = driverObject->GetNumberField("permanentNumber");
 			FString nationality = driverObject->GetStringField("nationality");
+			FString dob = driverObject->GetStringField("dateOfBirth");
 
 			DriverData driver
 			{
@@ -269,7 +271,8 @@ void UFormula1Api::DriverDataCallback(FHttpRequestPtr request, FHttpResponsePtr 
 				codeName,
 				static_cast<int>(number),
 				nationality,
-				"Unknown"
+				"Unknown",
+				dob,
 			};
 
 			m_criticalSection.Lock();
@@ -405,8 +408,11 @@ void UFormula1Api::ImportDataToSportHandler()
 
 		if (team != nullptr)
 		{
-			USportPlayer& player = USportPlayer::Make(driver.firstName, driver.lastName, driver.codeName, *team);
-			player.nationalityAsString = driver.nationality;
+			UF1Driver& f1Driver = UF1Driver::Make(driver.firstName, driver.lastName, driver.codeName, *team);
+			f1Driver.nationalityAsString = driver.nationality;
+			f1Driver.SetNumber(driver.number);
+			f1Driver.SetDateOfBirth(UnpackDateOfBirthString(driver));
+
 		}
 		else
 		{
@@ -517,4 +523,40 @@ bool UFormula1Api::IsTeamDriversPulled(bool& wasSuccessful)
 void UFormula1Api::SendApiDataEvent()
 {
 	m_sendApiDataEvent = true;
+}
+
+FDateTime UFormula1Api::UnpackDateOfBirthString(const DriverData& driver)
+{
+	const static FString format = "YYYY-MM-DD";
+
+	FString dob = driver.dob;
+		
+	int yearSeperatorIndex;
+	int monthSeperatorIndex;
+
+	if (!dob.FindChar('-', yearSeperatorIndex))
+	{
+		UDebug::Warning(FString::Printf(TEXT("Birthday of driver %s is invalid (not %s)"), *driver.driverId, *format));
+		return FDateTime();
+	}
+
+	FString yearString = dob.Mid(0, yearSeperatorIndex);
+
+	FString monthDayString = dob.Mid(yearSeperatorIndex + 1, dob.Len() - yearSeperatorIndex - 1);
+
+	if (!monthDayString.FindChar('-', monthSeperatorIndex))
+	{
+		UDebug::Warning(FString::Printf(TEXT("Birthday of driver %s is invalid (not %s)"), *driver.driverId, *format));
+		return FDateTime();
+	}
+
+	FString monthString = monthDayString.Mid(0, monthSeperatorIndex);
+
+	FString dayString = monthDayString.Mid(monthSeperatorIndex + 1, monthDayString.Len() - monthSeperatorIndex - 1);
+
+	int year = FCString::Atoi(*yearString);
+	int month = FCString::Atoi(*monthString);
+	int day = FCString::Atoi(*dayString);
+
+	return FDateTime(year, month, day);
 }
