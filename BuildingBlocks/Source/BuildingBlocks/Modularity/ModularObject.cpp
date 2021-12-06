@@ -25,6 +25,18 @@ void AModularObject::BeginPlay()
 {
 	Super::BeginPlay();
 
+	posX = GetActorLocation().X;
+	posY = GetActorLocation().Y;
+	posZ = GetActorLocation().Z;
+
+	rotX = GetActorRotation().Euler().X;
+	rotY = GetActorRotation().Euler().Y;
+	rotZ = GetActorRotation().Euler().Z;
+
+	scaleX = GetActorScale().X;
+	scaleY = GetActorScale().Y;
+	scaleZ = GetActorScale().Z;
+
 	if (meshAssets.Num() != 0)
 	{
 		m_currentMeshIndex = 0;
@@ -36,6 +48,18 @@ void AModularObject::BeginPlay()
 		visualComponent->SetMaterial(0, materialAssets[0]);
 	}
 	
+	SetupParameter(posX, "position.X");
+	SetupParameter(posY, "position.Y");
+	SetupParameter(posZ, "position.Z");
+
+	SetupParameter(rotX, "rotation.X");
+	SetupParameter(rotY, "rotation.Y");
+	SetupParameter(rotZ, "rotation.Z");
+
+	SetupParameter(scaleX, "scale.X");
+	SetupParameter(scaleY, "scale.Y");
+	SetupParameter(scaleZ, "scale.Z");
+
 	UCoreSystem::Get().GetModularitySystem()->RegisterObject(*this);
 }
 
@@ -53,6 +77,9 @@ void AModularObject::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	SetActorLocation(FVector(posX, posY, posZ));
+	SetActorRotation(FQuat::MakeFromEuler(FVector(rotX, rotY, rotZ)));
+	SetActorScale3D(FVector(scaleX, scaleY, scaleZ));
 }
 
 void AModularObject::SwapMeshNext()

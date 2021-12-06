@@ -85,6 +85,10 @@ private:
 	int m_currentMeshIndex = 0;
 	int m_currentMatIndex = 0;
 
+	double posX, posY, posZ;
+	double rotX, rotY, rotZ;
+	double scaleX, scaleY, scaleZ;
+
 	void SetupParameter(void* value, FString name, ParameterType type);
 	TMap<FString, TPair<ParameterType, void*>> m_parameters;
 };
