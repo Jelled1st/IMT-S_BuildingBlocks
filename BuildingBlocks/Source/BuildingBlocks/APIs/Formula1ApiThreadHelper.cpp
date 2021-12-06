@@ -37,11 +37,6 @@ uint32 FFormula1ApiThreadHelper::Run()
 	m_f1Api->PullDriverChampionship();
 	while (!m_f1Api->IsDriverChampionshipPulled(wasSuccesfull)) {};
 
-	/*UDebug::Log("PullTeamDrivers()");
-	wasSuccesfull = false;
-	m_f1Api->PullTeamDrivers();
-	while (!m_f1Api->IsTeamDriversPulled(wasSuccesfull)) {};*/
-
 	UDebug::Log("pulling is done");
 
 	m_f1Api->SendApiDataEvent();

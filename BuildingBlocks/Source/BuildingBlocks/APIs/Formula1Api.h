@@ -58,12 +58,6 @@ public:
 		bool isSuccessful = false;
 	};
 
-	struct TeamDriversResponseData
-	{
-		int expectedResponses = 0;
-		TArray<ResponseData> teamApiResponses;
-	};
-
 	UFormula1Api();
 	~UFormula1Api();
 
@@ -78,20 +72,15 @@ public:
 	void ImportDataToSportHandler();
 
 	void PullConstructorsData();
-	void PullDriverInformation();
 	void PullDriverChampionship();
-	void PullTeamDrivers();
 
 	bool IsContructorDataPulled(bool& wasSuccessful);
-	bool IsDriversInfoPulled(bool& wasSuccessful);
-	bool IsTeamDriversPulled(bool& wasSuccessful);
 	bool IsDriverChampionshipPulled(bool& wasSuccessful);
 
 	void SendApiDataEvent();
 
 private:
 	void ConstructorDataCallback(FHttpRequestPtr request, FHttpResponsePtr response, bool isSuccessful);
-	void DriverDataCallback(FHttpRequestPtr request, FHttpResponsePtr response, bool isSuccessful);
 	void DriverChampionShipCallback(FHttpRequestPtr request, FHttpResponsePtr response, bool isSuccessful);
 
 	FDateTime UnpackDateOfBirthString(const DriverData& driver);
@@ -108,9 +97,7 @@ private:
 	FCriticalSection m_criticalSection;
 
 	ResponseData m_constructorsResponse;
-	ResponseData m_driversResponse;
 	ResponseData m_driverChampionshipResponse;
-	TeamDriversResponseData m_teamDriversResponse;
 
 	bool m_isShuttingDown = false;
 
