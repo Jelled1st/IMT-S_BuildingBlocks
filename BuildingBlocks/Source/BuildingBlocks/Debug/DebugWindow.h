@@ -84,7 +84,7 @@ private:
 	void DrawSportDatabase();
 	void DrawCreateTeamMenu();
 	void DrawSportData(USportDataHandler& sportData, Sport sport);
-	void DrawPlayersTable(const TArray<USportPlayer*>& players, Sport sport);
+	void DrawPlayersTable(USportDataHandler& sportData, const TArray<USportPlayer*>& players, Sport sport);
 
 	void DrawPresetMenu();
 	FString m_jsonString = "";

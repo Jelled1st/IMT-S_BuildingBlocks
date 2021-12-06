@@ -512,15 +512,6 @@ void UDebugWindow::DrawSportData(USportDataHandler& sportData, Sport sport)
 
 	ImGui::Text("====================================================================");
 
-	float highestScore = 0;
-	for (UTeam* team : teams)
-	{
-		if (team->GetScore() > highestScore)
-		{
-			highestScore = team->GetScore();
-		}
-	}
-
 	bool showAdditionalTeamInfo = false;
 	for (UTeam* team : teams)
 	{
@@ -540,7 +531,7 @@ void UDebugWindow::DrawSportData(USportDataHandler& sportData, Sport sport)
 		ImGui::PushID(UUtility::FStringToCharPtr(*FString::Printf(TEXT("%s_score"), *team->GetName())));
 		ImGui::PushItemWidth(scoreSize);
 		float score = team->GetScore();
-		ImGui::SliderFloat("", &score, 0, highestScore);
+		ImGui::SliderFloat("", &score, 0, sportData.GetHighestScoreInSport(Sport::Formula1));
 		ImGui::PopItemWidth();
 		ImGui::PopID();
 
@@ -561,7 +552,7 @@ void UDebugWindow::DrawSportData(USportDataHandler& sportData, Sport sport)
 		ImGui::Text("Players");
 		const TArray<USportPlayer*>& players = m_selectedTeam->GetPlayers();
 
-		DrawPlayersTable(players, sport);
+		DrawPlayersTable(sportData, players, sport);
 
 		ImGui::NewLine();
 
@@ -602,7 +593,7 @@ void UDebugWindow::DrawSportData(USportDataHandler& sportData, Sport sport)
 	}
 }
 
-void UDebugWindow::DrawPlayersTable(const TArray<USportPlayer*>& players, Sport sport)
+void UDebugWindow::DrawPlayersTable(USportDataHandler& sportData, const TArray<USportPlayer*>& players, Sport sport)
 {
 	static int nrSize = 40;
 	static int nameSize = 200;
@@ -656,7 +647,7 @@ void UDebugWindow::DrawPlayersTable(const TArray<USportPlayer*>& players, Sport 
 		ImGui::PushID(UUtility::FStringToCharPtr(*FString::Printf(TEXT("%s_score"), *driver->GetName())));
 		ImGui::PushItemWidth(scoreSize);
 		float score = driver->championshipPoints;
-		ImGui::SliderFloat("", &score, 0, 0);
+		ImGui::SliderFloat("", &score, 0, sportData.GetHighestDriverScoreF1());
 		ImGui::PopItemWidth();
 		ImGui::PopID();
 
@@ -692,7 +683,6 @@ void UDebugWindow::DrawPlayersTable(const TArray<USportPlayer*>& players, Sport 
 		ImGui::Text("Date of Birth: ");
 		ImGui::SameLine();
 		ImGui::Text(TCHAR_TO_ANSI(*FString::Printf(TEXT("%d/%d/%d"), dob.GetDay(), dob.GetMonth(), dob.GetYear())));
-
 
 		ImGui::Unindent();
 	}
