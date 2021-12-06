@@ -22,11 +22,16 @@ public:
 	static USportPlayer& Make(FString firstName, FString lastName, FString displayName, UTeam& team);
 	bool Init(FString firstName, FString lastName, FString displayName, UTeam& team);
 
+	void SetNumber(int number);
+	void SetDateOfBirth(const FDateTime& dob);
+	void SetDateOfBirth(int day, int month, int year);
+
 	FString GetFullName() const;
 	FString GetDisplayName() const;
 	int GetNumber() const;
 	FString GetNumberAsString() const;
 	FString GetNationalityAsString() const;
+	const FDateTime& GetDateOfBirth() const;
 
 	UPROPERTY() TEnumAsByte<Country> nationality;
 	UPROPERTY() FString nationalityAsString;

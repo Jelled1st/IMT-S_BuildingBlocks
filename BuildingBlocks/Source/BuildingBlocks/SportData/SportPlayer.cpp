@@ -35,6 +35,21 @@ bool USportPlayer::Init(FString firstName, FString lastName, FString displayName
 	return true;
 }
 
+void USportPlayer::SetNumber(int number)
+{
+	m_number = number;
+}
+
+void USportPlayer::SetDateOfBirth(const FDateTime& dob)
+{
+	m_dateOfBirth = dob;
+}
+
+void USportPlayer::SetDateOfBirth(int day, int month, int year)
+{
+	m_dateOfBirth = FDateTime(year, month, day);
+}
+
 FString USportPlayer::GetFullName() const
 {
 	return FString::Printf(TEXT("%s %s"), *m_firstName, *m_lastName);
@@ -53,4 +68,14 @@ int USportPlayer::GetNumber() const
 FString USportPlayer::GetNumberAsString() const
 {
 	return FString::FromInt(m_number);
+}
+
+FString USportPlayer::GetNationalityAsString() const
+{
+	return nationalityAsString;
+}
+
+const FDateTime& USportPlayer::GetDateOfBirth() const
+{
+	return m_dateOfBirth;
 }
