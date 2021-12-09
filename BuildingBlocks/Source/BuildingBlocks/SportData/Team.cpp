@@ -4,6 +4,7 @@
 #include "Team.h"
 #include "SportDataHandler.h"
 #include "../Core/CoreSystem.h"
+#include "../Debug/Debug.h"
 
 UTeam::UTeam()
 {
@@ -11,8 +12,8 @@ UTeam::UTeam()
 
 UTeam::~UTeam()
 {
+	UDebug::Log(*FString::Printf(TEXT("Destructing team %s"), *this->teamName));
 }
-
 
 void UTeam::AddPlayer(USportPlayer& player)
 {
@@ -24,7 +25,7 @@ Sport UTeam::GetSport()
 	return sport;
 }
 
-FString UTeam::GetName()
+const FString& UTeam::GetName() const
 {
 	return teamName;
 }

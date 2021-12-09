@@ -647,7 +647,7 @@ void UDebugWindow::DrawPlayersTable(USportDataHandler& sportData, const TArray<U
 		ImGui::Text("|");
 		ImGui::SameLine(nrSize + nameSize + barSize * 4);
 
-		ImGui::PushID(UUtility::FStringToCharPtr(*FString::Printf(TEXT("%s_score"), *driver->GetName())));
+		ImGui::PushID(UUtility::FStringToCharPtr(*FString::Printf(TEXT("%s_score"), *driver->GetFullName())));
 		ImGui::PushItemWidth(scoreSize);
 		float score = driver->championshipPoints;
 		ImGui::SliderFloat("", &score, 0, sportData.GetHighestDriverScoreF1());

@@ -52,7 +52,7 @@ void USportPlayer::SetDateOfBirth(int day, int month, int year)
 
 FString USportPlayer::GetFullName() const
 {
-	return FString::Printf(TEXT("%s %s"), *m_firstName, *m_lastName);
+	return m_firstName + " " + m_lastName;
 }
 
 FString USportPlayer::GetDisplayName() const

@@ -37,15 +37,16 @@ public:
 	UPROPERTY() FString nationalityAsString;
 
 protected:
-	UPROPERTY() FString m_firstName;
-	UPROPERTY() FString m_lastName;
-	UPROPERTY() FString m_displayName;
+	FString m_firstName;
+	FString m_lastName;
+	FString m_displayName;
 
-	UPROPERTY() UTeam* m_team;
-	UPROPERTY() FDateTime m_dateOfBirth;
+	UPROPERTY();
+	UTeam* m_team;
 
-	UPROPERTY() int m_length;
-	UPROPERTY() float m_weight;
-	UPROPERTY() float m_number;
-	UPROPERTY() TEnumAsByte<Sport> m_sport;
+	FDateTime m_dateOfBirth;
+	int m_length;
+	float m_weight;
+	int m_number;
+	TEnumAsByte<Sport> m_sport;
 };

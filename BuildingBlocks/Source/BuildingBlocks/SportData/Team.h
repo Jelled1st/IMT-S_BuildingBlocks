@@ -25,7 +25,7 @@ public:
 
 	Sport GetSport();
 	UFUNCTION(BlueprintCallable)
-	FString GetName();
+	const FString& GetName() const;
 	UFUNCTION(BlueprintCallable)
 	float GetScore();
 	Country GetNationality();
@@ -39,11 +39,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) float score;
 
 private:
-	UPROPERTY() FString teamName;
-	UPROPERTY() TArray<USportPlayer*> players;
-	UPROPERTY() FString currentChampionship;
-	UPROPERTY() FString teamBoss;
-	UPROPERTY() TEnumAsByte<Country> nationality;
-	UPROPERTY() FString nationalityAsString;
-	UPROPERTY() TEnumAsByte<Sport> sport;
+	FString teamName;
+	UPROPERTY();
+	TArray<USportPlayer*> players;
+	FString currentChampionship;
+	FString teamBoss;
+	TEnumAsByte<Country> nationality;
+	FString nationalityAsString;
+	TEnumAsByte<Sport> sport;
 };
