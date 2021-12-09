@@ -108,12 +108,12 @@ public:
 
 	AElevator* const GetElevator() const
 	{
-		if (m_elevator == nullptr)
+		if (!m_elevator.IsValid())
 		{
 			UE_DEBUG_BREAK();
 			UDebug::Warning("Requested Elevator, which is nullptr");
 		}
-		return m_elevator;
+		return m_elevator.Get();
 	}
 
 private:
@@ -138,10 +138,8 @@ private:
 
 	UPROPERTY();
 	UFormula1Api* m_f1Api;
-	
-	UPROPERTY();
-	AElevator* m_elevator;
 
-	UPROPERTY();
+	TWeakObjectPtr<AElevator> m_elevator;
+
 	UPresetHandler* m_presetHandler;
 };

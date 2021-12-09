@@ -428,28 +428,31 @@ void UDebugWindow::DrawElevatorControls()
 
 	AElevator* elevator = UCoreSystem::Get().GetElevator();
 
-	if (elevator == nullptr)
+	if (elevator != nullptr)
 	{
-		return;
-	}
+		static const int nameSize = 150;
+		static const ImVec2 buttonSize = ImVec2(80, 20);
 
-	static const int nameSize = 150;
-	static const ImVec2 buttonSize = ImVec2(80, 20);
+		ImGui::Text(TCHAR_TO_ANSI(*elevator->GetName()));
 
-	ImGui::Text(TCHAR_TO_ANSI(*elevator->GetName()));
+		ImGui::SameLine(nameSize);
 
-	ImGui::SameLine(nameSize);
+		if (ImGui::Button("Down", buttonSize))
+		{
+			elevator->MoveDown(1);
+		}
 
-	if (ImGui::Button("Down", buttonSize))
-	{
-		elevator->MoveDown(1);
-	}
+		ImGui::SameLine();
 
-	ImGui::SameLine();
+		if (ImGui::Button("Up", buttonSize))
+		{
+			elevator->MoveUp(1);
+		}
 
-	if (ImGui::Button("Up", buttonSize))
-	{
-		elevator->MoveUp(1);
+		if (ImGui::Button("Destroy"))
+		{
+			elevator->Destroy();
+		}
 	}
 }
 
