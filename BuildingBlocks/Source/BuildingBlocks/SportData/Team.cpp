@@ -12,7 +12,6 @@ UTeam::UTeam()
 
 UTeam::~UTeam()
 {
-	UDebug::Log(*FString::Printf(TEXT("Destructing team %s"), *this->teamName));
 }
 
 void UTeam::AddPlayer(USportPlayer& player)
