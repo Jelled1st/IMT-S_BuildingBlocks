@@ -235,3 +235,16 @@ TMap<FString, TPair<ExposableParameterType, void*>>& UModularityComponent::GetPa
 {
 	return m_parameters;
 }
+
+bool UModularityComponent::RemoveParameter(const FString& name)
+{
+	if (m_parameters.Contains(name))
+	{
+		m_parameters.Remove(name);
+		return false;
+	}
+	else
+	{
+		return false;
+	}
+}

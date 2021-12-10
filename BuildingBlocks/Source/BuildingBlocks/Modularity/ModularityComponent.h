@@ -59,6 +59,8 @@ public:
 	void SetupParameter(double& value, FString name);
 	TMap<FString, TPair<ExposableParameterType, void*>>& GetParameters();
 
+	bool RemoveParameter(const FString& name);
+
 	template <typename T>
 	bool SetParameterValue(const FString& name, const T& value)
 	{
