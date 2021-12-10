@@ -8,6 +8,7 @@
 
 #include "Debug.h"
 #include "../Modularity/ModularObject.h"
+#include "../Modularity/ModularityComponent.h"
 #include "../Modularity/ModularitySystem.h"
 #include "../Core/CoreSystem.h"
 #include "Dom/JsonObject.h"
@@ -166,6 +167,7 @@ void UDebugWindow::DrawOperatorControls()
 			if (ImGui::Button(TCHAR_TO_ANSI(*name), buttonSize))
 			{
 				m_selectedObject = obj;
+				m_selectedComponent = nullptr;
 			}
 
 			if (obj == currentSelected)
@@ -176,6 +178,39 @@ void UDebugWindow::DrawOperatorControls()
 	}
 	else
 	{
+		m_selectedObject = nullptr;
+		m_selectedComponent = nullptr;
+	}
+
+	TArray<UModularityComponent*>& modularComponents = UCoreSystem::Get().GetModularitySystem()->GetRegisteredComponents();
+
+	UModularityComponent* currentSelectedComp = m_selectedComponent;
+
+	if (modularObjs.Num() > 0)
+	{
+		for (UModularityComponent* comp : modularComponents)
+		{
+			if (comp == currentSelectedComp)
+			{
+				ImGui::PushStyleColor(0, ImVec4(0, 1, 0, 1));
+			}
+
+			FString name = comp->GetActorName();
+			if (ImGui::Button(TCHAR_TO_ANSI(*name), buttonSize))
+			{
+				m_selectedComponent = comp;
+				m_selectedObject = nullptr;
+			}
+
+			if (comp == currentSelectedComp)
+			{
+				ImGui::PopStyleColor();
+			}
+		}
+	}
+	else
+	{
+		m_selectedComponent = nullptr;
 		m_selectedObject = nullptr;
 	}
 
@@ -201,6 +236,10 @@ void UDebugWindow::DrawOperatorControls()
 		DrawObjectControls(*m_selectedObject);
 	}
 
+	if (m_selectedComponent != nullptr)
+	{
+		DrawComponentControls(*m_selectedComponent);
+	}
 	ImGui::EndGroup();
 }
 
@@ -321,11 +360,11 @@ void UDebugWindow::DrawObjectControls(AModularObject& object)
 	ImGui::Separator();
 	ImGui::NewLine();
 
-	TMap<FString, TPair<AModularObject::ParameterType, void*>>& parameters = object.GetParameters();
+	TMap<FString, TPair<ExposableParameterType, void*>>& parameters = object.GetParameters();
 
 	FString currentGrouping = "";
 
-	for (TPair<FString, TPair<AModularObject::ParameterType, void* >> parameter : parameters)
+	for (TPair<FString, TPair<ExposableParameterType, void* >> parameter : parameters)
 	{
 		FString parameterName = parameter.Key;
 
@@ -354,16 +393,16 @@ void UDebugWindow::DrawObjectControls(AModularObject& object)
 			currentGrouping = "";
 		}
 
-		AModularObject::ParameterType parameterType = parameter.Value.Key;
+		ExposableParameterType parameterType = parameter.Value.Key;
 
 		switch (parameterType)
 		{
-		case AModularObject::ParameterType::Bool:
+		case ExposableParameterType::Bool:
 		{
 			ImGui::Checkbox(TCHAR_TO_ANSI(*parameterName), reinterpret_cast<bool*>(parameter.Value.Value));
 			break;
 		}
-		case AModularObject::ParameterType::String:
+		case ExposableParameterType::String:
 		{
 			FString* stringPtr = reinterpret_cast<FString*>(parameter.Value.Value);
 			char* stringAsChar = TCHAR_TO_ANSI(*(*stringPtr));
@@ -375,7 +414,7 @@ void UDebugWindow::DrawObjectControls(AModularObject& object)
 			*stringPtr = outValue;
 			break;
 		}
-		case AModularObject::ParameterType::Double:
+		case ExposableParameterType::Double:
 		{
 			double* doubleValue = reinterpret_cast<double*>(parameter.Value.Value);
 			float floatValue = static_cast<float>(*doubleValue);
@@ -396,27 +435,123 @@ void UDebugWindow::DrawObjectControls(AModularObject& object)
 	}
 }
 
-void UDebugWindow::DrawObjectTransform(AModularObject& object)
+void UDebugWindow::DrawComponentControls(UModularityComponent& component)
 {
-	FTransform transform = object.GetActorTransform();
+	ImGui::Text(TCHAR_TO_ANSI(*component.GetActorName()));
 
-	FVector position = transform.GetLocation();
-	FVector rotation = transform.GetRotation().Euler();
-	FVector scale = transform.GetScale3D();
+	static float arrowButtonSpacing = 40;
+	static float textSpacing = 160;
 
-	if (ImGui::TreeNode("Transform"))
+	ImGui::PushID("MeshSelection");
+	if (ImGui::Button("<"))
 	{
-		ImGuiSliderVector("Position", position);
-		ImGuiSliderVector("Rotation", rotation, 180, 180, 180);
-		ImGuiSliderVector("Scale", scale, 10, 10, 10);
-		ImGui::TreePop();
+		component.SwapMeshPrevious();
 	}
+	ImGui::SameLine(arrowButtonSpacing);
 
-	transform.SetLocation(position);
-	transform.SetRotation(FQuat::MakeFromEuler(rotation));
-	transform.SetScale3D(scale);
+	ImGui::Text(TCHAR_TO_ANSI(*component.GetMesh().GetName()));
 
-	object.SetActorTransform(transform);
+	ImGui::SameLine(arrowButtonSpacing + textSpacing);
+	if (ImGui::Button(">"))
+	{
+		component.SwapMeshNext();
+	}
+	ImGui::PopID();
+
+
+	ImGui::PushID("MaterialSelection");
+	if (ImGui::Button("<"))
+	{
+		component.SwapMatPrevious();
+	}
+	ImGui::SameLine(arrowButtonSpacing);
+
+	ImGui::Text(TCHAR_TO_ANSI(*component.GetMaterial().GetName()));
+
+	ImGui::SameLine(arrowButtonSpacing + textSpacing);
+	if (ImGui::Button(">"))
+	{
+		component.SwapMatNext();
+	}
+	ImGui::PopID();
+
+	ImGui::NewLine();
+	ImGui::Separator();
+	ImGui::NewLine();
+
+	TMap<FString, TPair<ExposableParameterType, void*>>& parameters = component.GetParameters();
+
+	FString currentGrouping = "";
+
+	for (TPair<FString, TPair<ExposableParameterType, void* >> parameter : parameters)
+	{
+		FString parameterName = parameter.Key;
+
+		if (parameterName.Contains(TEXT(".")))
+		{
+			int seperatorIndex = parameterName.Find(TEXT("."));
+
+			FString groupName = parameterName.Mid(0, seperatorIndex);
+			parameterName = parameterName.Mid(seperatorIndex + 1, parameterName.Len() - seperatorIndex - 1);
+
+			if (groupName != currentGrouping)
+			{
+				ImGui::NewLine();
+				ImGui::Text(TCHAR_TO_ANSI(*groupName));
+				ImGui::PushID(TCHAR_TO_ANSI(*groupName));
+			}
+			currentGrouping = groupName;
+		}
+		else
+		{
+			if (currentGrouping != "")
+			{
+				ImGui::PopID();
+				ImGui::NewLine();
+			}
+			currentGrouping = "";
+		}
+
+		ExposableParameterType parameterType = parameter.Value.Key;
+
+		switch (parameterType)
+		{
+		case ExposableParameterType::Bool:
+		{
+			ImGui::Checkbox(TCHAR_TO_ANSI(*parameterName), reinterpret_cast<bool*>(parameter.Value.Value));
+			break;
+		}
+		case ExposableParameterType::String:
+		{
+			FString* stringPtr = reinterpret_cast<FString*>(parameter.Value.Value);
+			char* stringAsChar = TCHAR_TO_ANSI(*(*stringPtr));
+
+			ImGui::InputText(TCHAR_TO_ANSI(*parameterName), stringAsChar, 1000);
+
+			FString outValue = FString(stringAsChar);
+
+			*stringPtr = outValue;
+			break;
+		}
+		case ExposableParameterType::Double:
+		{
+			double* doubleValue = reinterpret_cast<double*>(parameter.Value.Value);
+			float floatValue = static_cast<float>(*doubleValue);
+
+			ImGui::SliderFloat(TCHAR_TO_ANSI(*parameterName), &floatValue, m_rangeMin, m_rangeMax);
+
+			*doubleValue = static_cast<double>(floatValue);
+
+			break;
+		}
+
+		}
+	}
+	if (currentGrouping != "")
+	{
+		ImGui::PopID();
+		ImGui::NewLine();
+	}
 }
 
 void UDebugWindow::DrawElevatorControls()

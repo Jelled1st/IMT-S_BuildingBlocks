@@ -18,6 +18,7 @@
 #include "..\..\..\Plugins\ImGui\Source\ImGui\Public\ImGuiDelegates.h"
 class FImGuiModuleProperties;
 class AModularObject;
+class UModularityComponent;
 #endif
 
 #include "DebugWindow.generated.h"
@@ -77,7 +78,7 @@ private:
 #if WITH_IMGUI
 	void DrawOperatorControls();
 	void DrawObjectControls(AModularObject& object);
-	void DrawObjectTransform(AModularObject& object);
+	void DrawComponentControls(UModularityComponent& object);
 
 	void DrawElevatorControls();
 	
@@ -90,6 +91,7 @@ private:
 	FString m_jsonString = "";
 	bool m_deserializeSucceeded = true;
 	AModularObject* m_selectedObject = nullptr;
+	UModularityComponent* m_selectedComponent = nullptr;
 	TeamData m_newTeam;
 	PlayerData m_newPlayer;
 	UTeam* m_selectedTeam = nullptr;

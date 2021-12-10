@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "ModularObject.h"
+#include "ModularityComponent.h"
 
 #include "ModularitySystem.generated.h"
 
@@ -21,8 +22,16 @@ public:
 	void RegisterObject(AModularObject& object);
 	void UnregisterObject(AModularObject& object);
 
-	TArray<AModularObject*>& GetRegisteredObjects();
+	void RegisterComponent(UModularityComponent& object);
+	void UnregisterComponent(UModularityComponent& object);
 
+	TArray<AModularObject*>& GetRegisteredObjects();
+	TArray<UModularityComponent*>& GetRegisteredComponents();
+
+private:
 	UPROPERTY();
 	TArray<AModularObject*> m_modularObjects;
+
+	UPROPERTY();
+	TArray<UModularityComponent*> m_modularityComponents;
 };

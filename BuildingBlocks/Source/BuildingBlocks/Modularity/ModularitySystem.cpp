@@ -27,3 +27,18 @@ TArray<AModularObject*>& UModularitySystem::GetRegisteredObjects()
 {
 	return m_modularObjects;
 }
+
+void UModularitySystem::RegisterComponent(UModularityComponent& object)
+{
+	m_modularityComponents.Add(&object);
+}
+
+void UModularitySystem::UnregisterComponent(UModularityComponent& object)
+{
+	m_modularityComponents.Remove(&object);
+}
+
+TArray<UModularityComponent*>& UModularitySystem::GetRegisteredComponents()
+{
+	return m_modularityComponents;
+}

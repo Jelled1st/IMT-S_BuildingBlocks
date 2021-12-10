@@ -28,7 +28,7 @@ bool UPresetHandler::SavePreset(const FString& presetName)
 	{
 		FString name = obj->GetName();
 
-		TMap<FString, TPair<AModularObject::ParameterType, void*>>& parameters = obj->GetParameters();
+		TMap<FString, TPair<ExposableParameterType, void*>>& parameters = obj->GetParameters();
 
 		TSharedPtr<FJsonObject> jsonSubObject = MakeShareable(new FJsonObject);
 		jsonSubObject->SetStringField("Name", name);
@@ -36,25 +36,25 @@ bool UPresetHandler::SavePreset(const FString& presetName)
 		jsonSubObject->SetStringField("mesh", obj->GetMesh().GetName());
 		jsonSubObject->SetStringField("material", obj->GetMaterial().GetName());
 
-		for (TPair<FString, TPair<AModularObject::ParameterType, void* >> parameter : parameters)
+		for (TPair<FString, TPair<ExposableParameterType, void* >> parameter : parameters)
 		{
 			FString parameterName = parameter.Key;
-			AModularObject::ParameterType parameterType = parameter.Value.Key;
+			ExposableParameterType parameterType = parameter.Value.Key;
 			switch (parameterType)
 			{
-			case AModularObject::ParameterType::Bool:
+			case ExposableParameterType::Bool:
 			{
 				bool boolValue = *reinterpret_cast<bool*>(parameter.Value.Value);
 				jsonSubObject->SetBoolField(parameterName, boolValue);
 				break;
 			}
-			case AModularObject::ParameterType::String:
+			case ExposableParameterType::String:
 			{
 				FString stringValue = *reinterpret_cast<FString*>(parameter.Value.Value);
 				jsonSubObject->SetStringField(parameterName, stringValue);
 				break;
 			}
-			case AModularObject::ParameterType::Double:
+			case ExposableParameterType::Double:
 			{
 				double doubleValue = *reinterpret_cast<double*>(parameter.Value.Value);
 				jsonSubObject->SetNumberField(parameterName, static_cast<double>(doubleValue));

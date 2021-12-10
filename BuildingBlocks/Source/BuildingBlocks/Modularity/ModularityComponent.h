@@ -3,26 +3,25 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Components/ActorComponent.h"
 #include "GameFramework/Actor.h"
 #include "Containers/Map.h"
 #include "ExposableParameterType.h"
-#include "ModularObject.generated.h"
+#include "ModularityComponent.generated.h"
 
-UCLASS()
-class BUILDINGBLOCKS_API AModularObject : public AActor
+UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+class BUILDINGBLOCKS_API UModularityComponent : public UActorComponent
 {
 	GENERATED_BODY()
-	
+
 public:	
-	AModularObject();
-	~AModularObject();
+	UModularityComponent();
 
 protected:
 	virtual void BeginPlay() override;
 
 public:	
-	virtual void Tick(float DeltaTime) override;
-	virtual void BeginDestroy() override;
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	UPROPERTY(EditAnywhere);
 	UStaticMeshComponent* visualComponent;
@@ -32,6 +31,8 @@ public:
 
 	UPROPERTY(EditAnywhere);
 	TArray<UMaterialInterface*> materialAssets;
+
+	FString GetActorName() const;
 
 	UFUNCTION(BlueprintCallable)
 	void SwapMeshNext();
@@ -63,7 +64,7 @@ public:
 	{
 		if (m_parameters.Contains(name))
 		{
-			TPair<ExposableParameterType, void*> parameter = m_parameters[name];
+			TPair<ParameterType, void*> parameter = m_parameters[name];
 
 			T* parameterValue = reinterpret_cast<T*>(parameter.Value);
 
@@ -74,8 +75,13 @@ public:
 		return false;
 	}
 
+protected:
+	UPROPERTY();
+	AActor* m_owner;
 
 private:
+	bool m_isEnabled = false;
+
 	int m_currentMeshIndex = 0;
 	int m_currentMatIndex = 0;
 

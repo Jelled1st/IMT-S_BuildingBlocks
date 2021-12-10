@@ -188,25 +188,25 @@ bool AModularObject::TrySetMaterialByName(const FString& materialName)
 
 void AModularObject::SetupParameter(bool& value, FString name)
 {
-	SetupParameter(static_cast<void*>(&value), name, ParameterType::Bool);
+	SetupParameter(static_cast<void*>(&value), name, ExposableParameterType::Bool);
 }
 
 void AModularObject::SetupParameter(FString& value, FString name)
 {
-	SetupParameter(static_cast<void*>(&value), name, ParameterType::String);
+	SetupParameter(static_cast<void*>(&value), name, ExposableParameterType::String);
 }
 
 void AModularObject::SetupParameter(double& value, FString name)
 {
-	SetupParameter(static_cast<void*>(&value), name, ParameterType::Double);
+	SetupParameter(static_cast<void*>(&value), name, ExposableParameterType::Double);
 }
 
-void AModularObject::SetupParameter(void* value, FString name, ParameterType type)
+void AModularObject::SetupParameter(void* value, FString name, ExposableParameterType type)
 {
-	m_parameters.Add(name, TPair<ParameterType, void*>(type, value));
+	m_parameters.Add(name, TPair<ExposableParameterType, void*>(type, value));
 }
 
-TMap<FString, TPair<AModularObject::ParameterType, void*>>& AModularObject::GetParameters()
+TMap<FString, TPair<ExposableParameterType, void*>>& AModularObject::GetParameters()
 {
 	return m_parameters;
 }
