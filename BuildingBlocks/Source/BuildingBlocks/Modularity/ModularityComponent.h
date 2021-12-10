@@ -79,7 +79,6 @@ protected:
 	UPROPERTY();
 	AActor* m_owner;
 
-private:
 	bool m_isEnabled = false;
 
 	int m_currentMeshIndex = 0;
@@ -89,6 +88,7 @@ private:
 	double rotX, rotY, rotZ;
 	double scaleX, scaleY, scaleZ;
 
+private:
 	void SetupParameter(void* value, FString name, ExposableParameterType type);
 	TMap<FString, TPair<ExposableParameterType, void*>> m_parameters;
 };
