@@ -9,6 +9,8 @@ void UFlipBehaviourComponent::BeginPlay()
 	Super::BeginPlay();
 
 	SetupParameter(m_doFlip, "DoFlip");
+	SetupParameter(flipSpeed, "Flip Speed");
+	SetupParameter(flipRotation, "Flip Rotation");
 }
 
 void UFlipBehaviourComponent::TickComponent(float deltaTime, ELevelTick tickType, FActorComponentTickFunction* thisTickFunction)
@@ -34,13 +36,6 @@ void UFlipBehaviourComponent::TickComponent(float deltaTime, ELevelTick tickType
 		}
 		currentRotation += rotateNow;
 
-		/*FVector pos = m_owner->GetActorLocation();
-
-		pos.RotateAngleAxis(rotateNow, m_owner->GetActorForwardVector());
-
-		posX = pos.X;
-		posY = pos.Y;
-		posZ = pos.Z;*/
 
 		rotX += rotateNow;
 
