@@ -39,17 +39,26 @@ public:
 		Sport sport;
 		static const int nameLength = 21;
 		char teamName[21] = { 0 };
-		Country selectedNationality = Country::Unknown;
+		char nationality[21] = "Unknown";
 		float score = 0;
 	};
 
 	struct PlayerData
 	{
 	public:
+		Sport sport;
 		static const int nameLength = 21;
 		char firstName[21] = { 0 };
 		char lastName[21] = { 0 };
 		char displayName[21] = { 0 };
+		char nationality[21] = "Unknown";
+		float driverScoreF1 = 0;
+		int number;
+		UTeam* team;
+
+		int dob_day = 1;
+		int dob_month = 1;
+		int dob_year = 1950;
 	};
 
 	UDebugWindow();
@@ -84,6 +93,7 @@ private:
 	
 	void DrawSportDatabase();
 	void DrawCreateTeamMenu();
+	void DrawCreatePlayerMenu(USportDataHandler& sportData);
 	void DrawSportData(USportDataHandler& sportData, Sport sport);
 	void DrawPlayersTable(USportDataHandler& sportData, const TArray<USportPlayer*>& players, Sport sport);
 
@@ -102,6 +112,8 @@ private:
 
 	int m_rangeMin = -1000;
 	int m_rangeMax = 1000;
+
+	static const char* m_sportsList[21];
 
 #if OPERATOR_WINDOW
 	TSharedPtr<SWindow> m_window;

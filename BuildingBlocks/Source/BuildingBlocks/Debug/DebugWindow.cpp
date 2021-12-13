@@ -24,6 +24,7 @@
 bool UDebugWindow::debugWindowEnabled = true;
 #if WITH_IMGUI
 const int UDebugWindow::presetNameLength = 21;
+const char* UDebugWindow::m_sportsList[21] = { "Cricket", "Football", "Formula1" };
 #endif
 
 UDebugWindow::UDebugWindow()
@@ -616,6 +617,11 @@ void UDebugWindow::DrawSportDatabase()
 		DrawCreateTeamMenu();
 		ImGui::EndTabItem();
 	}
+	if (ImGui::BeginTabItem("Player creation"))
+	{
+		DrawCreatePlayerMenu(sportData);
+		ImGui::EndTabItem();
+	}
 	ImGui::EndTabBar();
 }
 
@@ -691,41 +697,6 @@ void UDebugWindow::DrawSportData(USportDataHandler& sportData, Sport sport)
 		const TArray<USportPlayer*>& players = m_selectedTeam->GetPlayers();
 
 		DrawPlayersTable(sportData, players, sport);
-
-		ImGui::NewLine();
-
-		if (ImGui::TreeNode("Create player"))
-		{
-			ImGui::Indent();
-
-			ImGui::PushItemWidth(200);
-
-			ImGui::Text("Name");
-			ImGui::PushID("first_name");
-			ImGui::InputText("", m_newPlayer.firstName, PlayerData::nameLength);
-			ImGui::PopID();
-
-			ImGui::SameLine();
-
-			ImGui::PushID("last_name");
-			ImGui::InputText("Last name", m_newPlayer.lastName, PlayerData::nameLength);
-			ImGui::PopID();
-
-			ImGui::Text("Display name");
-			ImGui::PushID("display_name");
-			ImGui::InputText("", m_newPlayer.displayName, PlayerData::nameLength);
-			ImGui::PopID();
-
-			ImGui::PopItemWidth();
-
-			if (ImGui::Button("Create player"))
-			{
-				USportPlayer::Make(m_newPlayer.firstName, m_newPlayer.lastName, m_newPlayer.displayName, *m_selectedTeam);
-			}
-
-			ImGui::Unindent();
-			ImGui::TreePop();
-		}
 
 		ImGui::Unindent();
 	}
@@ -828,70 +799,186 @@ void UDebugWindow::DrawPlayersTable(USportDataHandler& sportData, const TArray<U
 
 void UDebugWindow::DrawCreateTeamMenu()
 {
-	bool isCricket = m_newTeam.sport == Sport::Cricket;
-	bool isFootball = m_newTeam.sport == Sport::Football;
-	bool isF1 = m_newTeam.sport == Sport::Formula1;
-	if (ImGui::Checkbox("Cricket", &isCricket))
+	ImGui::Text("Team name");
+	ImGui::PushID("TeamName");
+	ImGui::InputText("", m_newTeam.teamName, TeamData::nameLength);
+	ImGui::PopID();
+
+	ImGui::NewLine();
+
+	int currentItem = static_cast<int>(m_newTeam.sport);
+
+	ImGui::Text("Sport");
+	ImGui::PushID("Sport");
+	if (ImGui::ListBox("", &currentItem, m_sportsList, 3))
 	{
-		m_newTeam.sport = Sport::Cricket;
+		m_newTeam.sport = static_cast<Sport>(currentItem);
 	}
-	if (ImGui::Checkbox("Football", &isFootball))
-	{
-		m_newTeam.sport = Sport::Football;
-	}
-	if (ImGui::Checkbox("Formula1", &isF1))
-	{
-		m_newTeam.sport = Sport::Formula1;
-	}
+	ImGui::PopID();
 
-	ImGui::InputText("Team Name", m_newTeam.teamName, m_newTeam.nameLength);
+	ImGui::NewLine();
+	
+	ImGui::Text("Nationality");
+	ImGui::PushID("Nationality");
+	ImGui::InputText("", m_newTeam.nationality, TeamData::nameLength);
+	ImGui::PopID();
 
-	TArray<Country> countries = UUtility::CreateCountryArray();
+	ImGui::NewLine();
 
-	static const int rowElements = 5;
-	if (ImGui::TreeNode("Select nationality"))
-	{
-		ImGui::Separator();
-		for (int i = 0; i < countries.Num(); ++i)
-		{
-			Country country = countries[i];
-			bool currentlySelected = m_newTeam.selectedNationality == country;
-
-			FString countryNameFString = UUtility::EnumToString(TEXT("Country"), static_cast<int>(country));
-			if (currentlySelected)
-			{
-				ImGui::PushStyleColor(0, ImVec4(0, 1, 0, 1));
-				countryNameFString = FString::Printf(TEXT("X %s X"), *countryNameFString);
-			}
-
-			char* countryName = UUtility::FStringToCharPtr(*countryNameFString);
-			if (ImGui::Button(countryName, ImVec2(140, 30)))
-			{
-				m_newTeam.selectedNationality = country;
-			}
-
-			if (currentlySelected)
-			{
-				ImGui::PopStyleColor();
-			}
-
-			bool isLast = i == countries.Num() - 1;
-			if ((i + 1) % rowElements != 0 && !isLast)
-			{
-				ImGui::SameLine();
-			}
-		}
-
-		ImGui::Separator();
-		ImGui::TreePop();
-	}
-
-	ImGui::SliderFloat("Score", &m_newTeam.score, 0, 500);
+	ImGui::Text("Score");
+	ImGui::PushID("Score");
+	ImGui::SliderFloat("", &m_newTeam.score, 0, 500);
+	ImGui::PopID();
+	
+	ImGui::NewLine();
 
 	if (ImGui::Button("Create Team"))
 	{
 		FString name = UUtility::CharPtrToFString(m_newTeam.teamName);
-		UTeam::Make(name, m_newTeam.sport, m_newTeam.score, UUtility::EnumToString(TEXT("Country"), static_cast<int>(m_newTeam.selectedNationality)), m_newTeam.selectedNationality);
+		UTeam::Make(name, m_newTeam.sport, m_newTeam.score, UUtility::CharPtrToFString(m_newTeam.nationality));
+	}
+}
+
+void UDebugWindow::DrawCreatePlayerMenu(USportDataHandler& sportData)
+{
+	int currentItem = static_cast<int>(m_newPlayer.sport);
+
+	ImGui::Text("Sport");
+	ImGui::PushID("Sport");
+	if (ImGui::ListBox("", &currentItem, m_sportsList, 3))
+	{
+		m_newPlayer.sport = static_cast<Sport>(currentItem);
+		m_newPlayer.team = nullptr;
+	}
+	ImGui::PopID();
+
+	ImGui::NewLine();
+
+	ImGui::PushItemWidth(200);
+
+	ImGui::Text("Name");
+	ImGui::PushID("first_name");
+	ImGui::InputText("", m_newPlayer.firstName, PlayerData::nameLength);
+	ImGui::PopID();
+
+	ImGui::SameLine();
+
+	ImGui::PushID("last_name");
+	ImGui::InputText("Last name", m_newPlayer.lastName, PlayerData::nameLength);
+	ImGui::PopID();
+
+	ImGui::Text("Display name");
+	ImGui::PushID("display_name");
+	ImGui::InputText("", m_newPlayer.displayName, PlayerData::nameLength);
+	ImGui::PopID();
+
+	ImGui::PopItemWidth();
+
+	ImGui::NewLine();
+
+	ImGui::Text("Number");
+	ImGui::PushID("Number");
+	ImGui::SliderInt("", &m_newPlayer.number, 0, 99);
+	ImGui::PopID();
+
+	ImGui::NewLine();
+
+	ImGui::PushItemWidth(100);
+
+	ImGui::Text("Date of Birth");
+	ImGui::PushID("dob");
+	ImGui::SliderInt("D", &m_newPlayer.dob_day, 1, 31);
+	ImGui::SliderInt("M", &m_newPlayer.dob_month, 1, 12);
+	ImGui::SliderInt("Y", &m_newPlayer.dob_year, 1950, 2021);
+	ImGui::PopID();
+
+	ImGui::PopItemWidth();
+
+	if (ImGui::TreeNode("Teams"))
+	{
+		const TArray<UTeam*> teams = sportData.GetTeams(m_newPlayer.sport);
+		static const ImVec2 btnSize = ImVec2(120, 30);
+		static const int columns = 5;
+
+		UTeam* currentlySelected = m_newPlayer.team;
+
+		int index = 0;
+		for (UTeam* team : teams)
+		{
+			if (team == currentlySelected)
+			{
+				ImGui::PushStyleColor(0, ImVec4(0, 1, 0, 1));
+			}
+
+			char* name = UUtility::FStringToCharPtr(team->GetName());
+			if (ImGui::Button(name, btnSize))
+			{
+				m_newPlayer.team = team;
+			}
+
+			if (team == currentlySelected)
+			{
+				ImGui::PopStyleColor(1);
+			}
+
+			bool isNewColumn = (index + 1) % columns == 0;
+			bool isLast = index + 1 == teams.Num();
+			if (!isNewColumn && !isLast)
+			{
+				ImGui::SameLine();
+			}
+			++index;
+		}
+		ImGui::TreePop();
+	}
+
+	ImGui::NewLine();
+
+	ImGui::Text("Nationality");
+	ImGui::PushID("Nationality");
+	ImGui::InputText("", m_newPlayer.nationality, PlayerData::nameLength);
+	ImGui::PopID();
+
+	ImGui::NewLine();
+
+	if (m_newPlayer.sport == Sport::Formula1)
+	{
+		ImGui::Text("Score");
+		ImGui::PushID("Score");
+		ImGui::SliderFloat("", &m_newPlayer.driverScoreF1, 0, 500);
+		ImGui::PopID();
+
+		ImGui::NewLine();
+	}
+
+	if (m_newPlayer.team == nullptr)
+	{
+		ImGui::Text("Team is not assigned - cannot create plaeyr");
+	}
+	else
+	{
+		if (ImGui::Button("Create player"))
+		{
+			USportPlayer* player = nullptr;
+
+			if (m_newPlayer.sport == Sport::Formula1)
+			{
+				UF1Driver& driver = UF1Driver::Make(m_newPlayer.firstName, m_newPlayer.lastName, m_newPlayer.displayName, *m_newPlayer.team);
+				driver.championshipPoints = m_newPlayer.driverScoreF1;
+				player = static_cast<USportPlayer*>(&driver);
+			}
+			else
+			{
+				player = &USportPlayer::Make(m_newPlayer.firstName, m_newPlayer.lastName, m_newPlayer.displayName, *m_newPlayer.team);
+			}
+
+			if (player != nullptr)
+			{
+				player->nationalityAsString = UUtility::CharPtrToFString(m_newPlayer.nationality);
+				player->SetNumber(m_newPlayer.number);
+				player->SetDateOfBirth(FDateTime(m_newPlayer.dob_year, m_newPlayer.dob_month, m_newPlayer.dob_day));
+			}
+		}
 	}
 }
 
