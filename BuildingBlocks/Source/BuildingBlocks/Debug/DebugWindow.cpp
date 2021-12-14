@@ -186,6 +186,11 @@ void UDebugWindow::DrawOperatorControls()
 			{
 				m_selectedObject = obj;
 				m_selectedComponent = nullptr;
+
+				if (obj == currentSelected)
+				{
+					m_selectedObject = nullptr;
+				}
 			}
 
 			if (obj == currentSelected)
@@ -218,6 +223,11 @@ void UDebugWindow::DrawOperatorControls()
 			{
 				m_selectedComponent = comp;
 				m_selectedObject = nullptr;
+
+				if (comp == currentSelectedComp)
+				{
+					m_selectedComponent = nullptr;
+				}
 			}
 
 			if (comp == currentSelectedComp)
