@@ -83,6 +83,12 @@ public:
 private:
 	float m_slideValue = 0;
 	bool m_isSaveWindowOpen = false;
+	bool nationality = false;
+	bool teamName = false;
+	bool numberOfPoints = false;
+	bool numberOfDrivers = false;
+	bool f1OptionNumberA = false;
+	bool f1OptionNumberB = false;
 
 #if WITH_IMGUI
 	void DrawOperatorControls();

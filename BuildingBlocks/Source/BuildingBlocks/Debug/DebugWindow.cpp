@@ -120,7 +120,24 @@ void UDebugWindow::DrawWindow()
 
 			ImGui::EndTabItem();
 		}
+		if (ImGui::BeginTabItem("Modular UI table"))
+		{
+			ImGui::Text("This is a test tab for the modular UI!");
 
+			ImGui::Checkbox("Show team name", &teamName);
+			ImGui::Checkbox("Show nationality", &nationality);
+			ImGui::Checkbox("Show driver score", &numberOfPoints);
+			ImGui::Checkbox("Show number of drivers per team", &numberOfDrivers);
+			ImGui::Checkbox("Show option 1", &f1OptionNumberA);
+			ImGui::Checkbox("Show option 2", &f1OptionNumberB);
+
+			if (ImGui::Button("Create new F1 data table"))
+			{
+				UDebug::Log("Hello World");
+			}
+
+			ImGui::EndTabItem();
+		}
 		ImGui::EndTabBar();
 	}
 
