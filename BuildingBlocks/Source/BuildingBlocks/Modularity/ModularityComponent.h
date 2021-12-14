@@ -90,6 +90,10 @@ protected:
 	double rotX, rotY, rotZ;
 	double scaleX, scaleY, scaleZ;
 
+	FVector m_previousPos;
+	FVector m_previousRot;
+	FVector m_previousScale;
+
 private:
 	void SetupParameter(void* value, FString name, ExposableParameterType type);
 	TMap<FString, TPair<ExposableParameterType, void*>> m_parameters;
