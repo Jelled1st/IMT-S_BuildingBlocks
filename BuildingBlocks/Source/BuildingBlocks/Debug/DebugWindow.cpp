@@ -186,6 +186,11 @@ void UDebugWindow::DrawOperatorControls()
 			{
 				m_selectedObject = obj;
 				m_selectedComponent = nullptr;
+
+				if (obj == currentSelected)
+				{
+					m_selectedObject = nullptr;
+				}
 			}
 
 			if (obj == currentSelected)
@@ -218,6 +223,11 @@ void UDebugWindow::DrawOperatorControls()
 			{
 				m_selectedComponent = comp;
 				m_selectedObject = nullptr;
+
+				if (comp == currentSelectedComp)
+				{
+					m_selectedComponent = nullptr;
+				}
 			}
 
 			if (comp == currentSelectedComp)
@@ -393,20 +403,34 @@ void UDebugWindow::DrawObjectControls(AModularObject& object)
 			FString groupName = parameterName.Mid(0, seperatorIndex);
 			parameterName = parameterName.Mid(seperatorIndex + 1, parameterName.Len() - seperatorIndex - 1);
 
+			bool currentlyGrouped = currentGrouping != "";
+			if (currentlyGrouped && groupName != currentGrouping)
+			{
+				ImGui::PopID();
+				ImGui::NewLine();
+
+				UDebug::Log(*FString::Printf(TEXT("PopId '%s'"), *currentGrouping));
+			}
+
 			if (groupName != currentGrouping)
 			{
 				ImGui::NewLine();
 				ImGui::Text(TCHAR_TO_ANSI(*groupName));
 				ImGui::PushID(TCHAR_TO_ANSI(*groupName));
+
+				UDebug::Log(*FString::Printf(TEXT("PushID(%s)"), *groupName));
 			}
 			currentGrouping = groupName;
 		}
 		else
 		{
-			if (currentGrouping != "")
+			bool currentlyGrouped = currentGrouping != "";
+			if (currentlyGrouped)
 			{
 				ImGui::PopID();
 				ImGui::NewLine();
+
+				UDebug::Log(*FString::Printf(TEXT("PopId '%s'"), *currentGrouping));
 			}
 			currentGrouping = "";
 		}
@@ -446,10 +470,13 @@ void UDebugWindow::DrawObjectControls(AModularObject& object)
 
 		}
 	}
-	if (currentGrouping != "")
+	bool currentlyGrouped = currentGrouping != "";
+	if (currentlyGrouped)
 	{
 		ImGui::PopID();
 		ImGui::NewLine();
+
+		UDebug::Log(*FString::Printf(TEXT("PopId final '%s'"), *currentGrouping));
 	}
 }
 
@@ -511,6 +538,15 @@ void UDebugWindow::DrawComponentControls(UModularityComponent& component)
 
 			FString groupName = parameterName.Mid(0, seperatorIndex);
 			parameterName = parameterName.Mid(seperatorIndex + 1, parameterName.Len() - seperatorIndex - 1);
+
+			bool currentlyGrouped = currentGrouping != "";
+			if (currentlyGrouped && groupName != currentGrouping)
+			{
+				ImGui::PopID();
+				ImGui::NewLine();
+
+				UDebug::Log(*FString::Printf(TEXT("PopId '%s'"), *currentGrouping));
+			}
 
 			if (groupName != currentGrouping)
 			{

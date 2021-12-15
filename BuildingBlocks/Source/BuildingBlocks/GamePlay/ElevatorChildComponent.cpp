@@ -47,9 +47,7 @@ void UElevatorChildComponent::TickComponent(float deltaTime, ELevelTick tickType
 	if (tickType == ELevelTick::LEVELTICK_All)
 	{
 		FVector desiredWorldPosition = m_physicalPosition + m_worldOffset;
-		FVector toMove = desiredWorldPosition - owner->GetActorLocation();
-
-		owner->AddActorWorldOffset(toMove, true);
+		owner->SetActorLocation(desiredWorldPosition);
 	}
 }
 
