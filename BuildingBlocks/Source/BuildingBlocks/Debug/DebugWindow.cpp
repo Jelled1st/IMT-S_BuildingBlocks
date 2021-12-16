@@ -244,7 +244,7 @@ void UDebugWindow::DrawOperatorControls()
 
 	UModularityComponent* currentSelectedComp = m_selectedComponent;
 
-	if (modularObjs.Num() > 0)
+	if (modularComponents.Num() > 0)
 	{
 		for (UModularityComponent* comp : modularComponents)
 		{

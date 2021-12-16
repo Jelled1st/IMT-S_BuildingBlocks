@@ -37,11 +37,7 @@ void AElevator::BeginPlay()
 		startFloor = 0;
 	}
 
-	float startFloorHeight = m_floors[startFloor]->GetActorLocation().Y;
-
 	m_startPosition = m_elevatorPlatform->GetActorLocation();
-	m_startPosition.Y = startFloorHeight;
-	m_elevatorPlatform->SetActorLocation(m_startPosition);
 }
 
 void AElevator::ConvertSoftPtrs()

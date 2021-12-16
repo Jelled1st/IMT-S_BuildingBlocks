@@ -16,6 +16,8 @@ void UModularityComponent::BeginPlay()
 	
 	m_owner = GetOwner();
 
+	FVector pos = m_owner->GetActorLocation();
+
 	if (visualComponent != nullptr)
 	{
 		m_isEnabled = true;
@@ -55,6 +57,8 @@ void UModularityComponent::BeginPlay()
 	posX = m_owner->GetActorLocation().X;
 	posY = m_owner->GetActorLocation().Y;
 	posZ = m_owner->GetActorLocation().Z;
+
+	m_previousPos = FVector(posX, posY, posZ);
 
 	rotX = m_owner->GetActorRotation().Euler().X;
 	rotY = m_owner->GetActorRotation().Euler().Y;

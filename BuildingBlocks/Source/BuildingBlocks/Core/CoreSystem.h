@@ -110,7 +110,7 @@ public:
 	{
 		if (!m_elevator.IsValid())
 		{
-			UE_DEBUG_BREAK();
+			//UE_DEBUG_BREAK();
 			UDebug::Warning("Requested Elevator, which is nullptr");
 		}
 		return m_elevator.Get();
