@@ -142,8 +142,6 @@ void UDebugWindow::DrawWindow()
 				index++;
 
 			}
-
-			ImGui::PopItemWidth();
 			
 			if (ImGui::Button("Add item to queue")) {
 				m_f1TeamData.Add(F1TeamData::Nationality);
