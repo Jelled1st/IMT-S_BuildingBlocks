@@ -116,6 +116,15 @@ public:
 		return m_elevator.Get();
 	}
 
+	void AddNationalityToArray();
+	void AddScoreToArray();
+	void AddTeamNameToArray();
+
+public:
+	TArray<FString> m_f1Data;
+	int m_ColumnLegnth=0;
+	int m_RowLength=0;
+
 private:
 	void OnElevatorSpawn(AElevator* elevator);
 
