@@ -119,7 +119,16 @@ private:
 	int m_rangeMin = -1000;
 	int m_rangeMax = 1000;
 
+	enum F1TeamData {
+		TeamName,
+		TeamScore,
+		Nationality
+	};
+
+	TArray<F1TeamData> m_f1TeamData;
+
 	static const char* m_sportsList[21];
+	static const char* m_dataOptions[21];
 
 #if OPERATOR_WINDOW
 	TSharedPtr<SWindow> m_window;

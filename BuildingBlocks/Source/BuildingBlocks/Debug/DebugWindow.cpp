@@ -25,6 +25,7 @@ bool UDebugWindow::debugWindowEnabled = true;
 #if WITH_IMGUI
 const int UDebugWindow::presetNameLength = 21;
 const char* UDebugWindow::m_sportsList[21] = { "Cricket", "Football", "Formula1" };
+const char* UDebugWindow::m_dataOptions[21] = { "TeamName","TeamScore","Nationality" };
 #endif
 
 UDebugWindow::UDebugWindow()
@@ -124,17 +125,53 @@ void UDebugWindow::DrawWindow()
 		{
 			ImGui::Text("This is a test tab for the modular UI!");
 
-			ImGui::Checkbox("Show team name", &teamName);
-			ImGui::Checkbox("Show nationality", &nationality);
-			ImGui::Checkbox("Show driver score", &numberOfPoints);
-			ImGui::Checkbox("Show number of drivers per team", &numberOfDrivers);
-			ImGui::Checkbox("Show option 1", &f1OptionNumberA);
-			ImGui::Checkbox("Show option 2", &f1OptionNumberB);
+			int index = 0;
+			for (F1TeamData dataType : m_f1TeamData) {
+				int dataTypeIndex = (int)dataType;
+				ImGui::PushID(UUtility::FStringToCharPtr(*FString::Printf(TEXT("%d"), index)));
 
-			if (ImGui::Button("Create new F1 data table"))
-			{
-				UDebug::Log("Hello World");
+				if (ImGui::ListBox("", &dataTypeIndex, m_dataOptions, 3)) {
+					m_f1TeamData[index] = (F1TeamData)dataTypeIndex;
+				}
+
+				ImGui::PopID();
+			
+				if (index != m_f1TeamData.Num() - 1) {
+					ImGui::SameLine();
+				}
+				index++;
+
 			}
+
+			ImGui::PopItemWidth();
+			
+			if (ImGui::Button("Add item to queue")) {
+				m_f1TeamData.Add(F1TeamData::Nationality);
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Remove item from queue")) {
+				m_f1TeamData.RemoveAt(m_f1TeamData.Num() - 1);
+			}
+
+			if (ImGui::Button("Create new F1 teaem data table"))
+			{
+				for(F1TeamData dataType : m_f1TeamData) {
+
+					//TODO: add methods in core system to be called here
+					if (dataType == F1TeamData::Nationality) {
+						
+					}
+					else if (dataType == F1TeamData::TeamName) {
+						
+					}
+					else if(dataType == F1TeamData::TeamScore) {
+						
+					}
+					
+				}
+			}
+
+			
 
 			ImGui::EndTabItem();
 		}
