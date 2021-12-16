@@ -221,11 +221,6 @@ void UDebugWindow::DrawOperatorControls()
 			{
 				m_selectedObject = obj;
 				m_selectedComponent = nullptr;
-
-				if (obj == currentSelected)
-				{
-					m_selectedObject = nullptr;
-				}
 			}
 
 			if (obj == currentSelected)
@@ -237,7 +232,6 @@ void UDebugWindow::DrawOperatorControls()
 	else
 	{
 		m_selectedObject = nullptr;
-		m_selectedComponent = nullptr;
 	}
 
 	TArray<UModularityComponent*>& modularComponents = UCoreSystem::Get().GetModularitySystem()->GetRegisteredComponents();
@@ -258,11 +252,6 @@ void UDebugWindow::DrawOperatorControls()
 			{
 				m_selectedComponent = comp;
 				m_selectedObject = nullptr;
-
-				if (comp == currentSelectedComp)
-				{
-					m_selectedComponent = nullptr;
-				}
 			}
 
 			if (comp == currentSelectedComp)
@@ -274,7 +263,6 @@ void UDebugWindow::DrawOperatorControls()
 	else
 	{
 		m_selectedComponent = nullptr;
-		m_selectedObject = nullptr;
 	}
 
 	ImGui::EndGroup();
