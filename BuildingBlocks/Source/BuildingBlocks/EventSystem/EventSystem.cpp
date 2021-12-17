@@ -9,6 +9,9 @@ UEventSystem::UEventSystem()
 
 	m_apiDataLoadedEvent.AddUObject(this, &UEventSystem::OnApiDataLoadedEventCallback);
 
+	apiTeamDataLoadedDelegate= FApiTeamDataLoadedDelegate();
+	m_apiTeamDataLoadedEvent.AddUObject(this, &UEventSystem::OnApiTeamDataLoadedEventCallback);
+
 }
 
 UEventSystem::~UEventSystem()

@@ -20,6 +20,9 @@ USportDataHandler::USportDataHandler()
 			eventSystem->OnApiDataLoaded().AddUObject(this, &USportDataHandler::OnSportDataLoaded);
 		}
 	}
+
+	m_ColumnLegnth = 0;
+	m_RowLength = 0;
 }
 
 USportDataHandler::~USportDataHandler()
@@ -212,6 +215,7 @@ void USportDataHandler::OnSportDataLoaded(Sport sport)
 			if (f1Api != nullptr)
 			{
 				f1Api->ImportDataToSportHandler();
+				m_RowLength = GetF1Teams().Num();
 			}
 		}
 	}
@@ -272,4 +276,51 @@ void USportDataHandler::ClearData(Sport sport)
 	{
 		m_f1Teams.Empty();
 	}
+}
+
+void USportDataHandler::AddNationalityToArray()
+{
+	//TODO: too much duplicate code,remove code. Make team data aka (teams,score,names) as method parameter?
+	m_ColumnLegnth++;
+	for (UTeam* f1Team : GetF1Teams())
+	{
+		m_f1Data.Add(f1Team->GetNationalityAsString());
+
+	}
+
+}
+
+void USportDataHandler::AddScoreToArray()
+{
+	m_ColumnLegnth++;
+	for (UTeam* f1Team : GetF1Teams())
+	{
+		m_f1Data.Add(FString::SanitizeFloat(f1Team->GetScore()));
+
+	}
+}
+
+void USportDataHandler::AddTeamNameToArray()
+{
+	m_ColumnLegnth++;
+	for (UTeam* f1Team : GetF1Teams())
+	{
+		m_f1Data.Add(f1Team->GetName());
+
+	}
+}
+
+TArray<FString> USportDataHandler::GetF1TeamDataArray()
+{
+	return  m_f1Data;
+}
+
+int USportDataHandler::GetF1ColumnLength()
+{
+	return m_ColumnLegnth;
+}
+
+int USportDataHandler::GetF1RowLength()
+{
+	return m_RowLength;
 }
