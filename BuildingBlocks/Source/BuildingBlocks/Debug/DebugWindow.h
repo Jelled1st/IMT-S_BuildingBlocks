@@ -106,8 +106,8 @@ private:
 	void DrawPresetMenu();
 	FString m_jsonString = "";
 	bool m_deserializeSucceeded = true;
-	AModularObject* m_selectedObject = nullptr;
-	UModularityComponent* m_selectedComponent = nullptr;
+	TWeakObjectPtr<AModularObject> m_selectedObject = nullptr;
+	TWeakObjectPtr<UModularityComponent> m_selectedComponent = nullptr;
 	TeamData m_newTeam;
 	PlayerData m_newPlayer;
 	UTeam* m_selectedTeam = nullptr;

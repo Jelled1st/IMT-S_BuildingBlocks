@@ -10,6 +10,24 @@ UModularityComponent::UModularityComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 }
 
+UModularityComponent::~UModularityComponent()
+{
+}
+
+void UModularityComponent::BeginDestroy()
+{
+	Super::BeginDestroy();
+
+	if (UCoreSystem::Exists())
+	{
+		UModularitySystem* system = UCoreSystem::Get().GetModularitySystem();
+		if (system != nullptr)
+		{
+			system->UnregisterComponent(*this);
+		}
+	}
+}
+
 void UModularityComponent::BeginPlay()
 {
 	Super::BeginPlay();

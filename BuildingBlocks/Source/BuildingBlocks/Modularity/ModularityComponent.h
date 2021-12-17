@@ -16,6 +16,9 @@ class BUILDINGBLOCKS_API UModularityComponent : public UActorComponent
 
 public:	
 	UModularityComponent();
+	~UModularityComponent();
+
+	void BeginDestroy() override;
 
 protected:
 	virtual void BeginPlay() override;
@@ -76,6 +79,7 @@ public:
 		}
 		return false;
 	}
+
 
 protected:
 	UPROPERTY();

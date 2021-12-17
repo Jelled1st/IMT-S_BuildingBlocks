@@ -18,7 +18,20 @@ AModularObject::AModularObject()
 
 AModularObject::~AModularObject()
 {
+}
 
+void AModularObject::BeginDestroy()
+{
+	Super::BeginDestroy();
+
+	if (UCoreSystem::Exists())
+	{
+		UModularitySystem* system = UCoreSystem::Get().GetModularitySystem();
+		if (system != nullptr)
+		{
+			system->UnregisterObject(*this);
+		}
+	}
 }
 
 void AModularObject::BeginPlay()
@@ -61,16 +74,6 @@ void AModularObject::BeginPlay()
 	SetupParameter(scaleZ, "scale.Z");
 
 	UCoreSystem::Get().GetModularitySystem()->RegisterObject(*this);
-}
-
-void AModularObject::BeginDestroy()
-{
-	Super::BeginDestroy();
-
-	if (UCoreSystem::Exists() && UCoreSystem::Get().GetModularitySystem() != nullptr)
-	{
-		UCoreSystem::Get().GetModularitySystem()->UnregisterObject(*this);
-	}
 }
 
 void AModularObject::Tick(float DeltaTime)

@@ -17,12 +17,13 @@ public:
 	AModularObject();
 	~AModularObject();
 
+	void BeginDestroy() override;
+
 protected:
 	virtual void BeginPlay() override;
 
 public:	
 	virtual void Tick(float DeltaTime) override;
-	virtual void BeginDestroy() override;
 
 	UPROPERTY(EditAnywhere);
 	UStaticMeshComponent* visualComponent;

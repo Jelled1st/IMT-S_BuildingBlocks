@@ -160,6 +160,13 @@ void UDebugWindow::DrawWindow()
 
 			ImGui::EndTabItem();
 		}
+
+		if (ImGui::BeginTabItem("Levels"))
+		{
+			DrawLevelMenu();
+			ImGui::EndTabItem();
+		}
+
 		ImGui::EndTabBar();
 	}
 
@@ -190,13 +197,13 @@ void UDebugWindow::DrawOperatorControls()
 
 	ImGui::BeginGroup();
 
-	TArray<AModularObject*>& modularObjs = UCoreSystem::Get().GetModularitySystem()->GetRegisteredObjects();
+	const TArray<TWeakObjectPtr<AModularObject>>& modularObjs = UCoreSystem::Get().GetModularitySystem()->GetRegisteredObjects();
 
-	AModularObject* currentSelected = m_selectedObject;
+	TWeakObjectPtr<AModularObject> currentSelected = m_selectedObject;
 
 	if (modularObjs.Num() > 0)
 	{
-		for (AModularObject* obj : modularObjs)
+		for (TWeakObjectPtr<AModularObject> obj : modularObjs)
 		{
 			if (obj == currentSelected)
 			{
@@ -221,13 +228,13 @@ void UDebugWindow::DrawOperatorControls()
 		m_selectedObject = nullptr;
 	}
 
-	TArray<UModularityComponent*>& modularComponents = UCoreSystem::Get().GetModularitySystem()->GetRegisteredComponents();
+	const TArray<TWeakObjectPtr<UModularityComponent>>& modularComponents = UCoreSystem::Get().GetModularitySystem()->GetRegisteredComponents();
 
-	UModularityComponent* currentSelectedComp = m_selectedComponent;
+	TWeakObjectPtr<UModularityComponent> currentSelectedComp = m_selectedComponent;
 
 	if (modularComponents.Num() > 0)
 	{
-		for (UModularityComponent* comp : modularComponents)
+		for (TWeakObjectPtr<UModularityComponent> comp : modularComponents)
 		{
 			if (comp == currentSelectedComp)
 			{

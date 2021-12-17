@@ -23,7 +23,7 @@ void UModularitySystem::UnregisterObject(AModularObject& object)
 	m_modularObjects.Remove(&object);
 }
 
-TArray<AModularObject*>& UModularitySystem::GetRegisteredObjects()
+const TArray<TWeakObjectPtr<AModularObject>>& UModularitySystem::GetRegisteredObjects()
 {
 	return m_modularObjects;
 }
@@ -38,7 +38,7 @@ void UModularitySystem::UnregisterComponent(UModularityComponent& object)
 	m_modularityComponents.Remove(&object);
 }
 
-TArray<UModularityComponent*>& UModularitySystem::GetRegisteredComponents()
+const TArray<TWeakObjectPtr<UModularityComponent>>& UModularitySystem::GetRegisteredComponents()
 {
 	return m_modularityComponents;
 }

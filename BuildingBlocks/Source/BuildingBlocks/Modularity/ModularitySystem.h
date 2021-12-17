@@ -25,13 +25,13 @@ public:
 	void RegisterComponent(UModularityComponent& object);
 	void UnregisterComponent(UModularityComponent& object);
 
-	TArray<AModularObject*>& GetRegisteredObjects();
-	TArray<UModularityComponent*>& GetRegisteredComponents();
+	const TArray<TWeakObjectPtr<AModularObject>>& GetRegisteredObjects();
+	const TArray<TWeakObjectPtr<UModularityComponent>>& GetRegisteredComponents();
 
 private:
 	UPROPERTY();
-	TArray<AModularObject*> m_modularObjects;
+	TArray<TWeakObjectPtr<AModularObject>> m_modularObjects;
 
 	UPROPERTY();
-	TArray<UModularityComponent*> m_modularityComponents;
+	TArray<TWeakObjectPtr<UModularityComponent>> m_modularityComponents;
 };

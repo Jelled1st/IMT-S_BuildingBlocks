@@ -23,9 +23,14 @@ bool UPresetHandler::SavePreset(const FString& presetName)
 {
 	TSharedPtr<FJsonObject> jsonWriteObject = MakeShareable(new FJsonObject);
 
-	TArray<AModularObject*>& modularObjs = UCoreSystem::Get().GetModularitySystem()->GetRegisteredObjects();
-	for (AModularObject* obj : modularObjs)
+	const TArray<TWeakObjectPtr<AModularObject>>& modularObjs = UCoreSystem::Get().GetModularitySystem()->GetRegisteredObjects();
+	for (TWeakObjectPtr<AModularObject> obj : modularObjs)
 	{
+		if (!obj.IsValid())
+		{
+			continue;
+		}
+
 		FString name = obj->GetName();
 
 		TMap<FString, TPair<ExposableParameterType, void*>>& parameters = obj->GetParameters();
@@ -111,12 +116,15 @@ bool UPresetHandler::LoadPreset(const FString& presetName)
 	{
 		isDeserializeSuccessful = true;
 
-		TArray<AModularObject*> modularObjs = UCoreSystem::Get().GetModularitySystem()->GetRegisteredObjects();
+		const TArray<TWeakObjectPtr<AModularObject>> modularObjs = UCoreSystem::Get().GetModularitySystem()->GetRegisteredObjects();
 		TMap<FString, AModularObject*> objectByName;
 
-		for (AModularObject* obj : modularObjs)
+		for (TWeakObjectPtr<AModularObject> obj : modularObjs)
 		{
-			objectByName.Add(obj->GetName(), obj);
+			if (obj.IsValid())
+			{
+				objectByName.Add(obj->GetName(), obj.Get());
+			}
 		}
 
 		TMap<FString, TSharedPtr<FJsonValue>> globalJsonValues = jsonLoadObject->Values;
