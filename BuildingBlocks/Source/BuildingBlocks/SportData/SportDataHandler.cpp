@@ -104,6 +104,71 @@ const TArray<UTeam*>& USportDataHandler::GetTeams(Sport sport) const
 	}
 }
 
+const TArray<USportPlayer*> USportDataHandler::GetPlayers(Sport sport) const
+{
+	const TArray<UTeam*>& teams = GetTeams(sport);
+
+	TArray<USportPlayer*> allPlayers;
+
+	for (UTeam* team : teams)
+	{
+		const TArray<USportPlayer*>& players = team->GetPlayers();
+
+		for (USportPlayer* player : players)
+		{
+			allPlayers.Add(player);
+		}
+	}
+
+	return allPlayers;
+}
+
+const TArray<USportPlayer*> USportDataHandler::GetPlayersSorted(Sport sport, PlayerSort sorting) const
+{
+	const TArray<UTeam*>& teams = GetTeams(sport);
+
+	TArray<USportPlayer*> allPlayers;
+
+	for (UTeam* team : teams)
+	{
+		const TArray<USportPlayer*>& players = team->GetPlayers();
+
+		for (USportPlayer* player : players)
+		{
+			allPlayers.Add(player);
+		}
+	}
+
+	auto nrSort = [](const USportPlayer& a, const USportPlayer& b)
+	{
+		return a.GetNumber() < b.GetNumber();
+	};
+
+	auto scoreSort = [](const USportPlayer& a, const USportPlayer& b)
+	{
+		const UF1Driver* driverA = static_cast<const UF1Driver*>(&a);
+		const UF1Driver* driverB = static_cast<const UF1Driver*>(&b);
+
+		return driverA->championshipPoints > driverB->championshipPoints;
+	};
+
+	switch (sorting)
+	{
+	case USportDataHandler::Number:
+		allPlayers.Sort(nrSort);
+		break;
+
+	case USportDataHandler::Score:
+		if (sport == Sport::Formula1)
+		{
+			allPlayers.Sort(scoreSort);
+		}
+		break;
+	}
+
+	return allPlayers;
+}
+
 UTeam* USportDataHandler::FindTeam(FString name, Sport sport) const
 {
 	const TArray<UTeam*>& teams = GetTeams(sport);

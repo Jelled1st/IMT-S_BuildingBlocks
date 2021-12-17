@@ -685,7 +685,20 @@ void UDebugWindow::DrawSportDatabase()
 	}
 	if (ImGui::BeginTabItem("F1"))
 	{
-		DrawSportData(sportData, Sport::Formula1);
+		ImGui::BeginTabBar("Teams Players");
+		if (ImGui::BeginTabItem("Teams"))
+		{
+			DrawSportData(sportData, Sport::Formula1);
+			ImGui::EndTabItem();
+		}
+
+		if (ImGui::BeginTabItem("Players"))
+		{
+			const TArray<USportPlayer*> players = sportData.GetPlayersSorted(Sport::Formula1, m_currentPlayerSort);
+			DrawPlayersTable(sportData, players, Sport::Formula1);
+			ImGui::EndTabItem();
+		}
+		ImGui::EndTabBar();
 		ImGui::EndTabItem();
 	}
 	if (ImGui::BeginTabItem("Team creation"))
@@ -783,10 +796,14 @@ void UDebugWindow::DrawPlayersTable(USportDataHandler& sportData, const TArray<U
 	static int nrSize = 40;
 	static int nameSize = 200;
 	static int scoreSize = 200;
+	static int teamsSize = 150;
 	static int nationalitySize = 140;
 	static int barSize = 10;
 
-	ImGui::Text("Nr.");
+	if (ImGui::Button("Nr.", ImVec2(nrSize, 20)))
+	{
+		m_currentPlayerSort = USportDataHandler::PlayerSort::Number;
+	}
 	ImGui::SameLine(nrSize + barSize);
 	ImGui::Text("|");
 	ImGui::SameLine(nrSize + barSize * 2);
@@ -796,14 +813,25 @@ void UDebugWindow::DrawPlayersTable(USportDataHandler& sportData, const TArray<U
 	ImGui::Text("|");
 	ImGui::SameLine(nrSize + nameSize + barSize * 4);
 
-	ImGui::Text("score");
+	if (ImGui::Button("Score", ImVec2(scoreSize, 20)))
+	{
+		m_currentPlayerSort = USportDataHandler::PlayerSort::Score;
+	}
 	ImGui::SameLine(nrSize + nameSize + scoreSize + barSize * 5);
 	ImGui::Text("|");
 	ImGui::SameLine(nrSize + nameSize + scoreSize + barSize * 6);
 
-	ImGui::Text("nationality");
+	if (ImGui::Button("Team", ImVec2(teamsSize, 20)))
+	{
+		m_currentPlayerSort = USportDataHandler::PlayerSort::Team;
+	}
+	ImGui::SameLine(nrSize + nameSize + scoreSize + teamsSize + barSize * 7);
+	ImGui::Text("|");
+	ImGui::SameLine(nrSize + nameSize + scoreSize + teamsSize + barSize * 8);
 
-	ImGui::Text("=========================================================================================");
+	ImGui::Text("Nationality");
+
+	ImGui::Text("===========================================================================================================");
 
 	bool showAdditionalPlayerInfo = false;
 	for (USportPlayer* player : players)
@@ -829,16 +857,25 @@ void UDebugWindow::DrawPlayersTable(USportDataHandler& sportData, const TArray<U
 		ImGui::Text("|");
 		ImGui::SameLine(nrSize + nameSize + barSize * 4);
 
-		ImGui::PushID(UUtility::FStringToCharPtr(*FString::Printf(TEXT("%s_score"), *driver->GetFullName())));
+		ImGui::PushID(UUtility::FStringToCharPtr(*FString::Printf(TEXT("%s_id"), *driver->GetFullName())));
+
 		ImGui::PushItemWidth(scoreSize);
 		float score = driver->championshipPoints;
 		ImGui::SliderFloat("", &score, 0, sportData.GetHighestDriverScoreF1());
 		ImGui::PopItemWidth();
-		ImGui::PopID();
 
 		ImGui::SameLine(nrSize + nameSize + scoreSize + barSize * 5);
 		ImGui::Text("|");
 		ImGui::SameLine(nrSize + nameSize + scoreSize + barSize * 6);
+
+		ImGui::PushItemWidth(teamsSize);
+		ImGui::Text(TCHAR_TO_ANSI(*FString::Printf(TEXT("%s"), *driver->GetTeam()->GetName())));
+		ImGui::PopItemWidth();
+		ImGui::SameLine(nrSize + nameSize + scoreSize + teamsSize + barSize * 7);
+		ImGui::Text("|");
+		ImGui::SameLine(nrSize + nameSize + scoreSize + teamsSize + barSize * 8);
+
+		ImGui::PopID();
 
 		ImGui::Text(TCHAR_TO_ANSI(*driver->GetNationalityAsString()));
 	}

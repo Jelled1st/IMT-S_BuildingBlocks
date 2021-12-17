@@ -15,6 +15,13 @@ class BUILDINGBLOCKS_API USportDataHandler : public UObject
 	GENERATED_BODY()
 	
 public:
+	enum PlayerSort
+	{
+		Number,
+		Score,
+		Team,
+	};
+
 	USportDataHandler();
 	~USportDataHandler();
 
@@ -28,6 +35,9 @@ public:
 
 	const TArray<UTeam*>& GetTeams(Sport sport) const;
 	TArray<UTeam*> GetAllTeams() const;
+
+	const TArray<USportPlayer*> GetPlayers(Sport sport) const;
+	const TArray<USportPlayer*> GetPlayersSorted(Sport sport, PlayerSort sorting) const;
 
 	UTeam* FindTeam(FString name, Sport sport) const;
 

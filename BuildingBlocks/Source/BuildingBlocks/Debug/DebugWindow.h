@@ -130,6 +130,8 @@ private:
 	static const char* m_sportsList[21];
 	static const char* m_dataOptions[21];
 
+	USportDataHandler::PlayerSort m_currentPlayerSort = USportDataHandler::PlayerSort::Team;
+
 #if OPERATOR_WINDOW
 	TSharedPtr<SWindow> m_window;
 	TSharedPtr<SViewport> m_viewport;

@@ -79,3 +79,9 @@ const FDateTime& USportPlayer::GetDateOfBirth() const
 {
 	return m_dateOfBirth;
 }
+
+
+const UTeam* const USportPlayer::GetTeam() const
+{
+	return m_team;
+}

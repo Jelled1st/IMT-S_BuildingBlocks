@@ -32,6 +32,7 @@ public:
 	FString GetNumberAsString() const;
 	FString GetNationalityAsString() const;
 	const FDateTime& GetDateOfBirth() const;
+	const UTeam* const GetTeam() const;
 
 	UPROPERTY() TEnumAsByte<Country> nationality;
 	UPROPERTY() FString nationalityAsString;
