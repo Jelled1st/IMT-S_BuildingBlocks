@@ -4,6 +4,7 @@
 #include "PresetHandler.h"
 #include "../Debug/Debug.h"
 #include "ModularObject.h"
+#include "ModularityComponent.h"
 #include "../Core/CoreSystem.h"
 
 const FString UPresetHandler::m_subFolders = "BuildingBlocks";
@@ -38,8 +39,60 @@ bool UPresetHandler::SavePreset(const FString& presetName)
 		TSharedPtr<FJsonObject> jsonSubObject = MakeShareable(new FJsonObject);
 		jsonSubObject->SetStringField("Name", name);
 
-		jsonSubObject->SetStringField("mesh", obj->GetMesh().GetName());
-		jsonSubObject->SetStringField("material", obj->GetMaterial().GetName());
+		if (obj->AllowsModularMeshes())
+		{
+			jsonSubObject->SetStringField("mesh", obj->GetMesh().GetName());
+			jsonSubObject->SetStringField("material", obj->GetMaterial().GetName());
+		}
+
+		for (TPair<FString, TPair<ExposableParameterType, void* >> parameter : parameters)
+		{
+			FString parameterName = parameter.Key;
+			ExposableParameterType parameterType = parameter.Value.Key;
+			switch (parameterType)
+			{
+			case ExposableParameterType::Bool:
+			{
+				bool boolValue = *reinterpret_cast<bool*>(parameter.Value.Value);
+				jsonSubObject->SetBoolField(parameterName, boolValue);
+				break;
+			}
+			case ExposableParameterType::String:
+			{
+				FString stringValue = *reinterpret_cast<FString*>(parameter.Value.Value);
+				jsonSubObject->SetStringField(parameterName, stringValue);
+				break;
+			}
+			case ExposableParameterType::Double:
+			{
+				double doubleValue = *reinterpret_cast<double*>(parameter.Value.Value);
+				jsonSubObject->SetNumberField(parameterName, static_cast<double>(doubleValue));
+				break;
+			}
+
+			}
+		}
+
+		jsonWriteObject->SetObjectField(name, jsonSubObject);
+	}
+
+	const TArray<TWeakObjectPtr<UModularityComponent>>& modularComponents = UCoreSystem::Get().GetModularitySystem()->GetRegisteredComponents();
+	for (TWeakObjectPtr<UModularityComponent> comp : modularComponents)
+	{
+		if (!comp.IsValid())
+		{
+			continue;
+		}
+
+		FString name = comp->GetName();
+
+		TMap<FString, TPair<ExposableParameterType, void*>>& parameters = comp->GetParameters();
+
+		TSharedPtr<FJsonObject> jsonSubObject = MakeShareable(new FJsonObject);
+		jsonSubObject->SetStringField("Name", name);
+
+		jsonSubObject->SetStringField("mesh", comp->GetMesh().GetName());
+		jsonSubObject->SetStringField("material", comp->GetMaterial().GetName());
 
 		for (TPair<FString, TPair<ExposableParameterType, void* >> parameter : parameters)
 		{
@@ -127,6 +180,17 @@ bool UPresetHandler::LoadPreset(const FString& presetName)
 			}
 		}
 
+		const TArray<TWeakObjectPtr<UModularityComponent>> modularComps = UCoreSystem::Get().GetModularitySystem()->GetRegisteredComponents();
+		TMap<FString, UModularityComponent*> compsByName;
+
+		for (TWeakObjectPtr<UModularityComponent> comp : modularComps)
+		{
+			if (comp.IsValid())
+			{
+				compsByName.Add(comp->GetName(), comp.Get());
+			}
+		}
+
 		TMap<FString, TSharedPtr<FJsonValue>> globalJsonValues = jsonLoadObject->Values;
 
 		for (TPair<FString, TSharedPtr<FJsonValue>> objectJsonValue : globalJsonValues)
@@ -137,47 +201,94 @@ bool UPresetHandler::LoadPreset(const FString& presetName)
 			}
 			else
 			{
-				AModularObject* modularObject = objectByName[objectJsonValue.Key];
-				TSharedPtr<FJsonObject> jsonObject = objectJsonValue.Value->AsObject();
-
-				TMap<FString, TSharedPtr<FJsonValue>> jsonValues = jsonObject->Values;
-
-				for (TPair<FString, TSharedPtr<FJsonValue>> jsonValue : jsonValues)
+				if (objectByName.Contains(objectJsonValue.Key))
 				{
-					FString valueName = jsonValue.Key;
-					TSharedPtr<FJsonValue> abstractValue = jsonValue.Value;
+					AModularObject* modularObject = objectByName[objectJsonValue.Key];
+					TSharedPtr<FJsonObject> jsonObject = objectJsonValue.Value->AsObject();
 
-					EJson type = abstractValue->Type;
+					TMap<FString, TSharedPtr<FJsonValue>> jsonValues = jsonObject->Values;
 
-					if (type == EJson::String)
+					for (TPair<FString, TSharedPtr<FJsonValue>> jsonValue : jsonValues)
 					{
+						FString valueName = jsonValue.Key;
+						TSharedPtr<FJsonValue> abstractValue = jsonValue.Value;
 
-						FString value = abstractValue->AsString();
+						EJson type = abstractValue->Type;
 
-						if (valueName == "mesh")
+						if (type == EJson::String)
 						{
-							modularObject->TrySetMeshByName(value);
+							FString value = abstractValue->AsString();
+
+							if (valueName == "mesh")
+							{
+								modularObject->TrySetMeshByName(value);
+							}
+							else if (valueName == "material")
+							{
+								modularObject->TrySetMaterialByName(value);
+							}
+							else
+							{
+								modularObject->SetParameterValue(valueName, value);
+							}
 						}
-						else if (valueName == "material")
+
+						if (type == EJson::Boolean)
 						{
-							modularObject->TrySetMaterialByName(value);
+							bool value = abstractValue->AsBool();
+							modularObject->SetParameterValue(valueName, value);
 						}
-						else
+
+						if (type == EJson::Number)
 						{
+							double value = abstractValue->AsNumber();
 							modularObject->SetParameterValue(valueName, value);
 						}
 					}
+				}
+				else if (compsByName.Contains(objectJsonValue.Key))
+				{
+					UModularityComponent* comp = compsByName[objectJsonValue.Key];
+					TSharedPtr<FJsonObject> jsonObject = objectJsonValue.Value->AsObject();
 
-					if (type == EJson::Boolean)
-					{
-						bool value = abstractValue->AsBool();
-						modularObject->SetParameterValue(valueName, value);
-					}
+					TMap<FString, TSharedPtr<FJsonValue>> jsonValues = jsonObject->Values;
 
-					if (type == EJson::Number)
+					for (TPair<FString, TSharedPtr<FJsonValue>> jsonValue : jsonValues)
 					{
-						double value = abstractValue->AsNumber();
-						modularObject->SetParameterValue(valueName, value);
+						FString valueName = jsonValue.Key;
+						TSharedPtr<FJsonValue> abstractValue = jsonValue.Value;
+
+						EJson type = abstractValue->Type;
+
+						if (type == EJson::String)
+						{
+							FString value = abstractValue->AsString();
+
+							if (valueName == "mesh")
+							{
+								comp->TrySetMeshByName(value);
+							}
+							else if (valueName == "material")
+							{
+								comp->TrySetMaterialByName(value);
+							}
+							else
+							{
+								comp->SetParameterValue(valueName, value);
+							}
+						}
+
+						if (type == EJson::Boolean)
+						{
+							bool value = abstractValue->AsBool();
+							comp->SetParameterValue(valueName, value);
+						}
+
+						if (type == EJson::Number)
+						{
+							double value = abstractValue->AsNumber();
+							comp->SetParameterValue(valueName, value);
+						}
 					}
 				}
 			}

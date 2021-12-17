@@ -69,7 +69,7 @@ public:
 	{
 		if (m_parameters.Contains(name))
 		{
-			TPair<ParameterType, void*> parameter = m_parameters[name];
+			TPair<ExposableParameterType, void*> parameter = m_parameters[name];
 
 			T* parameterValue = reinterpret_cast<T*>(parameter.Value);
 
