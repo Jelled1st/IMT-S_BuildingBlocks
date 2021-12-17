@@ -108,19 +108,6 @@ void UDebugWindow::DrawWindow()
 			ImGui::EndTabItem();
 		}
 
-		if (ImGui::BeginTabItem("Example"))
-		{
-			ImGui::Text("Hello world!");
-
-			if (ImGui::Button("Debug::Log('Hello World')"))
-			{
-				UDebug::Log("Hello World");
-			}
-
-			ImGui::SliderFloat("Slider", &m_slideValue, -5, 5);
-
-			ImGui::EndTabItem();
-		}
 		if (ImGui::BeginTabItem("Modular UI table"))
 		{
 			ImGui::Text("This is a test tab for the modular UI!");
