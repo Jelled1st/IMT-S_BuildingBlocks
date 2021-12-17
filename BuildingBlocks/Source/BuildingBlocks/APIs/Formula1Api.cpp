@@ -310,6 +310,8 @@ void UFormula1Api::ImportDataToSportHandler()
 {
 	USportDataHandler& sportHandler = UCoreSystem::Get().GetSportDataHandler();
 
+	sportHandler.ClearData(Sport::Formula1);
+
 	m_criticalSection.Lock();
 	for (ConstructorData& constructor : m_constructors)
 	{

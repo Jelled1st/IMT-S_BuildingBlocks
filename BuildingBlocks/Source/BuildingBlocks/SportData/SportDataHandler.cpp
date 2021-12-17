@@ -192,3 +192,19 @@ float USportDataHandler::GetHighestDriverScoreF1() const
 
 	return highestScore;
 }
+
+void USportDataHandler::ClearData(Sport sport)
+{
+	if (sport == Sport::Cricket)
+	{
+		m_cricketTeams.Empty();
+	}
+	else if (sport == Sport::Football)
+	{
+		m_footballTeams.Empty();
+	}
+	else //if(sport == Sport::Formula1)
+	{
+		m_f1Teams.Empty();
+	}
+}

@@ -36,6 +36,8 @@ public:
 	float GetHighestScoreInSport(Sport sport) const;
 	float GetHighestDriverScoreF1() const;
 
+	void ClearData(Sport sport);
+
 private:
 	UPROPERTY();
 	TArray<UTeam*> m_cricketTeams;
