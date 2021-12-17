@@ -54,11 +54,21 @@ void AModularObject::BeginPlay()
 	{
 		m_currentMeshIndex = 0;
 		visualComponent->SetStaticMesh(meshAssets[0]);
+		m_allowModularMesh = true;
+	}
+	else
+	{
+		m_allowModularMesh = false;
 	}
 	if (materialAssets.Num() != 0)
 	{
 		m_currentMatIndex = 0;
 		visualComponent->SetMaterial(0, materialAssets[0]);
+		m_allowModularMesh = true;
+	}
+	else
+	{
+		m_allowModularMesh = false;
 	}
 	
 	SetupParameter(posX, "position.X");

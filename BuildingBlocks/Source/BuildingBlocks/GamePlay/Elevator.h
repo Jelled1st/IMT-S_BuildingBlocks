@@ -4,13 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "../Modularity/ModularObject.h"
 #include "ElevatorSpeed.h"
 #include "Elevator.generated.h"
 
 class UElevatorChildComponent;
 
 UCLASS()
-class BUILDINGBLOCKS_API AElevator : public AActor
+class BUILDINGBLOCKS_API AElevator : public AModularObject
 {
 	GENERATED_BODY()
 	
@@ -76,4 +77,7 @@ private:
 
 	UPROPERTY();
 	TArray<UElevatorChildComponent*> m_children;
+
+	bool m_moveUp;
+	bool m_moveDown;
 };

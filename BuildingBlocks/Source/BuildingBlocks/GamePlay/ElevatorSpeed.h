@@ -38,20 +38,20 @@ public:
 	}
 
 	UPROPERTY(EditAnywhere);
-	float acceleration = 20.0f;
+	double acceleration = 20.0f;
 
 	UPROPERTY(EditAnywhere);
-	float maxSpeed = 250.0f;
+	double maxSpeed = 250.0f;
 
 	UPROPERTY(EditAnywhere);
-	float slowedMinSpeed = 20.0f;
+	double slowedMinSpeed = 20.0f;
 
 	UPROPERTY(EditAnywhere);
-	float slowDownDistance = 125.0f;
+	double slowDownDistance = 125.0f;
 
 	UPROPERTY(EditAnywhere);
-	float friction = 0.1f;
+	double friction = 0.1f;
 
 	UPROPERTY(EditAnywhere);
-	float currentSpeed = 0.0f;
+	double currentSpeed = 0.0f;
 };

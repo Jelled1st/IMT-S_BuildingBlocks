@@ -75,6 +75,10 @@ public:
 		return false;
 	}
 
+	bool AllowsModularMeshes()
+	{
+		return m_allowModularMesh;
+	}
 
 private:
 	int m_currentMeshIndex = 0;
@@ -83,6 +87,8 @@ private:
 	double posX, posY, posZ;
 	double rotX, rotY, rotZ;
 	double scaleX, scaleY, scaleZ;
+
+	bool m_allowModularMesh = true;
 
 	void SetupParameter(void* value, FString name, ExposableParameterType type);
 	TMap<FString, TPair<ExposableParameterType, void*>> m_parameters;

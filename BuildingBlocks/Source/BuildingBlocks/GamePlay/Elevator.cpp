@@ -8,12 +8,12 @@
 
 
 // Sets default values
-AElevator::AElevator()
+AElevator::AElevator() : AModularObject()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
+	//RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
 }
 
 // Called when the game starts or when spawned
@@ -38,6 +38,15 @@ void AElevator::BeginPlay()
 	}
 
 	m_startPosition = m_elevatorPlatform->GetActorLocation();
+
+	SetupParameter(speed.acceleration, "Speed.acceleration");
+	SetupParameter(speed.maxSpeed, "speed.maxSpeed");
+	SetupParameter(speed.slowedMinSpeed, "speed.slowedMinSpeed");
+	SetupParameter(speed.slowDownDistance, "speed.slowDownDistance");
+	SetupParameter(speed.friction, "speed.friction");
+
+	SetupParameter(m_moveUp, "elevator.MoveUp");
+	SetupParameter(m_moveDown, "elevator.MoveDown");
 }
 
 void AElevator::ConvertSoftPtrs()
@@ -59,6 +68,18 @@ void AElevator::BeginDestroy()
 void AElevator::Tick(float deltaTime)
 {
 	Super::Tick(deltaTime);
+
+	if (m_moveUp)
+	{
+		m_moveUp = false;
+		MoveUp(1);
+	}
+
+	if (m_moveDown)
+	{
+		m_moveDown = false;
+		MoveDown(1);
+	}
 
 	if (m_state != ElevatorState::Idle)
 	{
