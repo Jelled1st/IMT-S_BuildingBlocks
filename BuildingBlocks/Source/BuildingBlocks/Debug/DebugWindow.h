@@ -103,6 +103,8 @@ private:
 	void DrawSportData(USportDataHandler& sportData, Sport sport);
 	void DrawPlayersTable(USportDataHandler& sportData, const TArray<USportPlayer*>& players, Sport sport);
 
+	void DrawLevelMenu();
+
 	void DrawPresetMenu();
 	FString m_jsonString = "";
 	bool m_deserializeSucceeded = true;

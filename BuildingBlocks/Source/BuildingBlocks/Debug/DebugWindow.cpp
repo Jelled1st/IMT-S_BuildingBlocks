@@ -1089,6 +1089,28 @@ void UDebugWindow::DrawCreatePlayerMenu(USportDataHandler& sportData)
 	}
 }
 
+void UDebugWindow::DrawLevelMenu()
+{
+	UWorld* world = UCoreSystem::Get().GetWorld();
+
+	if (ImGui::Button("Minimal_Default"))
+	{
+		UGameplayStatics::OpenLevel(world, "Minimal_Default");
+	}
+	if (ImGui::Button("Modularity_Test"))
+	{
+		UGameplayStatics::OpenLevel(world, "Modularity_Test");
+	}
+	if (ImGui::Button("elevatorTest"))
+	{
+		UGameplayStatics::OpenLevel(world, "elevatorTest");
+	}
+	if (ImGui::Button("PersistantLevel"))
+	{
+		UGameplayStatics::OpenLevel(world, "PersistantLevel");
+	}
+}
+
 void UDebugWindow::ImGuiSliderVector(const char* label, FVector& vector, float xLimit, float yLimit, float zLimit)
 {
 	ImGui::PushID(label);
