@@ -80,6 +80,13 @@ public:
 		return false;
 	}
 
+	void SetWorldPosition(FVector pos)
+	{
+		posX = pos.X;
+		posY = pos.Y;
+		posZ = pos.Z;
+	}
+
 
 protected:
 	UPROPERTY();

@@ -4,6 +4,7 @@
 #include "ModularityComponent.h"
 #include "../Debug/Debug.h"
 #include "../Core/CoreSystem.h"
+#include "../Utilities/Utility.h"
 
 UModularityComponent::UModularityComponent()
 {
@@ -82,9 +83,13 @@ void UModularityComponent::BeginPlay()
 	rotY = m_owner->GetActorRotation().Euler().Y;
 	rotZ = m_owner->GetActorRotation().Euler().Z;
 
+	m_previousRot = FVector(rotX, rotY, rotZ);
+
 	scaleX = m_owner->GetActorScale().X;
 	scaleY = m_owner->GetActorScale().Y;
 	scaleZ = m_owner->GetActorScale().Z;
+
+	m_previousScale = FVector(scaleX, scaleY, scaleZ);
 
 	if (meshAssets.Num() != 0)
 	{
@@ -118,7 +123,7 @@ void UModularityComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 
 	if (m_isEnabled)
 	{
-		if (m_owner->GetActorLocation() != m_previousPos)
+		/*if (!UUtility::AlmostEqual(m_owner->GetActorLocation(), m_previousPos))
 		{
 			FVector pos = m_owner->GetActorLocation();
 			posX = pos.X;
@@ -126,7 +131,7 @@ void UModularityComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 			posZ = pos.Z;
 		}
 
-		if (m_owner->GetActorRotation().Euler() != m_previousRot)
+		if (!UUtility::AlmostEqual(m_owner->GetActorRotation().Euler(), m_previousRot))
 		{
 			FVector rot = m_owner->GetActorRotation().Euler();
 			rotX = rot.X;
@@ -134,13 +139,13 @@ void UModularityComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 			rotZ = rot.Z;
 		}
 
-		if (m_owner->GetActorScale() != m_previousScale)
+		if (!UUtility::AlmostEqual(m_owner->GetActorScale(), m_previousScale))
 		{
 			FVector scale = m_owner->GetActorScale();
 			scaleX = scale.X;
 			scaleY = scale.Y;
 			scaleZ = scale.Z;
-		}
+		}*/
 
 		FVector newPos = FVector(posX, posY, posZ);
 		FVector newRot = FVector(rotX, rotY, rotZ);

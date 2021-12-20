@@ -78,4 +78,9 @@ public:
 
 		return nullptr;
 	}
+
+	static bool AlmostEqual(const FVector& a, const FVector& b)
+	{
+		return FMath::IsNearlyEqual(a.X, b.X) && FMath::IsNearlyEqual(a.Y, b.Y) && FMath::IsNearlyEqual(a.Z, b.Z);
+	}
 };

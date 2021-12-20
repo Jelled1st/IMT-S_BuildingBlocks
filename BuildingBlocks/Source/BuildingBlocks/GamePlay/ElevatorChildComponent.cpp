@@ -22,6 +22,7 @@ void UElevatorChildComponent::BeginPlay()
 
 	owner = GetOwner();
 	m_physicalPosition = owner->GetActorLocation();
+	modularityComponent = owner->FindComponentByClass<UModularityComponent>();
 
 	if (UCoreSystem::Exists())
 	{
@@ -47,7 +48,15 @@ void UElevatorChildComponent::TickComponent(float deltaTime, ELevelTick tickType
 	if (tickType == ELevelTick::LEVELTICK_All)
 	{
 		FVector desiredWorldPosition = m_physicalPosition + m_worldOffset;
-		owner->SetActorLocation(desiredWorldPosition);
+		
+		if (modularityComponent)
+		{
+			modularityComponent->SetWorldPosition(desiredWorldPosition);
+		}
+		else
+		{
+			owner->SetActorLocation(desiredWorldPosition);
+		}
 	}
 }
 

@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Components/SceneComponent.h"
+#include "../Modularity/ModularityComponent.h"
 #include "ElevatorChildComponent.generated.h"
 
 class AElevator;
@@ -37,4 +38,7 @@ private:
 
 	FVector m_physicalPosition;
 	FVector m_worldOffset;
+
+	UPROPERTY();
+	UModularityComponent* modularityComponent;
 };
