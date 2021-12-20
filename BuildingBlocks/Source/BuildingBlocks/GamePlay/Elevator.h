@@ -48,9 +48,6 @@ public:
 	int startFloor = 0;
 
 	UPROPERTY(EditAnywhere);
-	TSoftObjectPtr<AActor> elevatorPlatformSoftPtr;
-
-	UPROPERTY(EditAnywhere);
 	FElevatorSpeed speed;
 
 	void AddChild(UElevatorChildComponent& child);
@@ -68,9 +65,6 @@ private:
 	int m_desinationIndex = 0;
 
 	FVector m_startPosition;
-
-	UPROPERTY();
-	AActor* m_elevatorPlatform;
 
 	UPROPERTY();
 	TArray<AActor*> m_floors;

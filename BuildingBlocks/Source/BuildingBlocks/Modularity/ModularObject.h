@@ -80,7 +80,7 @@ public:
 		return m_allowModularMesh;
 	}
 
-private:
+protected:
 	int m_currentMeshIndex = 0;
 	int m_currentMatIndex = 0;
 

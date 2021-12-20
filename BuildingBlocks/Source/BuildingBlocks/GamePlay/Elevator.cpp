@@ -37,7 +37,12 @@ void AElevator::BeginPlay()
 		startFloor = 0;
 	}
 
-	m_startPosition = m_elevatorPlatform->GetActorLocation();
+	m_startPosition = m_floors[0]->GetActorLocation();
+	this->SetActorLocation(m_startPosition);
+	
+	posX = m_startPosition.X;
+	posY = m_startPosition.Y;
+	posZ = m_startPosition.Z;
 
 	SetupParameter(speed.acceleration, "Speed.acceleration");
 	SetupParameter(speed.maxSpeed, "speed.maxSpeed");
@@ -55,8 +60,6 @@ void AElevator::ConvertSoftPtrs()
 	{
 		m_floors.Add(UUtility::ConvertSoftPtr(floor));
 	}
-
-	m_elevatorPlatform = UUtility::ConvertSoftPtr(elevatorPlatformSoftPtr);
 }
 
 void AElevator::BeginDestroy()
@@ -86,7 +89,7 @@ void AElevator::Tick(float deltaTime)
 		AActor* floorActor = m_floors[m_desinationIndex];
 		FVector destination = floorActor->GetActorLocation();
 
-		FVector position = m_elevatorPlatform->GetActorLocation();
+		FVector position = FVector(posX, posY, posZ);
 		FVector newPosition;
 
 		if (Move(position, newPosition, destination, deltaTime))
@@ -95,11 +98,14 @@ void AElevator::Tick(float deltaTime)
 			m_currentFloorIndex = m_desinationIndex;
 		}
 
-		m_elevatorPlatform->SetActorLocation(newPosition);
+		posX = newPosition.X;
+		posY = newPosition.Y;
+		posZ = newPosition.Z;
 
+		FVector offset = newPosition - m_startPosition;
 		for (UElevatorChildComponent* child : m_children)
 		{
-			child->GetWorldOffset() = newPosition - m_startPosition;
+			child->GetWorldOffset() = offset;
 		}
 	}
 }
