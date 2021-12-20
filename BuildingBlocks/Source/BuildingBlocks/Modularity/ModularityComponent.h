@@ -87,12 +87,14 @@ public:
 		posZ = pos.Z;
 	}
 
+	bool AllowsModularMeshes()
+	{
+		return m_allowModularMesh;
+	}
 
 protected:
 	UPROPERTY();
 	AActor* m_owner;
-
-	bool m_isEnabled = false;
 
 	int m_currentMeshIndex = 0;
 	int m_currentMatIndex = 0;
@@ -101,11 +103,8 @@ protected:
 	double rotX, rotY, rotZ;
 	double scaleX, scaleY, scaleZ;
 
-	FVector m_previousPos;
-	FVector m_previousRot;
-	FVector m_previousScale;
+	bool m_allowModularMesh = true;
 
-private:
 	void SetupParameter(void* value, FString name, ExposableParameterType type);
 	TMap<FString, TPair<ExposableParameterType, void*>> m_parameters;
 };

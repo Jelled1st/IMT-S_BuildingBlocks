@@ -523,38 +523,45 @@ void UDebugWindow::DrawComponentControls(UModularityComponent& component)
 	static float arrowButtonSpacing = 40;
 	static float textSpacing = 160;
 
-	ImGui::PushID("MeshSelection");
-	if (ImGui::Button("<"))
+	if (component.AllowsModularMeshes())
 	{
-		component.SwapMeshPrevious();
+		ImGui::PushID("MeshSelection");
+		if (ImGui::Button("<"))
+		{
+			component.SwapMeshPrevious();
+		}
+		ImGui::SameLine(arrowButtonSpacing);
+
+		ImGui::Text(TCHAR_TO_ANSI(*component.GetMesh().GetName()));
+
+		ImGui::SameLine(arrowButtonSpacing + textSpacing);
+		if (ImGui::Button(">"))
+		{
+			component.SwapMeshNext();
+		}
+		ImGui::PopID();
+
+
+		ImGui::PushID("MaterialSelection");
+		if (ImGui::Button("<"))
+		{
+			component.SwapMatPrevious();
+		}
+		ImGui::SameLine(arrowButtonSpacing);
+
+		ImGui::Text(TCHAR_TO_ANSI(*component.GetMaterial().GetName()));
+
+		ImGui::SameLine(arrowButtonSpacing + textSpacing);
+		if (ImGui::Button(">"))
+		{
+			component.SwapMatNext();
+		}
+		ImGui::PopID();
 	}
-	ImGui::SameLine(arrowButtonSpacing);
-
-	ImGui::Text(TCHAR_TO_ANSI(*component.GetMesh().GetName()));
-
-	ImGui::SameLine(arrowButtonSpacing + textSpacing);
-	if (ImGui::Button(">"))
+	else
 	{
-		component.SwapMeshNext();
+		ImGui::Text("Component has no modular meshes");
 	}
-	ImGui::PopID();
-
-
-	ImGui::PushID("MaterialSelection");
-	if (ImGui::Button("<"))
-	{
-		component.SwapMatPrevious();
-	}
-	ImGui::SameLine(arrowButtonSpacing);
-
-	ImGui::Text(TCHAR_TO_ANSI(*component.GetMaterial().GetName()));
-
-	ImGui::SameLine(arrowButtonSpacing + textSpacing);
-	if (ImGui::Button(">"))
-	{
-		component.SwapMatNext();
-	}
-	ImGui::PopID();
 
 	ImGui::NewLine();
 	ImGui::Separator();

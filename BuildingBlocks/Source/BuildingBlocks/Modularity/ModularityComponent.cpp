@@ -39,7 +39,7 @@ void UModularityComponent::BeginPlay()
 
 	if (visualComponent != nullptr)
 	{
-		m_isEnabled = true;
+		m_allowModularMesh = true;
 	}
 	else
 	{
@@ -49,57 +49,55 @@ void UModularityComponent::BeginPlay()
 		if (components.Num() == 1)
 		{
 			visualComponent = components[0];
-			m_isEnabled = true;
+			m_allowModularMesh = true;
 		}
 		else if (components.Num() > 1)
 		{
 			visualComponent = components[0];
-			m_isEnabled = true;
+			m_allowModularMesh = true;
 
 			UDebug::ToScreen(*FString::Printf(TEXT("Warning: '%s' contains multiple static mesh components (using the first) - please assign one to the '%s' component"), *m_owner->GetName(), *this->GetName()), FColor::Red);
 			UDebug::Warning(*FString::Printf(TEXT("'%s' contains multiple static mesh components (using the first) - please assign one to the '%s' component"), *m_owner->GetName(), *this->GetName()));
 		}
 		else if (components.Num() <= 0)
 		{
-			m_isEnabled = false;
-
+			m_allowModularMesh = false;
 			UDebug::ToScreen(*FString::Printf(TEXT("Warning: '%s' does not contain static mesh components - please assign one to the '%s' component"), *m_owner->GetName(), *this->GetName()), FColor::Red);
 			UDebug::Warning(*FString::Printf(TEXT("'%s' does not contain static mesh components - please assign one to the '%s' component"), *m_owner->GetName(), *this->GetName()));
 		}
-	}
-
-	if (!m_isEnabled)
-	{
-		return;
 	}
 
 	posX = m_owner->GetActorLocation().X;
 	posY = m_owner->GetActorLocation().Y;
 	posZ = m_owner->GetActorLocation().Z;
 
-	m_previousPos = FVector(posX, posY, posZ);
-
 	rotX = m_owner->GetActorRotation().Euler().X;
 	rotY = m_owner->GetActorRotation().Euler().Y;
 	rotZ = m_owner->GetActorRotation().Euler().Z;
-
-	m_previousRot = FVector(rotX, rotY, rotZ);
 
 	scaleX = m_owner->GetActorScale().X;
 	scaleY = m_owner->GetActorScale().Y;
 	scaleZ = m_owner->GetActorScale().Z;
 
-	m_previousScale = FVector(scaleX, scaleY, scaleZ);
-
 	if (meshAssets.Num() != 0)
 	{
 		m_currentMeshIndex = 0;
 		visualComponent->SetStaticMesh(meshAssets[0]);
+		m_allowModularMesh = true;
+	}
+	else
+	{
+		m_allowModularMesh = false;
 	}
 	if (materialAssets.Num() != 0)
 	{
 		m_currentMatIndex = 0;
 		visualComponent->SetMaterial(0, materialAssets[0]);
+		m_allowModularMesh = true;
+	}
+	else
+	{
+		m_allowModularMesh = false;
 	}
 
 	SetupParameter(posX, "position.X");
@@ -121,20 +119,13 @@ void UModularityComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	if (m_isEnabled)
-	{
-		FVector newPos = FVector(posX, posY, posZ);
-		FVector newRot = FVector(rotX, rotY, rotZ);
-		FVector newScale = FVector(scaleX, scaleY, scaleZ);
+	FVector newPos = FVector(posX, posY, posZ);
+	FVector newRot = FVector(rotX, rotY, rotZ);
+	FVector newScale = FVector(scaleX, scaleY, scaleZ);
 
-		m_owner->SetActorLocation(newPos);
-		m_owner->SetActorRotation(FQuat::MakeFromEuler(newRot));
-		m_owner->SetActorScale3D(newScale);
-
-		m_previousPos = newPos;
-		m_previousRot = newRot;
-		m_previousScale = newScale;
-	}
+	m_owner->SetActorLocation(newPos);
+	m_owner->SetActorRotation(FQuat::MakeFromEuler(newRot));
+	m_owner->SetActorScale3D(newScale);
 }
 
 FString UModularityComponent::GetActorName() const
