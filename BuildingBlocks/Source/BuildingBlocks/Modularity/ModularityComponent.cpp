@@ -123,30 +123,6 @@ void UModularityComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 
 	if (m_isEnabled)
 	{
-		/*if (!UUtility::AlmostEqual(m_owner->GetActorLocation(), m_previousPos))
-		{
-			FVector pos = m_owner->GetActorLocation();
-			posX = pos.X;
-			posY = pos.Y;
-			posZ = pos.Z;
-		}
-
-		if (!UUtility::AlmostEqual(m_owner->GetActorRotation().Euler(), m_previousRot))
-		{
-			FVector rot = m_owner->GetActorRotation().Euler();
-			rotX = rot.X;
-			rotY = rot.Y;
-			rotZ = rot.Z;
-		}
-
-		if (!UUtility::AlmostEqual(m_owner->GetActorScale(), m_previousScale))
-		{
-			FVector scale = m_owner->GetActorScale();
-			scaleX = scale.X;
-			scaleY = scale.Y;
-			scaleZ = scale.Z;
-		}*/
-
 		FVector newPos = FVector(posX, posY, posZ);
 		FVector newRot = FVector(rotX, rotY, rotZ);
 		FVector newScale = FVector(scaleX, scaleY, scaleZ);
