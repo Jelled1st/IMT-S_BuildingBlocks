@@ -8,6 +8,7 @@
 #include "EventSystem.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FApiDataLoadedDelegate, Sport, sport);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FApiTeamDataLoadedDelegate);
 
 UCLASS(BlueprintType)
 class BUILDINGBLOCKS_API UEventSystem : public UObject
@@ -48,6 +49,43 @@ public:
 	}
 
 
+
+
+
+
+
+
+
+	DECLARE_EVENT(EventSystem, ApiTeamDataLoadedEvent)
+	ApiTeamDataLoadedEvent& OnApiTeamDataLoaded()
+	{
+		return m_apiTeamDataLoadedEvent;
+	}
+
+	void CallTeamApiDataLoadedEvent()
+	{
+		m_apiTeamDataLoadedEvent.Broadcast();
+	}
+
+	UPROPERTY(BlueprintAssignable);
+	FApiTeamDataLoadedDelegate apiTeamDataLoadedDelegate;
+
+	void OnApiTeamDataLoadedEventCallback()
+	{
+		apiTeamDataLoadedDelegate.Broadcast();
+	}
+
+
+
+
+
+
+
+
+
+
+
+
 	DECLARE_EVENT_OneParam(EventSystem, ElevatorSpawnedEvent, AElevator* const)
 	ElevatorSpawnedEvent& OnElevatorSpawn()
 	{
@@ -63,6 +101,8 @@ private:
 	TestEvent m_testEvent;
 
 	ApiDataLoadedEvent m_apiDataLoadedEvent;
+
+	ApiTeamDataLoadedEvent m_apiTeamDataLoadedEvent;
 
 	ElevatorSpawnedEvent m_elevatorSpawnedEvent;
 };

@@ -113,6 +113,7 @@ void UDebugWindow::DrawWindow()
 			ImGui::Text("This is a test tab for the modular UI!");
 
 			int index = 0;
+			ImGui::PushItemWidth(100);
 			for (F1TeamData dataType : m_f1TeamData) {
 				int dataTypeIndex = (int)dataType;
 				ImGui::PushID(UUtility::FStringToCharPtr(*FString::Printf(TEXT("%d"), index)));
@@ -129,6 +130,7 @@ void UDebugWindow::DrawWindow()
 				index++;
 
 			}
+			ImGui::PopItemWidth();
 			
 			if (ImGui::Button("Add item to queue")) {
 				m_f1TeamData.Add(F1TeamData::Nationality);
@@ -140,20 +142,30 @@ void UDebugWindow::DrawWindow()
 
 			if (ImGui::Button("Create new F1 teaem data table"))
 			{
-				for(F1TeamData dataType : m_f1TeamData) {
-
-					//TODO: add methods in core system to be called here
-					if (dataType == F1TeamData::Nationality) {
-						
-					}
-					else if (dataType == F1TeamData::TeamName) {
-						
-					}
-					else if(dataType == F1TeamData::TeamScore) {
-						
-					}
-					
+				UEventSystem* eventSystem = nullptr;
+				USportDataHandler* f1DataHandler = nullptr;
+				if (UCoreSystem::Exists()) {
+					f1DataHandler = &UCoreSystem::Get().GetSportDataHandler();
+					 eventSystem = UCoreSystem::Get().GetEventSystem();
 				}
+				if (f1DataHandler != nullptr) {
+					for (F1TeamData dataType : m_f1TeamData) {
+
+						//TODO: add methods in core system to be called here
+						if (dataType == F1TeamData::Nationality) {
+							f1DataHandler->AddNationalityToArray();
+						}
+						if (dataType == F1TeamData::TeamName) {
+							f1DataHandler->AddTeamNameToArray();
+						}
+						if (dataType == F1TeamData::TeamScore) {
+							f1DataHandler->AddScoreToArray();
+						}
+
+					}
+				}
+				eventSystem->CallTeamApiDataLoadedEvent();
+				
 			}
 
 			

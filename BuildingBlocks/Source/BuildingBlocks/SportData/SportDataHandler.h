@@ -48,6 +48,25 @@ public:
 
 	void ClearData(Sport sport);
 
+
+	void AddNationalityToArray();
+	void AddScoreToArray();
+	void AddTeamNameToArray();
+	UFUNCTION(BlueprintCallable)
+	TArray<FString> GetF1TeamDataArray();
+	UFUNCTION(BlueprintCallable)
+		int GetF1ColumnLength();
+	UFUNCTION(BlueprintCallable)
+		int GetF1RowLength();
+
+public:
+	UPROPERTY()
+	TArray<FString> m_f1Data;
+	UPROPERTY()
+	int m_ColumnLegnth;
+	UPROPERTY()
+	int m_RowLength;
+
 private:
 	UPROPERTY();
 	TArray<UTeam*> m_cricketTeams;

@@ -32,8 +32,6 @@ void UCoreSystem::Init()
 	m_f1Api = NewObject<UFormula1Api>();
 	m_f1Api->Init(FHttpModule::Get());
 
-	
-	m_RowLength = m_sportDataHandler->GetF1Teams().Num();
 }
 
 void UCoreSystem::OnStart()
@@ -63,38 +61,6 @@ UCoreSystem& UCoreSystem::Get()
 bool UCoreSystem::Exists()
 {
 	return m_instance.IsValid();
-}
-
-void UCoreSystem::AddNationalityToArray()
-{
-	//TODO: too much duplicate code,remove code. Make team data aka (teams,score,names) as method parameter?
-	m_ColumnLegnth++;
-	for(UTeam *f1Team : m_sportDataHandler->GetF1Teams())
-	{
-		m_f1Data.Add(f1Team->GetNationalityAsString());
-
-	}
-	
-}
-
-void UCoreSystem::AddScoreToArray()
-{
-	m_ColumnLegnth++;
-	for(UTeam * f1Team : m_sportDataHandler->GetF1Teams())
-	{
-		m_f1Data.Add(FString::SanitizeFloat(f1Team->GetScore()));
-
-	}
-}
-
-void UCoreSystem::AddTeamNameToArray()
-{
-	m_ColumnLegnth++;
-	for(UTeam * f1Team : m_sportDataHandler->GetF1Teams())
-	{
-		m_f1Data.Add(f1Team->GetName());
-
-	}
 }
 
 void UCoreSystem::OnElevatorSpawn(AElevator* elevator)
