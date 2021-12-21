@@ -150,5 +150,5 @@ private:
 	UPROPERTY();
 	UPresetHandler* m_presetHandler;
 
-	bool debugTogglePressed = false;
+	bool m_debugTogglePressed = false;
 };

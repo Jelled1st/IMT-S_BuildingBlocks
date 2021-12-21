@@ -65,15 +65,15 @@ bool UCoreSystem::Tick(float deltaTime)
 {
 	if(this->GetWorld()->GetFirstPlayerController()->IsInputKeyDown(FKey("P")))
 	{
-		if (!debugTogglePressed)
+		if (!m_debugTogglePressed)
 		{
 			m_debugWindow->isEnabled = !m_debugWindow->isEnabled;
 		}
-		debugTogglePressed = true;
+		m_debugTogglePressed = true;
 	}
 	else
 	{
-		debugTogglePressed = false;
+		m_debugTogglePressed = false;
 	}
 
 	return true;
