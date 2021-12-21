@@ -67,6 +67,7 @@ public:
 	void Start();
 	void Shutdown();
 
+	bool isEnabled = true;
 #if WITH_IMGUI
 	void DrawWindow();
 

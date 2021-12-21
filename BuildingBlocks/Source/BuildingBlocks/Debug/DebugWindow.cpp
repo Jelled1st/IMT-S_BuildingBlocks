@@ -81,7 +81,7 @@ void UDebugWindow::Shutdown()
 #if WITH_IMGUI
 void UDebugWindow::DrawWindow()
 {
-	if (!debugWindowEnabled)
+	if (!debugWindowEnabled || !isEnabled)
 	{
 		return;
 	}

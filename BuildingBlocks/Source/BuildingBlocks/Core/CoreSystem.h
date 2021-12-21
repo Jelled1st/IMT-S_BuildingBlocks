@@ -17,6 +17,8 @@
 
 #include "../Gameplay/Elevator.h"
 
+#include "Containers/Ticker.h"
+
 #include "CoreSystem.generated.h"
 
 UCLASS(Blueprintable)
@@ -30,6 +32,9 @@ public:
 	virtual void Init();
 	virtual void OnStart();
 	virtual void Shutdown();
+
+	FDelegateHandle tickDelegateHandle;
+	bool Tick(float deltaTime);
 
 	static UCoreSystem& Get();
 	static bool Exists();
@@ -144,4 +149,6 @@ private:
 
 	UPROPERTY();
 	UPresetHandler* m_presetHandler;
+
+	bool debugTogglePressed = false;
 };

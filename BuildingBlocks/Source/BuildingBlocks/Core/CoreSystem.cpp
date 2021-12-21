@@ -15,6 +15,8 @@ void UCoreSystem::Init()
 {
 	Super::Init();
 
+	tickDelegateHandle = FTicker::GetCoreTicker().AddTicker(FTickerDelegate::CreateUObject(this, &UCoreSystem::Tick));
+
 	m_instance.Reset(this);
 	UDebug::Log("CoreSystem - Init");
 
@@ -36,6 +38,8 @@ void UCoreSystem::Init()
 
 void UCoreSystem::OnStart()
 {
+	Super::OnStart();
+
 	m_debugWindow->Start();
 
 	//get request example, can be called from wherever needed
@@ -47,10 +51,32 @@ void UCoreSystem::OnStart()
 
 void UCoreSystem::Shutdown()
 {
+	Super::Shutdown();
+
+	FTicker::GetCoreTicker().RemoveTicker(tickDelegateHandle);
+
 	m_debugWindow->Shutdown();
 	m_instance.Release();
 
 	UDebug::Log("CoreSystem - Shutdown()");
+}
+
+bool UCoreSystem::Tick(float deltaTime)
+{
+	if(this->GetWorld()->GetFirstPlayerController()->IsInputKeyDown(FKey("P")))
+	{
+		if (!debugTogglePressed)
+		{
+			m_debugWindow->isEnabled = !m_debugWindow->isEnabled;
+		}
+		debugTogglePressed = true;
+	}
+	else
+	{
+		debugTogglePressed = false;
+	}
+
+	return true;
 }
 
 UCoreSystem& UCoreSystem::Get()
