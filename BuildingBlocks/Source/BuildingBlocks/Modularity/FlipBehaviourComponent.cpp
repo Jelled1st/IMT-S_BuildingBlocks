@@ -2,7 +2,7 @@
 
 
 #include "FlipBehaviourComponent.h"
-
+#include "../Core/CoreSystem.h"
 
 void UFlipBehaviourComponent::BeginPlay()
 {
@@ -24,6 +24,19 @@ void UFlipBehaviourComponent::TickComponent(float deltaTime, ELevelTick tickType
 
 	if (m_isFlipping)
 	{
+		bool startOfFlip = currentRotation == 0;
+		if (startOfFlip)
+		{
+			if (UCoreSystem::Exists())
+			{
+				UEventSystem* eventSystem = UCoreSystem::Get().GetEventSystem();
+				if (eventSystem != nullptr)
+				{
+					eventSystem->CallPanelFlipEvent(this);
+				}
+			}
+		}
+
 		bool shouldEnd = false;
 
 		float rotateNow = flipSpeed * deltaTime;

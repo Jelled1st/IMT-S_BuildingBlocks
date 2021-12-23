@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "../SportData/Sport.h"
 #include "../Gameplay/Elevator.h"
+#include "../Modularity/FlipBehaviourComponent.h"
 #include "EventSystem.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FApiDataLoadedDelegate, Sport, sport);
@@ -48,14 +49,6 @@ public:
 		apiDataLoadedDelegate.Broadcast(sport);
 	}
 
-
-
-
-
-
-
-
-
 	DECLARE_EVENT(EventSystem, ApiTeamDataLoadedEvent)
 	ApiTeamDataLoadedEvent& OnApiTeamDataLoaded()
 	{
@@ -75,17 +68,6 @@ public:
 		apiTeamDataLoadedDelegate.Broadcast();
 	}
 
-
-
-
-
-
-
-
-
-
-
-
 	DECLARE_EVENT_OneParam(EventSystem, ElevatorSpawnedEvent, AElevator* const)
 	ElevatorSpawnedEvent& OnElevatorSpawn()
 	{
@@ -97,6 +79,17 @@ public:
 		m_elevatorSpawnedEvent.Broadcast(elevator);
 	}
 
+	DECLARE_EVENT_OneParam(EventSystem, PanelFlipEvent, UFlipBehaviourComponent*)
+	PanelFlipEvent& OnPanelFlip()
+	{
+		return m_panelFlipEvent;
+	}
+
+	void CallPanelFlipEvent(UFlipBehaviourComponent* flipBehaviour)
+	{
+		m_panelFlipEvent.Broadcast(flipBehaviour);
+	}
+
 private:
 	TestEvent m_testEvent;
 
@@ -105,4 +98,6 @@ private:
 	ApiTeamDataLoadedEvent m_apiTeamDataLoadedEvent;
 
 	ElevatorSpawnedEvent m_elevatorSpawnedEvent;
+
+	PanelFlipEvent m_panelFlipEvent;
 };
