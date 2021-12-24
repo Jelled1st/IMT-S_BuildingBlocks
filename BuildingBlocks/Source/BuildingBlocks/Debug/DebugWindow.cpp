@@ -114,17 +114,20 @@ void UDebugWindow::DrawWindow()
 
 			int index = 0;
 			ImGui::PushItemWidth(100);
-			for (F1TeamData dataType : m_f1TeamData) {
+			for (F1TeamData dataType : m_f1TeamData) 
+			{
 				int dataTypeIndex = (int)dataType;
 				ImGui::PushID(UUtility::FStringToCharPtr(*FString::Printf(TEXT("%d"), index)));
 
-				if (ImGui::ListBox("", &dataTypeIndex, m_dataOptions, 3)) {
+				if (ImGui::ListBox("", &dataTypeIndex, m_dataOptions, 3)) 
+				{
 					m_f1TeamData[index] = (F1TeamData)dataTypeIndex;
 				}
 
 				ImGui::PopID();
 			
-				if (index != m_f1TeamData.Num() - 1) {
+				if (index != m_f1TeamData.Num() - 1) 
+				{
 					ImGui::SameLine();
 				}
 				index++;
@@ -132,11 +135,15 @@ void UDebugWindow::DrawWindow()
 			}
 			ImGui::PopItemWidth();
 			
-			if (ImGui::Button("Add item to queue")) {
-				m_f1TeamData.Add(F1TeamData::Nationality);
+			if (ImGui::Button("Add item to queue")) 
+			{
+				m_f1TeamData.Add(F1TeamData::TeamName);
 			}
+			
 			ImGui::SameLine();
-			if (ImGui::Button("Remove item from queue")) {
+			
+			if (ImGui::Button("Remove item from queue")) 
+			{
 				m_f1TeamData.RemoveAt(m_f1TeamData.Num() - 1);
 			}
 
@@ -152,23 +159,23 @@ void UDebugWindow::DrawWindow()
 					for (F1TeamData dataType : m_f1TeamData) {
 
 						//TODO: add methods in core system to be called here
-						if (dataType == F1TeamData::Nationality) {
+						if (dataType == F1TeamData::Nationality) 
+						{
 							f1DataHandler->AddNationalityToArray();
 						}
-						if (dataType == F1TeamData::TeamName) {
+						if (dataType == F1TeamData::TeamName) 
+						{
 							f1DataHandler->AddTeamNameToArray();
 						}
-						if (dataType == F1TeamData::TeamScore) {
+						if (dataType == F1TeamData::TeamScore) 
+						{
 							f1DataHandler->AddScoreToArray();
 						}
 
 					}
 				}
 				eventSystem->CallTeamApiDataLoadedEvent();
-				
 			}
-
-			
 
 			ImGui::EndTabItem();
 		}
