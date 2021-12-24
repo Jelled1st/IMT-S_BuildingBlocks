@@ -70,11 +70,6 @@ void UFlipBehaviourComponent::TickComponent(float deltaTime, ELevelTick tickType
 		{
 			rotateNow = flipRotation - currentRotation;
 
-			if (flipSpeed < 0)
-			{
-				rotateNow = -rotateNow;
-			}
-
 			shouldEnd = true;
 		}
 		currentRotation += rotateNow;
