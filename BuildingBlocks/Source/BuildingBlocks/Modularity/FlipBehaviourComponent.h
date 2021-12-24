@@ -25,6 +25,7 @@ protected:
 
 private:
 	bool m_doFlip = false;
+	bool m_inverseRotation = false;
 
 	bool m_isFlipping = false;
 

@@ -28,12 +28,20 @@ void UMoveThroughPanelComponent::BeginPlay()
 
 void UMoveThroughPanelComponent::OnPanelFlip(UFlipBehaviourComponent* flipBehaviour)
 {
-	if (flipBehaviour == m_flipBehaviour)
+	if (m_flipBehaviour != nullptr)
 	{
-		m_isMoving = true;
-		float flipTime = flipBehaviour->flipRotation / flipBehaviour->flipSpeed;
-		m_speed = size / flipTime;
-		m_currentMovement = 0;
+		if (flipBehaviour == m_flipBehaviour)
+		{
+			m_isMoving = true;
+			float flipTime = flipBehaviour->flipRotation / flipBehaviour->flipSpeed;
+			m_speed = size / flipTime;
+			
+			if (flipBehaviour->flipRotation < 0 && flipBehaviour->flipSpeed < 0)
+			{
+				m_speed = -m_speed;
+			}
+			m_currentMovement = 0;
+		}
 	}
 }
 
@@ -46,10 +54,25 @@ void UMoveThroughPanelComponent::TickComponent(float deltaTime, ELevelTick tickT
 		float addToMove = m_speed * deltaTime;
 
 		bool isDone = false;
-		if (m_currentMovement + addToMove >= size)
+
+		bool willOvershoot = m_currentMovement + addToMove >= size;
+		if (m_speed < 0)
+		{
+			willOvershoot = m_currentMovement + addToMove <= -size;
+		}
+
+		if (willOvershoot)
 		{
 			isDone = true;
-			addToMove = size - m_currentMovement;
+
+			if (m_speed < 0)
+			{
+				addToMove = (-size) - m_currentMovement;
+			}
+			else
+			{
+				addToMove = size - m_currentMovement;
+			}
 		}
 		m_currentMovement += addToMove;
 

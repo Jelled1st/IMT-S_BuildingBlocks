@@ -9,6 +9,8 @@ void UFlipBehaviourComponent::BeginPlay()
 	Super::BeginPlay();
 
 	SetupParameter(m_doFlip, "DoFlip");
+	SetupParameter(m_inverseRotation, "Inverse rotation");
+
 	SetupParameter(flipSpeed, "Flip Speed");
 	SetupParameter(flipRotation, "Flip Rotation");
 }
@@ -17,9 +19,25 @@ void UFlipBehaviourComponent::TickComponent(float deltaTime, ELevelTick tickType
 {
 	Super::TickComponent(deltaTime, tickType, thisTickFunction);
 
+	if (m_inverseRotation)
+	{
+		flipSpeed = -flipSpeed;
+		flipRotation = -flipRotation;
+		m_inverseRotation = false;
+	}
+
 	if (m_doFlip)
 	{
-		m_isFlipping = true;
+		if ((flipRotation > 0 && flipSpeed > 0) || (flipRotation < 0 && flipSpeed < 0))
+		{
+			m_isFlipping = true;
+		}
+		else
+		{
+			m_doFlip = false;
+			UDebug::Warning("Cannot flip because flipRotation or flipSpeed is negative. Make both positive or negative");
+			UDebug::ToScreen("Cannot flip because flipRotation or flipSpeed is negative. Make both positive or negative", FColor::Red);
+		}
 	}
 
 	if (m_isFlipping)
@@ -41,14 +59,25 @@ void UFlipBehaviourComponent::TickComponent(float deltaTime, ELevelTick tickType
 
 		float rotateNow = flipSpeed * deltaTime;
 
-		if (currentRotation + rotateNow >= flipRotation)
+		bool willOvershoot = currentRotation + rotateNow >= flipRotation;
+		
+		if (flipSpeed < 0)
+		{
+			willOvershoot = currentRotation + rotateNow <= flipRotation;
+		}
+
+		if (willOvershoot)
 		{
 			rotateNow = flipRotation - currentRotation;
+
+			if (flipSpeed < 0)
+			{
+				rotateNow = -rotateNow;
+			}
 
 			shouldEnd = true;
 		}
 		currentRotation += rotateNow;
-
 
 		rotX += rotateNow;
 
