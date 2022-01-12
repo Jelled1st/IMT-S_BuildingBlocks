@@ -33,7 +33,7 @@ public:
 	UPROPERTY(EditAnywhere);
 	AActor* owner;
 
-private:
+protected:
 	void OnElevatorSpawn(AElevator* elevator);
 
 	FVector m_physicalPosition;

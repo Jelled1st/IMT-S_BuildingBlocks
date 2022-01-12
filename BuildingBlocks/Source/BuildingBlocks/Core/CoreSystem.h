@@ -121,6 +121,10 @@ public:
 		return m_elevator.Get();
 	}
 
+	APlayerController* const GetPlayerController() const
+	{
+		return this->GetWorld()->GetFirstPlayerController();
+	}
 
 private:
 	void OnElevatorSpawn(AElevator* elevator);

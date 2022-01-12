@@ -99,10 +99,12 @@ protected:
 	int m_currentMeshIndex = 0;
 	int m_currentMatIndex = 0;
 
+public:
 	double posX, posY, posZ;
 	double rotX, rotY, rotZ;
 	double scaleX, scaleY, scaleZ;
 
+private:
 	bool m_allowModularMesh = true;
 
 	void SetupParameter(void* value, FString name, ExposableParameterType type);
