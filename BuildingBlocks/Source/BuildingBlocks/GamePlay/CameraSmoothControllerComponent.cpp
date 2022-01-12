@@ -18,31 +18,49 @@ void UCameraSmoothControllerComponent::TickComponent(float deltaTime, ELevelTick
 		return;
 	}
 
+	friction = FGenericPlatformMath::Max(0.0, FGenericPlatformMath::Min(friction, 1000.0));
+	turnFriction = FGenericPlatformMath::Max(0.0, FGenericPlatformMath::Min(turnFriction, 1000.0));
+
 	APlayerController* controller = UCoreSystem::Get().GetPlayerController();
 
 	FVector inputVelocity;
 
+	const float accelerationFloat = static_cast<float>(friction);
+
 	if (controller->IsInputKeyDown(FKey("A")))
 	{
-		inputVelocity.Y -= acceleration;
+		inputVelocity.Y -= accelerationFloat;
 	}
 	if (controller->IsInputKeyDown(FKey("D")))
 	{
-		inputVelocity.Y += acceleration;
+		inputVelocity.Y += accelerationFloat;
 	}
 	if (controller->IsInputKeyDown(FKey("W")))
 	{
-		inputVelocity.X += acceleration;
+		inputVelocity.X += accelerationFloat;
 	}
 	if (controller->IsInputKeyDown(FKey("S")))
 	{
-		inputVelocity.X -= acceleration;
+		inputVelocity.X -= accelerationFloat;
+	}
+	if (controller->IsInputKeyDown(FKey("SpaceBar")))
+	{
+		m_velocity.Z += accelerationFloat;
+	}
+	if (controller->IsInputKeyDown(FKey("LeftShift")))
+	{
+		m_velocity.Z -= accelerationFloat;
 	}
 
 	FQuat rotation = owner->GetActorRotation().Quaternion();
 	FVector directionalAcceleration = rotation * inputVelocity;
 	m_velocity += directionalAcceleration;
 
+	m_worldOffset += m_velocity * deltaTime;
+	m_velocity *= ((100 - friction) / 100.0);
+
+
+	const float turnccelerationFloat = static_cast<float>(friction);
 	float mouseX, mouseY;
 	if (controller->GetMousePosition(mouseX, mouseY) && controller->IsInputKeyDown(FKey("E")))
 	{
@@ -51,17 +69,14 @@ void UCameraSmoothControllerComponent::TickComponent(float deltaTime, ELevelTick
 
 		if (enableMouseX)
 		{
-			m_angularVelocity.Z -= mouseDiff.X * turnAcceleration;
+			m_angularVelocity.Z -= mouseDiff.X * turnccelerationFloat;
 		}
 		if (enableMouseY)
 		{
-			m_angularVelocity.Y += mouseDiff.Y * turnAcceleration;
+			m_angularVelocity.Y += mouseDiff.Y * turnccelerationFloat;
 		}
 	}
 	m_previousMouse.Set(mouseX, mouseY);
-
-	m_worldOffset += m_velocity * deltaTime;
-	m_velocity *= ((100-friction)/100.0);
 
 	if (modularityComponent != nullptr)
 	{
@@ -70,6 +85,7 @@ void UCameraSmoothControllerComponent::TickComponent(float deltaTime, ELevelTick
 		modularityComponent->rotZ += m_angularVelocity.Z * deltaTime;
 	}
 	m_angularVelocity *= ((100 - turnFriction) / 100.0);
+
 
 	Super::TickComponent(deltaTime, tickType, thisTickFunction);
 }

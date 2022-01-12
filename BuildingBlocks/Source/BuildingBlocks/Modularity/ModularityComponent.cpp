@@ -56,13 +56,11 @@ void UModularityComponent::BeginPlay()
 			visualComponent = components[0];
 			m_allowModularMesh = true;
 
-			UDebug::ToScreen(*FString::Printf(TEXT("Warning: '%s' contains multiple static mesh components (using the first) - please assign one to the '%s' component"), *m_owner->GetName(), *this->GetName()), FColor::Red);
 			UDebug::Warning(*FString::Printf(TEXT("'%s' contains multiple static mesh components (using the first) - please assign one to the '%s' component"), *m_owner->GetName(), *this->GetName()));
 		}
 		else if (components.Num() <= 0)
 		{
 			m_allowModularMesh = false;
-			UDebug::ToScreen(*FString::Printf(TEXT("Warning: '%s' does not contain static mesh components - please assign one to the '%s' component"), *m_owner->GetName(), *this->GetName()), FColor::Red);
 			UDebug::Warning(*FString::Printf(TEXT("'%s' does not contain static mesh components - please assign one to the '%s' component"), *m_owner->GetName(), *this->GetName()));
 		}
 	}
