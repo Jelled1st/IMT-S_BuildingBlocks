@@ -20,22 +20,28 @@ void UCameraSmoothControllerComponent::TickComponent(float deltaTime, ELevelTick
 
 	APlayerController* controller = UCoreSystem::Get().GetPlayerController();
 
+	FVector inputVelocity;
+
 	if (controller->IsInputKeyDown(FKey("A")))
 	{
-		m_velocity.Y -= acceleration;
+		inputVelocity.Y -= acceleration;
 	}
 	if (controller->IsInputKeyDown(FKey("D")))
 	{
-		m_velocity.Y += acceleration;
+		inputVelocity.Y += acceleration;
 	}
 	if (controller->IsInputKeyDown(FKey("W")))
 	{
-		m_velocity.X += acceleration;
+		inputVelocity.X += acceleration;
 	}
 	if (controller->IsInputKeyDown(FKey("S")))
 	{
-		m_velocity.X -= acceleration;
+		inputVelocity.X -= acceleration;
 	}
+
+	FQuat rotation = owner->GetActorRotation().Quaternion();
+	FVector directionalAcceleration = rotation * inputVelocity;
+	m_velocity += directionalAcceleration;
 
 	float mouseX, mouseY;
 	if (controller->GetMousePosition(mouseX, mouseY) && controller->IsInputKeyDown(FKey("E")))
