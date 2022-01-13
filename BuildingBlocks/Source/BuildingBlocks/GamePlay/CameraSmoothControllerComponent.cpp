@@ -25,7 +25,7 @@ void UCameraSmoothControllerComponent::TickComponent(float deltaTime, ELevelTick
 
 	FVector inputVelocity;
 
-	const float accelerationFloat = static_cast<float>(friction);
+	const float accelerationFloat = static_cast<float>(acceleration);
 
 	if (controller->IsInputKeyDown(FKey("A")))
 	{
@@ -60,9 +60,9 @@ void UCameraSmoothControllerComponent::TickComponent(float deltaTime, ELevelTick
 	m_velocity *= ((100 - friction) / 100.0);
 
 
-	const float turnccelerationFloat = static_cast<float>(friction);
+	const float turnccelerationFloat = static_cast<float>(turnAcceleration);
 	float mouseX, mouseY;
-	if (controller->GetMousePosition(mouseX, mouseY) && controller->IsInputKeyDown(FKey("E")))
+	if (controller->GetMousePosition(mouseX, mouseY) && controller->IsInputKeyDown(FKey("RightMouseButton")))
 	{
 		FVector2D currentMouse = FVector2D(mouseX, mouseY);
 		FVector2D mouseDiff = m_previousMouse - currentMouse;
