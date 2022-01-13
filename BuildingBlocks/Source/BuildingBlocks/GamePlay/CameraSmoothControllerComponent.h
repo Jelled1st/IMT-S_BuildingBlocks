@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "ElevatorChildComponent.h"
+#include "Camera/CameraComponent.h"
 #include "CameraSmoothControllerComponent.generated.h"
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
@@ -35,10 +36,20 @@ public:
 	UPROPERTY(EditAnywhere);
 	bool enableMouseY = true;
 
+	UPROPERTY(EditAnywhere);
+	UCameraComponent* camera;
+
 protected:
 	virtual void BeginPlay() override;
 
 	FVector m_velocity;
 	FVector m_angularVelocity;
-	FVector2D m_previousMouse;
+
+	double m_currentFov;
+
+private:
+	float m_originalCameraFov;
+	float m_lastFov;
+	bool m_doResetFov;
+	bool m_isMovingMouse = false;
 };
