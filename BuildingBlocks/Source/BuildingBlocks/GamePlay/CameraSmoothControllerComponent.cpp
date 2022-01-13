@@ -23,9 +23,10 @@ void UCameraSmoothControllerComponent::TickComponent(float deltaTime, ELevelTick
 
 	APlayerController* controller = UCoreSystem::Get().GetPlayerController();
 
-	FVector inputVelocity;
+	FVector inputVelocity = FVector(0.0f, 0.0f, 0.0f);
 
 	const float accelerationFloat = static_cast<float>(acceleration);
+	const float frictionFloat = static_cast<float>(friction);
 
 	if (controller->IsInputKeyDown(FKey("A")))
 	{
@@ -57,26 +58,40 @@ void UCameraSmoothControllerComponent::TickComponent(float deltaTime, ELevelTick
 	m_velocity += directionalAcceleration;
 
 	m_worldOffset += m_velocity * deltaTime;
-	m_velocity *= ((100 - friction) / 100.0);
-
+	m_velocity *= ((100.0f - frictionFloat) / 100.0f);
 
 	const float turnccelerationFloat = static_cast<float>(turnAcceleration);
 	float mouseX, mouseY;
+
 	if (controller->GetMousePosition(mouseX, mouseY) && controller->IsInputKeyDown(FKey("RightMouseButton")))
 	{
-		FVector2D currentMouse = FVector2D(mouseX, mouseY);
-		FVector2D mouseDiff = m_previousMouse - currentMouse;
+		FVector2D viewport;
+		GEngine->GameViewport->GetViewportSize(viewport);
+		FVector2D center = viewport / 2.0f;
 
-		if (enableMouseX)
+		controller->SetMouseLocation(center.X, center.Y);
+
+		if (m_isMovingMouse)
 		{
-			m_angularVelocity.Z -= mouseDiff.X * turnccelerationFloat;
+			FVector2D currentMouse = FVector2D(mouseX, mouseY);
+			FVector2D mouseDiff = center - currentMouse;
+			const float turnAccelerationFloat = static_cast<float>(turnAcceleration);
+
+			if (enableMouseX)
+			{
+				m_angularVelocity.Z -= mouseDiff.X * turnccelerationFloat;
+			}
+			if (enableMouseY)
+			{
+				m_angularVelocity.Y += mouseDiff.Y * turnccelerationFloat;
+			}
 		}
-		if (enableMouseY)
-		{
-			m_angularVelocity.Y += mouseDiff.Y * turnccelerationFloat;
-		}
+		m_isMovingMouse = true;
 	}
-	m_previousMouse.Set(mouseX, mouseY);
+	else
+	{
+		m_isMovingMouse = false;
+	}
 
 	if (modularityComponent != nullptr)
 	{
@@ -84,8 +99,8 @@ void UCameraSmoothControllerComponent::TickComponent(float deltaTime, ELevelTick
 		modularityComponent->rotY += m_angularVelocity.Y * deltaTime;
 		modularityComponent->rotZ += m_angularVelocity.Z * deltaTime;
 	}
-	m_angularVelocity *= ((100 - turnFriction) / 100.0);
-
+	const float turnFrictionFloat = static_cast<float>(turnFriction);
+	m_angularVelocity *= ((100.0f - turnFrictionFloat) / 100.0f);
 
 	if (m_doResetFov)
 	{
@@ -129,5 +144,11 @@ void UCameraSmoothControllerComponent::BeginPlay()
 		modularityComponent->SetupParameter(enableMouseY, "Camera.enabledMouseY");
 		modularityComponent->SetupParameter(m_currentFov, "Camera.FieldOfView");
 		modularityComponent->SetupParameter(m_doResetFov, "Camera.ResetFoV");
+	}
+
+
+	if (!UCoreSystem::Exists())
+	{
+		return;
 	}
 }

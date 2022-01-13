@@ -44,7 +44,6 @@ protected:
 
 	FVector m_velocity;
 	FVector m_angularVelocity;
-	FVector2D m_previousMouse;
 
 	double m_currentFov;
 
@@ -52,4 +51,5 @@ private:
 	float m_originalCameraFov;
 	float m_lastFov;
 	bool m_doResetFov;
+	bool m_isMovingMouse = false;
 };
