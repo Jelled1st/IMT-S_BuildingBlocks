@@ -87,12 +87,37 @@ void UCameraSmoothControllerComponent::TickComponent(float deltaTime, ELevelTick
 	m_angularVelocity *= ((100 - turnFriction) / 100.0);
 
 
+	if (m_doResetFov)
+	{
+		m_currentFov = static_cast<double>(m_originalCameraFov);
+	}
+
+	const float currentFovFloat = static_cast<float>(m_currentFov);
+	if (m_lastFov != m_currentFov)
+	{
+		if (camera != nullptr)
+		{
+			camera->FieldOfView = m_currentFov;
+		}
+
+		m_lastFov = m_currentFov;
+	}
+
 	Super::TickComponent(deltaTime, tickType, thisTickFunction);
 }
 
 void UCameraSmoothControllerComponent::BeginPlay()
 {
 	Super::BeginPlay();
+
+	camera = owner->FindComponentByClass<UCameraComponent>();
+
+	if (camera != nullptr)
+	{
+		m_originalCameraFov = camera->FieldOfView;
+		m_currentFov = m_originalCameraFov;
+		m_lastFov = m_originalCameraFov;
+	}
 
 	if (modularityComponent != nullptr)
 	{
@@ -102,5 +127,7 @@ void UCameraSmoothControllerComponent::BeginPlay()
 		modularityComponent->SetupParameter(turnFriction, "Camera.TurnFriction(0-100)");
 		modularityComponent->SetupParameter(enableMouseX, "Camera.enabledMouseX");
 		modularityComponent->SetupParameter(enableMouseY, "Camera.enabledMouseY");
+		modularityComponent->SetupParameter(m_currentFov, "Camera.FieldOfView");
+		modularityComponent->SetupParameter(m_doResetFov, "Camera.ResetFoV");
 	}
 }
